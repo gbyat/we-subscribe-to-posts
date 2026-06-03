@@ -5,6 +5,7 @@
  * Description: Post subscription notifications with double opt-in and one-click unsubscribe.
  * Version: 0.1.3
  * Requires at least: 6.6
+ * Tested up to: 7.0
  * Requires PHP: 8.1
  * Author: webentwicklerin, Gabriele Laesser
  * Author URI: https://webentwicklerin.at
