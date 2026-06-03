@@ -5,7 +5,7 @@ const path = require('path');
 const releaseType = process.argv[2] || 'patch';
 const allowedTypes = ['patch', 'minor', 'major'];
 const rootDir = path.join(__dirname, '..');
-const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+const npmCommand = 'npm';
 
 if (!allowedTypes.includes(releaseType)) {
 	console.error('Invalid release type. Use patch, minor, or major.');
@@ -16,7 +16,7 @@ function run(command, args, options = {}) {
 	const result = spawnSync(command, args, {
 		cwd: rootDir,
 		stdio: 'inherit',
-		shell: false,
+		shell: true,
 		...options,
 	});
 
@@ -33,7 +33,7 @@ function runQuiet(command, args) {
 		cwd: rootDir,
 		stdio: ['ignore', 'pipe', 'ignore'],
 		encoding: 'utf8',
-		shell: false,
+		shell: true,
 	});
 	if (result.error || result.status !== 0) {
 		return '';
