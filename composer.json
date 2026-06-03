@@ -1,0 +1,19 @@
+{
+  "name": "webentwicklerin/we-subscribe-to-posts",
+  "description": "WordPress plugin for post update subscriptions with double opt-in.",
+  "type": "wordpress-plugin",
+  "require-dev": {
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.1",
+    "squizlabs/php_codesniffer": "^3.11",
+    "wp-coding-standards/wpcs": "^3.1"
+  },
+  "scripts": {
+    "lint": "phpcs --standard=phpcs.xml.dist",
+    "lint:fix": "phpcbf --standard=phpcs.xml.dist"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  }
+}

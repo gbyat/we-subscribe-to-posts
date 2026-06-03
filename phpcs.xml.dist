@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<ruleset name="We Subscribe To Posts">
+	<description>PHPCS rules for plugin development.</description>
+
+	<arg name="basepath" value="."/>
+	<arg name="colors"/>
+	<arg value="sp"/>
+
+	<file>we-subscribe-to-posts.php</file>
+	<file>includes</file>
+	<file>templates</file>
+
+	<rule ref="WordPress-Extra"/>
+
+	<exclude-pattern>vendor/*</exclude-pattern>
+</ruleset>

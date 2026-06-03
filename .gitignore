@@ -1,0 +1,15 @@
+node_modules/
+vendor/
+
+# OS / logs
+Thumbs.db
+.DS_Store
+*.log
+
+# Local planning docs
+TASK-LOG.md
+.cursor/
+
+# Composer / PHP tool caches
+.phpcs-cache
+.phpunit.result.cache

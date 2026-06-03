@@ -1,0 +1,19 @@
+{
+  "name": "we-subscribe-to-posts",
+  "version": "1.0.0",
+  "description": "WordPress plugin for post update subscriptions.",
+  "scripts": {
+    "pot": "node scripts/update-pot.js",
+    "make-pot": "npm run pot",
+    "i18n:json": "node scripts/make-json.js",
+    "json": "npm run i18n:json"
+  },
+  "keywords": [
+    "wordpress",
+    "plugin",
+    "i18n"
+  ],
+  "author": "webentwicklerin, Gabriele Laesser",
+  "license": "GPL-2.0-or-later",
+  "type": "commonjs"
+}

@@ -1,0 +1,996 @@
+# Copyright (C) 2026 We Subscribe To Posts
+# This file is distributed under the same license as the We Subscribe To Posts package.
+msgid ""
+msgstr ""
+"Project-Id-Version: We Subscribe To Posts\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/we-subscribe-to-"
+"posts\n"
+"POT-Creation-Date: 2026-05-31T14:23:51+02:00\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: webentwicklerin, Gabriele Laesser\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: "
+"__;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Generator: Poedit 3.9\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#. Plugin Name of the plugin
+#: we-subscribe-to-posts.php
+msgid "We Subscribe To Posts"
+msgstr "Wir abonnieren Beiträge"
+
+#. Description of the plugin
+#: we-subscribe-to-posts.php
+msgid ""
+"Post subscription notifications with double opt-in and one-click unsubscribe."
+msgstr ""
+"Benachrichtigungen über neue Beiträge mit Double-Opt-in und Abmeldung per "
+"Mausklick versenden."
+
+#. Author of the plugin
+#: we-subscribe-to-posts.php
+msgid "webentwicklerin, Gabriele Laesser"
+msgstr "Webentwicklerin, Gabriele Laesser"
+
+#. Author URI of the plugin
+#: we-subscribe-to-posts.php
+msgid "https://webentwicklerin.at"
+msgstr "https://webentwicklerin.at"
+
+#: includes/admin/class-email_template.php:59
+#: includes/admin/class-email_template.php:60
+#: includes/admin/class-email_template.php:61
+#: includes/admin/class-email_template.php:252
+#: includes/admin/class-email_template.php:253
+msgid "Digest Email Template"
+msgstr "E-Mail-Vorlage für den Newsletter"
+
+#: includes/admin/class-email_template.php:62
+msgid "Add Email Template"
+msgstr "E-Mail-Vorlage hinzufügen"
+
+#: includes/admin/class-email_template.php:63
+msgid "Edit Email Template"
+msgstr "E-Mail Vorlage bearbeiten"
+
+#: includes/admin/class-email_template.php:126
+msgid "Default Digest Email Template"
+msgstr "Standardvorlage für die Zusammenfassungs-E-Mail"
+
+#: includes/admin/class-email_template.php:324 templates/emails/digest.php:27
+msgid "Here are the latest published posts:"
+msgstr "Hier sind die zuletzt veröffentlichten Beiträge:"
+
+#: includes/admin/class-email_template.php:328
+msgid "Add your legal sender details here (company name, address, contact)."
+msgstr ""
+"Geben Sie hier Ihre rechtlichen Absenderdaten an (Firmenname, Adresse, "
+"Kontaktdaten)."
+
+#: includes/admin/class-preview_controller.php:58
+#: includes/admin/class-settings_page.php:1071
+#: includes/admin/class-subscribers_page.php:126
+#: includes/admin/class-subscribers_page.php:520
+#: includes/admin/class-subscribers_page.php:750
+msgid "You are not allowed to do this."
+msgstr "Sie haben keine Berechtigung, das zu tun."
+
+#: includes/admin/class-preview_controller.php:62
+#: includes/admin/class-settings_page.php:1075
+#: includes/admin/class-subscribers_page.php:130
+#: includes/admin/class-subscribers_page.php:754
+msgid "Security check failed."
+msgstr "Sicherheitsprüfung fehlgeschlagen."
+
+#: includes/admin/class-settings_page.php:70
+#: includes/admin/class-settings_page.php:71
+msgid "Post Subscriptions"
+msgstr "WE Post Subscriptions"
+
+#: includes/admin/class-settings_page.php:81
+#: includes/admin/class-settings_page.php:82
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: includes/admin/class-settings_page.php:90
+#: includes/admin/class-settings_page.php:91
+msgid "Mail Transport"
+msgstr "E-Mail-Transport"
+
+#: includes/admin/class-settings_page.php:139
+msgid "Privacy section text is required."
+msgstr "Der Text für den Datenschutzbereich ist erforderlich."
+
+#: includes/admin/class-settings_page.php:490
+#: includes/frontend/class-subscription_form.php:174
+msgid ""
+"I agree that my email address is used only for post update notifications."
+msgstr ""
+"Ich bin damit einverstanden, dass meine E-Mail-Adresse ausschließlich für "
+"Benachrichtigungen über neue Beiträge verwendet wird."
+
+#: includes/admin/class-settings_page.php:604
+msgid "Preview email sent successfully."
+msgstr "Die E-Mail-Vorschau wurde erfolgreich versendet."
+
+#: includes/admin/class-settings_page.php:605
+msgid "Preview email could not be sent."
+msgstr "Die Vorschau-E-Mail konnte nicht gesendet werden."
+
+#: includes/admin/class-settings_page.php:606
+msgid "Preview recipient email is invalid."
+msgstr "Die E-Mail-Adresse des Empfängers der Vorschau ist ungültig."
+
+#: includes/admin/class-settings_page.php:610
+msgid "Post Subscription Settings"
+msgstr "Einstellungen für das Abonnement von Beiträgen"
+
+#: includes/admin/class-settings_page.php:625
+msgid "Privacy section text"
+msgstr "Text zum Datenschutz"
+
+#: includes/admin/class-settings_page.php:628
+msgid "Shown next to the required consent checkbox in the signup form."
+msgstr ""
+"Wird im Anmeldeformular neben dem Kontrollkästchen für die erforderliche "
+"Einwilligung angezeigt."
+
+#: includes/admin/class-settings_page.php:632
+msgid "Preview recipient email"
+msgstr "Vorschau der E-Mail an den Empfänger"
+
+#: includes/admin/class-settings_page.php:635
+msgid "Preview mails are sent to this address."
+msgstr "An diese Adresse werden Vorschau-E-Mails gesendet."
+
+#: includes/admin/class-settings_page.php:639
+msgid "Daily send hour (site time)"
+msgstr "Tägliche Sendezeit (Ortszeit)"
+
+#: includes/admin/class-settings_page.php:642
+msgid "Applies to daily sends and the dispatch time for weekly/monthly runs."
+msgstr ""
+"Gilt für tägliche Sendungen sowie für den Versandzeitpunkt bei wöchentlichen/"
+"monatlichen Durchläufen."
+
+#: includes/admin/class-settings_page.php:646
+msgid "Weekly send weekday"
+msgstr "Wöchentlich an Werktagen versenden"
+
+#: includes/admin/class-settings_page.php:658
+msgid "Monthly send day"
+msgstr "Monatlicher Versandtag"
+
+#: includes/admin/class-settings_page.php:661
+msgid "Use 1-28 to avoid invalid dates in shorter months."
+msgstr ""
+"Verwenden Sie den Wert 1–28, um ungültige Datumsangaben in Monaten mit "
+"weniger Tagen zu vermeiden."
+
+#: includes/admin/class-settings_page.php:665
+msgid "Delete unconfirmed after days"
+msgstr "Unbestätigte Einträge nach einigen Tagen löschen"
+
+#: includes/admin/class-settings_page.php:668
+msgid ""
+"Pending (double opt-in not confirmed) subscribers are removed by daily "
+"cleanup after this many days."
+msgstr ""
+"Ausstehende Abonnenten (Doppel-Opt-in noch nicht bestätigt) werden nach "
+"Ablauf dieser Frist im Rahmen der täglichen Bereinigung entfernt."
+
+#: includes/admin/class-settings_page.php:672
+msgid "Max digest emails per minute"
+msgstr "Maximale Anzahl von Digest-E-Mails pro Minute"
+
+#: includes/admin/class-settings_page.php:675
+msgid ""
+"Recommended: keep throttling enabled to reduce hoster spam/rate-limit risk "
+"on larger sends. Use 0 only if you explicitly want no throttling."
+msgstr ""
+"Empfehlung: Lassen Sie die Drosselung aktiviert, um das Risiko von Spam und "
+"Ratenbegrenzungen durch den Hoster bei größeren Sendungen zu verringern. "
+"Verwenden Sie den Wert 0 nur, wenn Sie ausdrücklich keine Drosselung "
+"wünschen."
+
+#: includes/admin/class-settings_page.php:679
+msgid "Subscribe anti-spam window (seconds)"
+msgstr "Anmeldefenster (Sekunden)"
+
+#: includes/admin/class-settings_page.php:682
+msgid ""
+"How long the anti-spam window lasts for signup attempts. Set to 0 to disable "
+"subscribe rate limiting."
+msgstr ""
+"Wie lange das Anti-Spam-Fenster bei Anmeldeversuchen aktiv bleibt. Setzen "
+"Sie den Wert auf 0, um die Begrenzung der Anmelderate zu deaktivieren."
+
+#: includes/admin/class-settings_page.php:686
+msgid "Subscribe attempts allowed per window"
+msgstr "Zulässige Abonnementversuche pro Fenster"
+
+#: includes/admin/class-settings_page.php:689
+msgid "Maximum subscribe attempts per email/IP during one anti-spam window."
+msgstr ""
+"Maximale Anzahl von Anmeldeversuchen pro E-Mail-Adresse/IP-Adresse während "
+"eines Anti-Spam-Zeitraums."
+
+#: includes/admin/class-settings_page.php:693
+msgid "Success message display"
+msgstr "Anzeige einer Erfolgsmeldung"
+
+#: includes/admin/class-settings_page.php:696
+msgid "Slide-in notification"
+msgstr "Einblendbare Benachrichtigung (Slide in)"
+
+#: includes/admin/class-settings_page.php:697
+msgid "Centered overlay notification"
+msgstr "Zentrierte Overlay-Benachrichtigung"
+
+#: includes/admin/class-settings_page.php:698
+msgid "Inline message above the form"
+msgstr "Inline-Meldung über dem Formular"
+
+#: includes/admin/class-settings_page.php:700
+msgid "Choose how users see confirmation after signup."
+msgstr ""
+"Legen Sie fest, wie die Bestätigung nach der Anmeldung den Benutzern "
+"angezeigt wird."
+
+#: includes/admin/class-settings_page.php:704
+msgid "Slide-in position"
+msgstr "Einschubposition"
+
+#: includes/admin/class-settings_page.php:707
+msgid "Bottom right"
+msgstr "Unten rechts"
+
+#: includes/admin/class-settings_page.php:708
+msgid "Bottom left"
+msgstr "Unten links"
+
+#: includes/admin/class-settings_page.php:709
+msgid "Top right"
+msgstr "Oben rechts"
+
+#: includes/admin/class-settings_page.php:710
+msgid "Top left"
+msgstr "Oben links"
+
+#: includes/admin/class-settings_page.php:712
+msgid "Used for slide-in notification style."
+msgstr "Wird für den Einblendungsstil von Benachrichtigungen verwendet."
+
+#: includes/admin/class-settings_page.php:716
+msgid "Auto-close after seconds"
+msgstr "Nach Sekunden automatisch schließen"
+
+#: includes/admin/class-settings_page.php:719
+msgid "Set to 0 to disable auto-close."
+msgstr "Auf 0 setzen, um das automatische Schließen zu deaktivieren."
+
+#: includes/admin/class-settings_page.php:724
+msgid "Save settings"
+msgstr "Einstellungen speichern"
+
+#: includes/admin/class-settings_page.php:765
+msgid "Post Subscriptions > Digest Email Template"
+msgstr "Beitragsabonnements > Vorlage für die E-Mail-Zusammenfassung"
+
+#. translators: %s: admin URL.
+#: includes/admin/class-settings_page.php:769
+#, php-format
+msgid "Edit your block-based digest email template under %s."
+msgstr ""
+"Bearbeiten Sie Ihre blockbasierte Vorlage für die Zusammenfassungs-E-Mail "
+"unter %s."
+
+#: includes/admin/class-settings_page.php:781
+msgid "Edit active template"
+msgstr "Aktive Vorlage bearbeiten"
+
+#: includes/admin/class-settings_page.php:785
+msgid "Create template"
+msgstr "Vorlage erstellen"
+
+#: includes/admin/class-settings_page.php:794
+msgid "Cron reliability (recommended)"
+msgstr "Zuverlässigkeit von Cron (empfohlen)"
+
+#: includes/admin/class-settings_page.php:795
+msgid ""
+"For reliable digest delivery, set up a real server cron job that triggers "
+"WordPress cron regularly."
+msgstr ""
+"Um eine zuverlässige Zustellung der Zusammenfassungen zu gewährleisten, "
+"richten Sie einen echten Server-Cron-Job ein, der den WordPress-Cron "
+"regelmäßig auslöst."
+
+#: includes/admin/class-settings_page.php:796
+msgid "HTTP endpoint:"
+msgstr "HTTP-Endpunkt:"
+
+#: includes/admin/class-settings_page.php:797
+msgid "Example interval:"
+msgstr "Beispielintervall:"
+
+#: includes/admin/class-settings_page.php:797
+msgid "every 5 minutes"
+msgstr "alle 5 Minuten"
+
+#: includes/admin/class-settings_page.php:800
+msgid "Email preview"
+msgstr "E-Mail-Vorschau"
+
+#: includes/admin/class-settings_page.php:801
+msgid "Send a preview email with the latest 3 published posts."
+msgstr ""
+"Sende eine Vorschau-E-Mail mit den letzten drei veröffentlichten Beiträgen."
+
+#: includes/admin/class-settings_page.php:806
+msgid "Send preview now"
+msgstr "Vorschau jetzt senden"
+
+#: includes/admin/class-settings_page.php:838
+msgid "Test transport email sent successfully."
+msgstr "Test-Transport-E-Mail erfolgreich versendet."
+
+#: includes/admin/class-settings_page.php:839
+msgid "Test transport email could not be sent."
+msgstr "Die Test-E-Mail konnte nicht gesendet werden."
+
+#: includes/admin/class-settings_page.php:840
+msgid "Please provide a valid test recipient email."
+msgstr "Bitte geben Sie eine gültige E-Mail-Adresse für den Testempfänger an."
+
+#: includes/admin/class-settings_page.php:844
+msgid "Mail Transport Settings"
+msgstr "E-Mail-Transport-Einstellungen"
+
+#: includes/admin/class-settings_page.php:858
+msgid "Mail transport"
+msgstr "E-Mail-Transport"
+
+#: includes/admin/class-settings_page.php:861
+msgid "WordPress default (wp_mail / host)"
+msgstr "WordPress-Standard (wp_mail / Host)"
+
+#: includes/admin/class-settings_page.php:862
+msgid "Custom SMTP"
+msgstr "Benutzerdefiniertes SMTP"
+
+#: includes/admin/class-settings_page.php:863
+msgid "Gmail (SMTP preset)"
+msgstr "Gmail (SMTP-Voreinstellung)"
+
+#: includes/admin/class-settings_page.php:868
+msgid "Use for all WordPress emails"
+msgstr "Für alle WordPress-E-Mails verwenden"
+
+#: includes/admin/class-settings_page.php:873
+msgid "Apply this transport globally (not only this plugin)."
+msgstr "Wende diese Transportart global an (nicht nur für dieses Plugin)."
+
+#: includes/admin/class-settings_page.php:878
+msgid "From email (optional)"
+msgstr "Aus E-Mail (optional)"
+
+#: includes/admin/class-settings_page.php:884
+msgid "From name (optional)"
+msgstr "Von Name (optional)"
+
+#: includes/admin/class-settings_page.php:890
+msgid "SMTP host"
+msgstr "SMTP-Host"
+
+#: includes/admin/class-settings_page.php:896
+msgid "SMTP port"
+msgstr "SMTP-Port"
+
+#: includes/admin/class-settings_page.php:902
+msgid "SMTP encryption"
+msgstr "SMTP-Verschlüsselung"
+
+#: includes/admin/class-settings_page.php:905
+msgid "None"
+msgstr "Keins"
+
+#: includes/admin/class-settings_page.php:912
+msgid "SMTP authentication"
+msgstr "SMTP-Authentifizierung"
+
+#: includes/admin/class-settings_page.php:915
+msgid "Yes"
+msgstr "Ja"
+
+#: includes/admin/class-settings_page.php:916
+msgid "No"
+msgstr "Nein"
+
+#: includes/admin/class-settings_page.php:921
+msgid "SMTP username"
+msgstr "SMTP-Benutzername:"
+
+#: includes/admin/class-settings_page.php:927
+msgid "SMTP password/app password"
+msgstr "SMTP-Passwort/App-Passwort"
+
+#: includes/admin/class-settings_page.php:930
+msgid "For Gmail use an app password and keep TLS/587."
+msgstr "Verwenden Sie für Gmail ein App-Passwort und behalten Sie TLS/587 bei."
+
+#: includes/admin/class-settings_page.php:935
+msgid "Save mail transport settings"
+msgstr "E-Mail-Transport-Einstellungen speichern"
+
+#: includes/admin/class-settings_page.php:1032
+msgid "Test transport recipient"
+msgstr "Testempfänger"
+
+#: includes/admin/class-settings_page.php:1034
+msgid "Send test email"
+msgstr "Test-E-Mail senden"
+
+#: includes/admin/class-settings_page.php:1050
+msgid "Active transport summary"
+msgstr "Zusammenfassung zum aktiven Transport"
+
+#: includes/admin/class-settings_page.php:1052
+msgid "Transport: WordPress default wp_mail() / host environment"
+msgstr "Übertragung: WordPress-Standardfunktion wp_mail() / Host-Umgebung"
+
+#: includes/admin/class-subscribers_page.php:79
+#: includes/admin/class-subscribers_page.php:80
+#: includes/admin/class-subscribers_page.php:193
+msgid "Subscribers"
+msgstr "Abonnenten"
+
+#: includes/admin/class-subscribers_page.php:274
+msgid "Add email to suppression list (never send again)"
+msgstr "E-Mail-Adresse zur Sperrliste hinzufügen (nie wieder senden)"
+
+#: includes/admin/class-subscribers_page.php:276
+msgid "Add to suppression list"
+msgstr "Zur Unterdrückungsliste hinzufügen"
+
+#: includes/admin/class-subscribers_page.php:282
+msgid "Search subscribers"
+msgstr "Abonnenten suchen"
+
+#: includes/admin/class-subscribers_page.php:284
+msgid "Search"
+msgstr "Suchen"
+
+#: includes/admin/class-subscribers_page.php:287
+#: includes/admin/class-subscribers_page.php:341
+msgid "Status"
+msgstr "Status"
+
+#: includes/admin/class-subscribers_page.php:289
+#: includes/admin/class-subscribers_page.php:298
+msgid "All"
+msgstr "Alle"
+
+#: includes/admin/class-subscribers_page.php:290
+msgid "Pending"
+msgstr "Ausstehend"
+
+#: includes/admin/class-subscribers_page.php:291
+msgid "Active"
+msgstr "Aktiv"
+
+#: includes/admin/class-subscribers_page.php:292
+msgid "Unsubscribed"
+msgstr "Abgemeldet"
+
+#: includes/admin/class-subscribers_page.php:293
+msgid "Suppressed"
+msgstr "Unterdrückt"
+
+#: includes/admin/class-subscribers_page.php:296
+#: includes/admin/class-subscribers_page.php:342
+msgid "Frequency"
+msgstr "Frequenz"
+
+#: includes/admin/class-subscribers_page.php:299
+#: assets/js/subscription-form-block.js:50
+msgid "Daily"
+msgstr "Täglich"
+
+#: includes/admin/class-subscribers_page.php:300
+#: includes/frontend/class-subscription_form.php:164
+#: assets/js/subscription-form-block.js:51
+msgid "Weekly"
+msgstr "Wöchentlich"
+
+#: includes/admin/class-subscribers_page.php:301
+#: includes/frontend/class-subscription_form.php:165
+#: assets/js/subscription-form-block.js:52
+msgid "Monthly"
+msgstr "Monatlich"
+
+#: includes/admin/class-subscribers_page.php:304
+msgid "Filter"
+msgstr "Filter"
+
+#: includes/admin/class-subscribers_page.php:310
+msgid "Export CSV"
+msgstr "CSV-Datei exportieren"
+
+#: includes/admin/class-subscribers_page.php:319
+#: includes/admin/class-subscribers_page.php:411
+msgid "Select bulk action"
+msgstr "Mehrfachaktion auswählen"
+
+#: includes/admin/class-subscribers_page.php:321
+#: includes/admin/class-subscribers_page.php:413
+msgid "Bulk actions"
+msgstr "Mehrfachaktionen"
+
+#: includes/admin/class-subscribers_page.php:322
+#: includes/admin/class-subscribers_page.php:414
+#: includes/admin/class-subscribers_page.php:602
+msgid "Unsubscribe"
+msgstr "Abmelden"
+
+#: includes/admin/class-subscribers_page.php:323
+#: includes/admin/class-subscribers_page.php:415
+#: includes/admin/class-subscribers_page.php:610
+msgid "Suppress"
+msgstr "Unterdrücken"
+
+#: includes/admin/class-subscribers_page.php:324
+#: includes/admin/class-subscribers_page.php:416
+#: includes/admin/class-subscribers_page.php:618
+msgid "Reactivate"
+msgstr "Reaktivieren"
+
+#: includes/admin/class-subscribers_page.php:325
+#: includes/admin/class-subscribers_page.php:417
+msgid "Delete permanently"
+msgstr "Dauerhaft löschen"
+
+#: includes/admin/class-subscribers_page.php:327
+#: includes/admin/class-subscribers_page.php:419
+msgid "Apply"
+msgstr "Anwenden"
+
+#: includes/admin/class-subscribers_page.php:330
+#, php-format
+msgid "%d subscriber"
+msgid_plural "%d subscribers"
+msgstr[0] "%d Abonnent"
+msgstr[1] "%d Abonnenten"
+
+#: includes/admin/class-subscribers_page.php:339
+msgid "Email"
+msgstr "E-Mail"
+
+#: includes/admin/class-subscribers_page.php:340
+msgid "Name"
+msgstr "Name"
+
+#: includes/admin/class-subscribers_page.php:343
+msgid "Created"
+msgstr "Erstellt"
+
+#: includes/admin/class-subscribers_page.php:344
+msgid "Deliveries"
+msgstr "Lieferungen"
+
+#: includes/admin/class-subscribers_page.php:345
+msgid "Last Result"
+msgstr "Letztes Ergebnis"
+
+#: includes/admin/class-subscribers_page.php:346
+msgid "Consent Proof"
+msgstr "Nachweis der Einwilligung"
+
+#: includes/admin/class-subscribers_page.php:347
+msgid "Actions"
+msgstr "Aktionen"
+
+#: includes/admin/class-subscribers_page.php:353
+msgid "No subscribers found."
+msgstr "Keine Abonnenten gefunden."
+
+#: includes/admin/class-subscribers_page.php:473
+msgid "Delete selected subscribers permanently?"
+msgstr "Ausgewählte Abonnenten endgültig löschen?"
+
+#: includes/admin/class-subscribers_page.php:625
+msgid "Delete subscriber permanently?"
+msgstr "Abonnenten endgültig löschen?"
+
+#: includes/admin/class-subscribers_page.php:626
+msgid "Delete"
+msgstr "Löschen"
+
+#: includes/admin/class-subscribers_page.php:723
+msgid "Subscriber action completed."
+msgstr "Abo-Vorgang abgeschlossen."
+
+#: includes/admin/class-subscribers_page.php:724
+msgid "Subscriber action failed."
+msgstr "Die Aktion des Abonnenten ist fehlgeschlagen."
+
+#: includes/admin/class-subscribers_page.php:725
+msgid "Bulk action completed for all selected subscribers."
+msgstr "Die Massenaktion wurde für alle ausgewählten Abonnenten abgeschlossen."
+
+#: includes/admin/class-subscribers_page.php:726
+msgid "Bulk action completed with partial failures."
+msgstr "Massenaktion abgeschlossen, mit teilweisen Fehlern."
+
+#: includes/admin/class-subscribers_page.php:727
+msgid "Please select a bulk action and at least one subscriber."
+msgstr ""
+"Bitte wählen Sie eine Sammelaktion und mindestens einen Abonnenten aus."
+
+#: includes/admin/class-subscribers_page.php:728
+msgid "Email added to suppression list."
+msgstr "E-Mail-Adresse zur Sperrliste hinzugefügt."
+
+#: includes/admin/class-subscribers_page.php:729
+msgid "Please provide a valid email to suppress."
+msgstr ""
+"Bitte geben Sie eine gültige E-Mail-Adresse an, die aus dem Verteiler "
+"entfernt werden soll."
+
+#: includes/frontend/class-subscription_form.php:77
+#: includes/frontend/class-subscription_form.php:129
+#: templates/subscription-form.php:34 assets/js/subscription-form-block.js:21
+#: assets/js/subscription-form-block.js:60
+msgid "Subscribe"
+msgstr "Abonnieren"
+
+#: includes/frontend/class-subscription_form.php:163
+msgid "Daily (on days with new posts)"
+msgstr "Täglich (an Tagen mit neuen Beiträgen)"
+
+#: includes/frontend/class-subscription_form.php:564
+#: templates/subscription-form.php:117 templates/subscription-form.php:297
+msgid "Continue to website"
+msgstr "weiter zur Website"
+
+#: includes/frontend/class-subscription_form.php:586
+#: templates/subscription-form.php:76 templates/subscription-form.php:319
+msgid "OK"
+msgstr "OK"
+
+#: includes/frontend/class-subscription_form.php:612
+#: templates/subscription-form.php:15
+msgid "Please check your inbox and confirm your subscription."
+msgstr ""
+"Bitte überprüfen Sie Ihren Posteingang und bestätigen Sie Ihr Abonnement."
+
+#: includes/frontend/class-subscription_form.php:613
+#: templates/subscription-form.php:28
+msgid "We sent a fresh confirmation email. Please check your inbox."
+msgstr ""
+"Wir haben dir eine neue Bestätigungs-E-Mail geschickt. Bitte schau in deinen "
+"Posteingang."
+
+#: includes/frontend/class-subscription_form.php:614
+#: templates/subscription-form.php:16
+msgid "Subscription confirmed. You are now subscribed."
+msgstr "Das Abonnement wurde bestätigt. Sie sind nun angemeldet."
+
+#: includes/frontend/class-subscription_form.php:615
+#: templates/subscription-form.php:17
+msgid "You have been unsubscribed successfully."
+msgstr "Sie wurden erfolgreich abgemeldet."
+
+#: includes/frontend/class-subscription_form.php:616
+#: templates/subscription-form.php:18
+msgid "Security check failed. Please try again."
+msgstr "Sicherheitscheck scheiterte. Bitte versuchen Sie es noch einmal."
+
+#: includes/frontend/class-subscription_form.php:617
+#: templates/subscription-form.php:19
+msgid "Please enter a valid email address."
+msgstr "Bitte gültige E-Mail-Adresse eingeben"
+
+#: includes/frontend/class-subscription_form.php:618
+#: templates/subscription-form.php:20
+msgid "Please select a valid delivery frequency."
+msgstr "Bitte wählen Sie eine gültige Lieferhäufigkeit aus."
+
+#: includes/frontend/class-subscription_form.php:619
+#: templates/subscription-form.php:21
+msgid "Please accept the privacy section before subscribing."
+msgstr ""
+"Bitte stimmen Sie den Datenschutzbestimmungen zu, bevor Sie sich anmelden."
+
+#: includes/frontend/class-subscription_form.php:620
+#: templates/subscription-form.php:22
+msgid "Submission could not be processed. Please try again."
+msgstr ""
+"Die Übermittlung konnte nicht verarbeitet werden. Bitte versuchen Sie es "
+"erneut."
+
+#: includes/frontend/class-subscription_form.php:621
+#: templates/subscription-form.php:23
+msgid ""
+"Too many subscribe attempts in a short time. Please wait a moment and try "
+"again."
+msgstr ""
+"Es wurden innerhalb kurzer Zeit zu viele Anmeldeversuche unternommen. Bitte "
+"warte einen Moment und versuche es erneut."
+
+#: includes/frontend/class-subscription_form.php:622
+#: templates/subscription-form.php:24
+msgid ""
+"We could not send the confirmation email right now. Please try again later."
+msgstr ""
+"Wir konnten die Bestätigungs-E-Mail derzeit nicht versenden. Bitte versuche "
+"es später erneut."
+
+#: includes/frontend/class-subscription_form.php:623
+#: templates/subscription-form.php:25
+msgid "This confirmation or unsubscribe link is invalid or expired."
+msgstr "Dieser Bestätigungs- oder Abmeldelink ist ungültig oder abgelaufen."
+
+#: includes/frontend/class-subscription_form.php:624
+#: templates/subscription-form.php:26
+msgid "This email is already subscribed with the selected frequency."
+msgstr ""
+"Dieser E-Mail-Adresse ist bereits ein Abonnement mit der ausgewählten "
+"Häufigkeit zugewiesen."
+
+#: includes/frontend/class-subscription_form.php:625
+#: templates/subscription-form.php:27
+msgid ""
+"A confirmation email was already sent for this address. Please check your "
+"inbox."
+msgstr ""
+"An diese E-Mail-Adresse wurde bereits eine Bestätigungs-E-Mail gesendet. "
+"Bitte überprüfen Sie Ihren Posteingang."
+
+#: includes/frontend/class-subscription_form.php:626
+#: templates/subscription-form.php:29
+msgid "This email is blocked from subscriptions and cannot be added again."
+msgstr ""
+"Diese E-Mail-Adresse ist für Abonnements gesperrt und kann nicht erneut "
+"hinzugefügt werden."
+
+#: includes/frontend/class-subscription_form.php:642
+msgid "An unknown status occurred."
+msgstr "Es ist ein unbekannter Fehler aufgetreten."
+
+#: includes/mailer/class-digest_builder.php:108
+msgid "[Preview] Latest post updates"
+msgstr "[Vorschau] Neueste Beiträge"
+
+#: includes/mailer/class-digest_builder.php:112
+msgid "Your weekly post updates"
+msgstr "Deine wöchentlichen Beitragsaktualisierungen"
+
+#: includes/mailer/class-digest_builder.php:113
+msgid "Your monthly post updates"
+msgstr "Deine monatlichen Post-Updates"
+
+#: includes/mailer/class-digest_builder.php:114
+msgid "Your latest post updates"
+msgstr "Deine neuesten Beiträge"
+
+#: includes/mailer/class-digest_scheduler.php:167
+msgid "wp_mail returned false."
+msgstr "wp_mail hat „false“ zurückgegeben."
+
+#: includes/mailer/class-digest_scheduler.php:189
+#: includes/mailer/class-digest_template_renderer.php:132
+#: templates/emails/optin-confirmation.php:13
+msgid "there"
+msgstr "dort"
+
+#. translators: %s: subscriber name.
+#. translators: %s: subscriber display name.
+#: includes/mailer/class-digest_template_renderer.php:143
+#: templates/emails/digest.php:21 templates/emails/optin-confirmation.php:22
+#, php-format
+msgid "Hi %s,"
+msgstr "Hallo %s,"
+
+#: includes/mailer/class-digest_template_renderer.php:161
+msgid "No published posts available yet."
+msgstr "Es sind noch keine Beiträge verfügbar."
+
+#: includes/mailer/class-digest_template_renderer.php:230
+#: templates/emails/digest.php:51
+msgid "Unsubscribe instantly"
+msgstr "Sofort abmelden"
+
+#: includes/mailer/class-digest_template_renderer.php:352
+#: templates/emails/digest.php:45
+msgid "Read more"
+msgstr "Beitrag lesen"
+
+#: includes/mailer/class-mailer.php:55
+msgid "Please confirm your post subscription"
+msgstr "Bitte bestätigen Sie Ihr Abonnement"
+
+#: includes/mailer/class-mailer.php:109
+msgid "[Test] Post Subscription Mail Transport"
+msgstr "[Test] E-Mail-Versand nach Abonnement"
+
+#: includes/mailer/class-mailer.php:111
+msgid "This is a test email from We Subscribe To Posts transport settings."
+msgstr ""
+"Dies ist eine Test-E-Mail aus den Transport-Einstellungen von „We Subscribe "
+"To Posts“."
+
+#: includes/subscription/class-double_optin_service.php:95
+msgid "Could not send double opt-in message."
+msgstr "Die Double-Opt-in-Nachricht konnte nicht gesendet werden."
+
+#: templates/emails/optin-confirmation.php:28
+msgid ""
+"Please confirm your subscription to post update notifications by clicking "
+"the link below:"
+msgstr ""
+"Bitte bestätigen Sie Ihr Abonnement für Benachrichtigungen zu "
+"Aktualisierungen, indem Sie auf den folgenden Link klicken:"
+
+#: templates/emails/optin-confirmation.php:29
+msgid "Confirm subscription"
+msgstr "Abonnement bestätigen"
+
+#: templates/subscription-form.php:160
+msgid "Website"
+msgstr "Website"
+
+#: templates/subscription-form.php:165
+msgid "Email address"
+msgstr "Mail-Adresse"
+
+#: templates/subscription-form.php:170
+msgid "Name (optional)"
+msgstr "Name (optional)"
+
+#: templates/subscription-form.php:175
+msgid "Send frequency"
+msgstr "Sendefrequenz"
+
+#: assets/js/email-template-blocks.js:11
+msgid "Digest Greeting"
+msgstr "Digest-Grußwort"
+
+#: assets/js/email-template-blocks.js:14
+msgid "Dynamic personalized greeting for the subscriber."
+msgstr "Dynamische, personalisierte Begrüßung für den Abonnenten."
+
+#: assets/js/email-template-blocks.js:25
+msgid "Greeting is rendered dynamically in the email."
+msgstr "Die Anrede wird in der E-Mail dynamisch generiert."
+
+#: assets/js/email-template-blocks.js:34
+msgid "Unsubscribe Link"
+msgstr "Link zum Abmelden"
+
+#: assets/js/email-template-blocks.js:37
+msgid "Required one-click unsubscribe link."
+msgstr "Erforderlicher Link zum Abbestellen mit einem Klick."
+
+#: assets/js/email-template-blocks.js:49
+msgid "Unsubscribe link is rendered dynamically in the email."
+msgstr "Der Link zum Abbestellen wird dynamisch in der E-Mail eingeblendet."
+
+#: assets/js/email-template-blocks.js:58
+msgid "Digest Posts Loop"
+msgstr "Übersicht über Beiträge"
+
+#: assets/js/email-template-blocks.js:61
+msgid "Loop layout for digest posts. Add columns and post field blocks inside."
+msgstr ""
+"Schleifenlayout für Digest-Beiträge. Fügen Sie darin Spalten und "
+"Beitragsfeldblöcke ein."
+
+#: assets/js/email-template-blocks.js:94
+msgid "This layout is repeated for each digest post."
+msgstr "Dieses Layout wird für jeden Digest-Beitrag wiederholt."
+
+#: assets/js/email-template-blocks.js:123
+msgid "Digest Post Image"
+msgstr "Vorschaubild des Beitrags"
+
+#: assets/js/email-template-blocks.js:143
+msgid "Image size"
+msgstr "Bildgröße"
+
+#: assets/js/email-template-blocks.js:147
+msgid "Max width (px)"
+msgstr "Max. Breite (px)"
+
+#: assets/js/email-template-blocks.js:161
+msgid "Post image renders here."
+msgstr "Das Bild zum Beitrag wird hier angezeigt."
+
+#: assets/js/email-template-blocks.js:172
+msgid "Digest Post Title"
+msgstr "Titel des Digest-Beitrags"
+
+#: assets/js/email-template-blocks.js:174
+msgid "Post title renders here."
+msgstr "Der Titel des Beitrags wird hier angezeigt."
+
+#: assets/js/email-template-blocks.js:189
+msgid "Digest Post Excerpt"
+msgstr "Auszug aus dem Digest-Beitrag"
+
+#: assets/js/email-template-blocks.js:191
+msgid "Post excerpt renders here."
+msgstr "Hier wird ein Auszug aus dem Beitrag angezeigt."
+
+#: assets/js/email-template-blocks.js:205
+msgid "Digest Post Read More Link"
+msgstr "Zusammenfassung Beitrag Weiterlesen Link"
+
+#: assets/js/email-template-blocks.js:207
+msgid "Read more link renders here."
+msgstr "Hier finden Sie weitere Informationen."
+
+#: assets/js/subscription-form-block.js:14
+#: assets/js/subscription-form-block.js:103
+msgid "Post Subscription Form"
+msgstr "Formular zur Anmeldung für den Newsletter"
+
+#: assets/js/subscription-form-block.js:17
+msgid "Signup form for post update notifications."
+msgstr "Anmeldeformular für Benachrichtigungen bei neuen Beiträgen."
+
+#: assets/js/subscription-form-block.js:36
+msgid "Form options"
+msgstr "Formular-Optionen"
+
+#: assets/js/subscription-form-block.js:40
+msgid "Compact layout"
+msgstr "Kompakte Anordnung"
+
+#: assets/js/subscription-form-block.js:47
+msgid "Default frequency"
+msgstr "Standardfrequenz"
+
+#: assets/js/subscription-form-block.js:59
+msgid "Button label"
+msgstr "Button Label"
+
+#: assets/js/subscription-form-block.js:66
+msgid "Button radius (px)"
+msgstr "Schaltflächenradius (px)"
+
+#: assets/js/subscription-form-block.js:79
+msgid "Button colors"
+msgstr "Button Farben"
+
+#: assets/js/subscription-form-block.js:83
+msgid "Background color"
+msgstr "Hintergrundfarbe"
+
+#: assets/js/subscription-form-block.js:90
+msgid "Text color"
+msgstr "Schriftfarbe"
+
+#: assets/js/subscription-form-block.js:104
+msgid "The form renders on the frontend."
+msgstr "Das Formular wird im Frontend angezeigt."
+
+#: assets/js/subscription-form-block.js:105
+msgid "Use the sidebar to set compact layout and button style."
+msgstr ""
+"Verwenden Sie die Seitenleiste, um das kompakte Layout und den Stil der "
+"Schaltflächen festzulegen."
+
+#~ msgid "Toast position"
+#~ msgstr "Toast-Stufe"
+
+#~ msgid "Slide-up toast"
+#~ msgstr "Toast zum Aufschieben"
