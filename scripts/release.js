@@ -11,18 +11,40 @@ function shouldUseShell(command) {
 	return process.platform === 'win32' && command === npmCommand;
 }
 
+function escapeShellArg(value) {
+	const safe = /^[a-zA-Z0-9_./:=+-]+$/;
+	if (safe.test(value)) {
+		return value;
+	}
+	return `"${value.replace(/"/g, '\\"')}"`;
+}
+
+function runCommand(command, args, stdio, encoding) {
+	if (shouldUseShell(command)) {
+		const fullCommand = [command, ...args].map(escapeShellArg).join(' ');
+		return spawnSync(fullCommand, [], {
+			cwd: rootDir,
+			stdio,
+			encoding,
+			shell: true,
+		});
+	}
+
+	return spawnSync(command, args, {
+		cwd: rootDir,
+		stdio,
+		encoding,
+		shell: false,
+	});
+}
+
 if (!allowedTypes.includes(releaseType)) {
 	console.error('Invalid release type. Use patch, minor, or major.');
 	process.exit(1);
 }
 
 function run(command, args, options = {}) {
-	const result = spawnSync(command, args, {
-		cwd: rootDir,
-		stdio: 'inherit',
-		shell: shouldUseShell(command),
-		...options,
-	});
+	const result = runCommand(command, args, options.stdio || 'inherit', options.encoding);
 
 	if (result.error) {
 		throw result.error;
@@ -33,12 +55,7 @@ function run(command, args, options = {}) {
 }
 
 function runQuiet(command, args) {
-	const result = spawnSync(command, args, {
-		cwd: rootDir,
-		stdio: ['ignore', 'pipe', 'ignore'],
-		encoding: 'utf8',
-		shell: shouldUseShell(command),
-	});
+	const result = runCommand(command, args, ['ignore', 'pipe', 'ignore'], 'utf8');
 	if (result.error || result.status !== 0) {
 		return '';
 	}
