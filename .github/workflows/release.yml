@@ -1,0 +1,157 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    name: Validate Release Inputs
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "20"
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@8358ee0e2e8afe63c2fb8253d1d52085811ab1e5 # v2
+        with:
+          php-version: "8.1"
+          tools: composer
+
+      - name: Install dependencies
+        run: |
+          if [ -f composer.json ]; then
+            composer install --no-interaction --prefer-dist
+          fi
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Validate tag/version consistency
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          echo "Release version: ${VERSION}"
+          node -e "
+          const fs = require('fs');
+          const version = process.argv[1];
+          const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          if (pkg.version !== version) {
+            console.error(\`package.json version (\${pkg.version}) does not match tag (\${version})\`);
+            process.exit(1);
+          }
+          const plugin = fs.readFileSync('we-subscribe-to-posts.php', 'utf8');
+          if (!plugin.includes(\`Version: \${version}\`)) {
+            console.error('Plugin header version does not match tag');
+            process.exit(1);
+          }
+          if (!plugin.includes(\`WSTP_VERSION', '\${version}\`)) {
+            console.error('WSTP_VERSION constant does not match tag');
+            process.exit(1);
+          }
+          " "${VERSION}"
+
+      - name: Validate CHANGELOG entry exists
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          if ! grep -q "^## \[${VERSION}\] - " CHANGELOG.md; then
+            echo "Missing CHANGELOG entry for version ${VERSION}"
+            exit 1
+          fi
+
+      - name: Run PHPCS
+        run: |
+          if [ -f vendor/bin/phpcs ]; then
+            vendor/bin/phpcs --standard=phpcs.xml.dist
+          fi
+
+  build_release:
+    name: Build and Publish Release
+    needs: validate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "20"
+
+      - name: Install npm dependencies
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Prepare release notes
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          node scripts/extract-release-notes.js "${VERSION}" release_notes.txt
+
+      - name: Create plugin ZIP
+        run: |
+          PLUGIN_DIR="we-subscribe-to-posts"
+          ZIP_NAME="${PLUGIN_DIR}.zip"
+
+          mkdir -p "${PLUGIN_DIR}"
+          cp we-subscribe-to-posts.php "${PLUGIN_DIR}/"
+
+          if [ -f uninstall.php ]; then
+            cp uninstall.php "${PLUGIN_DIR}/"
+          fi
+          if [ -d includes ]; then
+            cp -r includes "${PLUGIN_DIR}/"
+          fi
+          if [ -d assets ]; then
+            cp -r assets "${PLUGIN_DIR}/"
+          fi
+          if [ -d templates ]; then
+            cp -r templates "${PLUGIN_DIR}/"
+          fi
+          if [ -d languages ]; then
+            cp -r languages "${PLUGIN_DIR}/"
+          fi
+          for doc in CHANGELOG.md README.md README.txt readme.txt LICENSE; do
+            if [ -f "${doc}" ]; then
+              cp "${doc}" "${PLUGIN_DIR}/"
+            fi
+          done
+
+          zip -r "${ZIP_NAME}" "${PLUGIN_DIR}/"
+          rm -rf "${PLUGIN_DIR}"
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
+        with:
+          files: we-subscribe-to-posts.zip
+          body_path: release_notes.txt
+          generate_release_notes: false
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

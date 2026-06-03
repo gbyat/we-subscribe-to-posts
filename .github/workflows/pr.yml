@@ -1,0 +1,81 @@
+name: Pull Request Checks
+
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate Code
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          persist-credentials: false
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@8358ee0e2e8afe63c2fb8253d1d52085811ab1e5 # v2
+        with:
+          php-version: "8.1"
+          tools: composer
+
+      - name: Install PHP dependencies
+        run: |
+          if [ -f composer.json ]; then
+            composer install --no-interaction --prefer-dist
+          fi
+
+      - name: Run PHPCS
+        run: |
+          if [ -f vendor/bin/phpcs ]; then
+            vendor/bin/phpcs --standard=phpcs.xml.dist
+          else
+            echo "vendor/bin/phpcs not found."
+            exit 1
+          fi
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "20"
+
+      - name: Install npm dependencies
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Validate package.json version
+        run: |
+          node -e "
+          const pkg = require('./package.json');
+          if (!pkg.version || !/^\d+\.\d+\.\d+$/.test(pkg.version)) {
+            console.error('Invalid package.json version');
+            process.exit(1);
+          }
+          console.log('package.json version OK:', pkg.version);
+          "
+
+      - name: Validate plugin main file version
+        run: |
+          php -r "
+          \$content = file_get_contents('we-subscribe-to-posts.php');
+          if (!preg_match('/Version:\s*\\d+\\.\\d+\\.\\d+/', \$content)) {
+            fwrite(STDERR, \"Missing or invalid plugin header version\\n\");
+            exit(1);
+          }
+          if (!preg_match(\"/WSTP_VERSION'\\s*,\\s*'\\d+\\.\\d+\\.\\d+'/\", \$content)) {
+            fwrite(STDERR, \"Missing or invalid WSTP_VERSION constant\\n\");
+            exit(1);
+          }
+          echo 'Plugin version declarations OK' . PHP_EOL;
+          "

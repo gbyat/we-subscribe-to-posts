@@ -1,12 +1,14 @@
 <?php
 /**
  * Plugin Name: We Subscribe To Posts
+ * Plugin URI: https://github.com/gbyat/we-subscribe-to-posts
  * Description: Post subscription notifications with double opt-in and one-click unsubscribe.
  * Version: 0.1.0
  * Requires at least: 6.6
  * Requires PHP: 8.1
  * Author: webentwicklerin, Gabriele Laesser
  * Author URI: https://webentwicklerin.at
+ * Update URI: https://github.com/gbyat/we-subscribe-to-posts
  * Text Domain: we-subscribe-to-posts
  * Domain Path: /languages
  *
@@ -29,6 +31,10 @@ if ( ! defined( 'WSTP_PATH' ) ) {
 
 if ( ! defined( 'WSTP_URL' ) ) {
 	define( 'WSTP_URL', plugin_dir_url( __FILE__ ) );
+}
+
+if ( ! defined( 'WSTP_GITHUB_REPO' ) ) {
+	define( 'WSTP_GITHUB_REPO', 'gbyat/we-subscribe-to-posts' );
 }
 
 require_once WSTP_PATH . 'includes/core/class-autoloader.php';

@@ -20,6 +20,7 @@ use WSTP\Mailer\Mailer;
 use WSTP\Subscription\Double_Optin_Service;
 use WSTP\Subscription\Pending_Cleanup;
 use WSTP\Subscription\Unsubscribe_Service;
+use WSTP\Core\Updater;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -47,6 +48,9 @@ final class Plugin {
 		$subscribers_page     = new Subscribers_Page( $subscriber_repository, $event_repository );
 		$preview_controller   = new Preview_Controller( $digest_builder, $mailer );
 		$email_template       = class_exists( Email_Template::class ) ? new Email_Template() : null;
+		if ( ( is_admin() || wp_doing_cron() ) && class_exists( Updater::class ) ) {
+			new Updater( WSTP_FILE );
+		}
 
 		$mailer->register();
 		$double_optin_service->register();

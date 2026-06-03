@@ -1,0 +1,11 @@
+{
+  "plugin_slug": "we-subscribe-to-posts",
+  "plugin_main_file": "we-subscribe-to-posts.php",
+  "namespace_prefix": "WSTP",
+  "version_constant": "WSTP_VERSION",
+  "github_repo": "gbyat/we-subscribe-to-posts",
+  "release_zip_name": "we-subscribe-to-posts.zip",
+  "min_wp": "6.6",
+  "min_php": "8.1",
+  "task_log_policy": "local_ignored"
+}

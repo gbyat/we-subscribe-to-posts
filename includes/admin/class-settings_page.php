@@ -461,6 +461,7 @@ final class Settings_Page
 			'subscribe_rate_limit_window_seconds' => $this->sanitize_subscribe_rate_limit_window_seconds($input['subscribe_rate_limit_window_seconds'] ?? $defaults['subscribe_rate_limit_window_seconds']),
 			'subscribe_rate_limit_max_attempts' => $this->sanitize_subscribe_rate_limit_max_attempts($input['subscribe_rate_limit_max_attempts'] ?? $defaults['subscribe_rate_limit_max_attempts']),
 			'doi_resend_cooldown_minutes' => $this->sanitize_doi_resend_cooldown_minutes($input['doi_resend_cooldown_minutes'] ?? $defaults['doi_resend_cooldown_minutes']),
+			'github_updates_enabled' => $this->sanitize_yes_no($input['github_updates_enabled'] ?? $defaults['github_updates_enabled']),
 			'status_notice_style'  => $this->sanitize_status_notice_style($input['status_notice_style'] ?? $defaults['status_notice_style']),
 			'status_notice_position' => $this->sanitize_status_notice_position($input['status_notice_position'] ?? $defaults['status_notice_position']),
 			'status_notice_seconds' => $this->sanitize_status_notice_seconds($input['status_notice_seconds'] ?? $defaults['status_notice_seconds']),
@@ -537,6 +538,7 @@ final class Settings_Page
 			'subscribe_rate_limit_window_seconds' => 600,
 			'subscribe_rate_limit_max_attempts' => 6,
 			'doi_resend_cooldown_minutes' => 10,
+			'github_updates_enabled' => 'no',
 			'status_notice_style'  => 'toast',
 			'status_notice_position' => 'bottom-right',
 			'status_notice_seconds' => 8,
@@ -642,6 +644,7 @@ final class Settings_Page
 		$subscribe_rate_limit_window_seconds = (int) $general_settings['subscribe_rate_limit_window_seconds'];
 		$subscribe_rate_limit_max_attempts = (int) $general_settings['subscribe_rate_limit_max_attempts'];
 		$doi_resend_cooldown_minutes = (int) $general_settings['doi_resend_cooldown_minutes'];
+		$github_updates_enabled = (string) $general_settings['github_updates_enabled'];
 		$status_notice_style    = (string) $general_settings['status_notice_style'];
 		$status_notice_position = (string) $general_settings['status_notice_position'];
 		$status_notice_seconds  = (int) $general_settings['status_notice_seconds'];
@@ -768,6 +771,16 @@ final class Settings_Page
 														<td>
 															<input id="wstp_doi_resend_cooldown_minutes" name="wstp_settings[doi_resend_cooldown_minutes]" type="number" min="0" max="1440" value="<?php echo esc_attr((string) $doi_resend_cooldown_minutes); ?>" />
 															<p class="description"><?php esc_html_e('Prevents repeated confirmation mails for pending subscribers. Set to 0 to allow immediate resend.', 'we-subscribe-to-posts'); ?></p>
+														</td>
+													</tr>
+													<tr>
+														<th scope="row"><label for="wstp_github_updates_enabled"><?php esc_html_e('GitHub auto updates', 'we-subscribe-to-posts'); ?></label></th>
+														<td>
+															<select id="wstp_github_updates_enabled" name="wstp_settings[github_updates_enabled]">
+																<option value="no" <?php selected($github_updates_enabled, 'no'); ?>><?php esc_html_e('Disabled', 'we-subscribe-to-posts'); ?></option>
+																<option value="yes" <?php selected($github_updates_enabled, 'yes'); ?>><?php esc_html_e('Enabled', 'we-subscribe-to-posts'); ?></option>
+															</select>
+															<p class="description"><?php esc_html_e('When enabled, WordPress checks GitHub releases for plugin updates.', 'we-subscribe-to-posts'); ?></p>
 														</td>
 													</tr>
 													<tr>
