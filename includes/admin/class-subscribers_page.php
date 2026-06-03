@@ -327,7 +327,7 @@ final class Subscribers_Page {
 						<?php submit_button( __( 'Apply', 'we-subscribe-to-posts' ), 'action', '', false ); ?>
 					</div>
 					<div class="tablenav-pages one-page">
-						<span class="displaying-num"><?php echo esc_html( sprintf( _n( '%d subscriber', '%d subscribers', $total, 'we-subscribe-to-posts' ), $total ) ); ?></span>
+						<span class="displaying-num"><?php echo esc_html( sprintf( /* translators: %d: subscriber count. */ _n( '%d subscriber', '%d subscribers', $total, 'we-subscribe-to-posts' ), $total ) ); ?></span>
 					</div>
 				</div>
 

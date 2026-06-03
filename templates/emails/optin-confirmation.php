@@ -18,7 +18,7 @@ $display_name = ! empty( $name ) ? $name : __( 'there', 'we-subscribe-to-posts' 
 		<?php
 		echo esc_html(
 			sprintf(
-				/* translators: %s: subscriber display name. */
+				/* translators: %s: subscriber name. */
 				__( 'Hi %s,', 'we-subscribe-to-posts' ),
 				$display_name
 			)
