@@ -115,6 +115,18 @@ final class Mailer {
 	}
 
 	/**
+	 * Send admin notification email.
+	 *
+	 * @param string $email Recipient.
+	 * @param string $subject Subject.
+	 * @param string $body Html body.
+	 * @return bool
+	 */
+	public function send_admin_notification( string $email, string $subject, string $body ): bool {
+		return $this->send_html_mail( $email, $subject, $body );
+	}
+
+	/**
 	 * Configure PHPMailer transport from plugin settings.
 	 *
 	 * @param mixed $phpmailer PHPMailer instance.

@@ -7,6 +7,7 @@
 
 namespace WSTP\Mailer;
 
+use WSTP\DB\Event_Log_Repository;
 use WP_Post;
 
 defined( 'ABSPATH' ) || exit;
@@ -15,6 +16,29 @@ defined( 'ABSPATH' ) || exit;
  * Builds digest payload for rendering/sending.
  */
 final class Digest_Builder {
+	/**
+	 * Event repository.
+	 *
+	 * @var Event_Log_Repository
+	 */
+	private Event_Log_Repository $event_repository;
+
+	/**
+	 * Total posts matched in latest collection.
+	 *
+	 * @var int
+	 */
+	private int $last_collection_total = 0;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param Event_Log_Repository $event_repository Event repository.
+	 */
+	public function __construct( Event_Log_Repository $event_repository ) {
+		$this->event_repository = $event_repository;
+	}
+
 	/**
 	 * Build digest payload from subscriber and frequency.
 	 *
@@ -25,10 +49,14 @@ final class Digest_Builder {
 	 */
 	public function build_payload( array $subscriber, string $frequency, bool $is_preview = false ): array {
 		$posts = $this->collect_posts( $subscriber, $frequency, $is_preview );
+		$available_total = $this->last_collection_total > 0 ? $this->last_collection_total : count( $posts );
+		$truncated_count = max( 0, $available_total - count( $posts ) );
 
 		return array(
-			'subject' => $this->build_subject( $frequency, $is_preview, count( $posts ) ),
-			'posts'   => array_map( array( $this, 'map_post_to_email_data' ), $posts ),
+			'subject'            => $this->build_subject( $frequency, $is_preview, count( $posts ) ),
+			'posts'              => array_map( array( $this, 'map_post_to_email_data' ), $posts ),
+			'posts_total'        => $available_total,
+			'posts_truncated_by' => $truncated_count,
 		);
 	}
 
@@ -41,6 +69,8 @@ final class Digest_Builder {
 	 * @return array<int,WP_Post>
 	 */
 	public function collect_posts( array $subscriber, string $frequency, bool $is_preview = false ): array {
+		$this->last_collection_total = 0;
+
 		if ( $is_preview ) {
 			$query = new \WP_Query(
 				array(
@@ -52,15 +82,17 @@ final class Digest_Builder {
 				)
 			);
 
+			$this->last_collection_total = is_array( $query->posts ) ? count( $query->posts ) : 0;
 			return is_array( $query->posts ) ? $query->posts : array();
 		}
 
 		$after_date = $this->resolve_after_date( $subscriber, $frequency );
+		$max_posts  = $this->resolve_max_posts( $frequency );
 		$query      = new \WP_Query(
 			array(
 				'post_type'      => 'post',
 				'post_status'    => 'publish',
-				'posts_per_page' => 20,
+				'posts_per_page' => $max_posts > 0 ? $max_posts : -1,
 				'orderby'        => 'date',
 				'order'          => 'DESC',
 				'date_query'     => array(
@@ -72,6 +104,7 @@ final class Digest_Builder {
 			)
 		);
 
+		$this->last_collection_total = isset( $query->found_posts ) ? (int) $query->found_posts : 0;
 		return is_array( $query->posts ) ? $query->posts : array();
 	}
 
@@ -83,16 +116,12 @@ final class Digest_Builder {
 	 * @return string
 	 */
 	private function resolve_after_date( array $subscriber, string $frequency ): string {
-		if ( ! empty( $subscriber['last_sent_at'] ) ) {
-			return (string) $subscriber['last_sent_at'];
-		}
-
-		if ( ! empty( $subscriber['confirmed_at'] ) ) {
-			return (string) $subscriber['confirmed_at'];
-		}
-
-		if ( ! empty( $subscriber['created_at'] ) ) {
-			return (string) $subscriber['created_at'];
+		$subscriber_id = isset( $subscriber['id'] ) ? (int) $subscriber['id'] : 0;
+		if ( $subscriber_id > 0 ) {
+			$frequency_last_sent_at = $this->event_repository->get_last_success_sent_at( $subscriber_id, $frequency );
+			if ( '' !== $frequency_last_sent_at ) {
+				return $frequency_last_sent_at;
+			}
 		}
 
 		$modifier = match ( $frequency ) {
@@ -107,7 +136,41 @@ final class Digest_Builder {
 			$after_ts = $base_timestamp;
 		}
 
-		return wp_date( 'Y-m-d H:i:s', $after_ts );
+		$window_start = wp_date( 'Y-m-d H:i:s', $after_ts );
+
+		if ( ! empty( $subscriber['confirmed_at'] ) ) {
+			$confirmed_at = (string) $subscriber['confirmed_at'];
+			return strtotime( $confirmed_at ) > strtotime( $window_start ) ? $confirmed_at : $window_start;
+		}
+
+		if ( ! empty( $subscriber['created_at'] ) ) {
+			$created_at = (string) $subscriber['created_at'];
+			return strtotime( $created_at ) > strtotime( $window_start ) ? $created_at : $window_start;
+		}
+
+		return $window_start;
+	}
+
+	/**
+	 * Resolve max posts limit by frequency.
+	 *
+	 * @param string $frequency Frequency key.
+	 * @return int
+	 */
+	private function resolve_max_posts( string $frequency ): int {
+		$settings = $this->get_general_settings();
+		$key      = match ( $frequency ) {
+			'weekly' => 'max_posts_weekly',
+			'monthly' => 'max_posts_monthly',
+			default => 'max_posts_daily',
+		};
+		$value    = isset( $settings[ $key ] ) ? (int) $settings[ $key ] : 0;
+
+		if ( $value < 0 ) {
+			return 0;
+		}
+
+		return $value;
 	}
 
 	/**
@@ -176,6 +239,9 @@ final class Digest_Builder {
 				'subject_weekly'  => __( 'Your weekly post updates - {site_name}', 'we-subscribe-to-posts' ),
 				'subject_monthly' => __( 'Your monthly post updates - {site_name}', 'we-subscribe-to-posts' ),
 				'subject_preview' => __( '[Preview] Latest post updates - {site_name}', 'we-subscribe-to-posts' ),
+				'max_posts_daily' => 0,
+				'max_posts_weekly' => 0,
+				'max_posts_monthly' => 0,
 			)
 		);
 	}

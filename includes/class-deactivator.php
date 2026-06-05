@@ -21,5 +21,6 @@ final class Deactivator {
 		wp_clear_scheduled_hook( 'wstp_weekly_digest_event' );
 		wp_clear_scheduled_hook( 'wstp_monthly_digest_event' );
 		wp_clear_scheduled_hook( 'wstp_cleanup_pending_event' );
+		wp_clear_scheduled_hook( 'wstp_admin_subscriber_summary_event' );
 	}
 }

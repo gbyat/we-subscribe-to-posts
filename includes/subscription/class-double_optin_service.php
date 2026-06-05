@@ -32,14 +32,23 @@ final class Double_Optin_Service {
 	private Mailer $mailer;
 
 	/**
+	 * Admin notification service.
+	 *
+	 * @var Admin_Notification_Service
+	 */
+	private Admin_Notification_Service $admin_notification_service;
+
+	/**
 	 * Constructor.
 	 *
-	 * @param Subscriber_Repository $subscriber_repository Subscriber repository.
-	 * @param Mailer                $mailer Mailer service.
+	 * @param Subscriber_Repository      $subscriber_repository Subscriber repository.
+	 * @param Mailer                     $mailer Mailer service.
+	 * @param Admin_Notification_Service $admin_notification_service Admin notification service.
 	 */
-	public function __construct( Subscriber_Repository $subscriber_repository, Mailer $mailer ) {
-		$this->subscriber_repository = $subscriber_repository;
-		$this->mailer                = $mailer;
+	public function __construct( Subscriber_Repository $subscriber_repository, Mailer $mailer, Admin_Notification_Service $admin_notification_service ) {
+		$this->subscriber_repository    = $subscriber_repository;
+		$this->mailer                   = $mailer;
+		$this->admin_notification_service = $admin_notification_service;
 	}
 
 	/**
@@ -95,6 +104,15 @@ final class Double_Optin_Service {
 			return new WP_Error( 'wstp_doi_send_failed', __( 'Could not send double opt-in message.', 'we-subscribe-to-posts' ) );
 		}
 
+		$this->admin_notification_service->notify_pending(
+			array(
+				'id'        => $subscriber_id,
+				'email'     => $email,
+				'name'      => $name,
+				'frequency' => $frequency,
+			)
+		);
+
 		return true;
 	}
 
@@ -120,6 +138,14 @@ final class Double_Optin_Service {
 		}
 
 		$this->subscriber_repository->mark_active( (int) $subscriber['id'] );
+		$this->admin_notification_service->notify_confirmed(
+			array(
+				'id'        => isset( $subscriber['id'] ) ? (int) $subscriber['id'] : 0,
+				'email'     => isset( $subscriber['email'] ) ? (string) $subscriber['email'] : '',
+				'name'      => isset( $subscriber['name'] ) ? (string) $subscriber['name'] : '',
+				'frequency' => isset( $subscriber['frequency'] ) ? (string) $subscriber['frequency'] : '',
+			)
+		);
 		$this->redirect_with_status( 'confirmed' );
 	}
 

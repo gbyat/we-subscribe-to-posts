@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-06-03T14:08:54+02:00\n"
+"POT-Creation-Date: 2026-06-05T10:32:28+02:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: we-subscribe-to-posts\n"
@@ -69,7 +69,7 @@ msgid "Add your legal sender details here (company name, address, contact)."
 msgstr ""
 
 #: includes/admin/class-preview_controller.php:58
-#: includes/admin/class-settings_page.php:1165
+#: includes/admin/class-settings_page.php:1322
 #: includes/admin/class-subscribers_page.php:126
 #: includes/admin/class-subscribers_page.php:520
 #: includes/admin/class-subscribers_page.php:750
@@ -77,7 +77,7 @@ msgid "You are not allowed to do this."
 msgstr ""
 
 #: includes/admin/class-preview_controller.php:62
-#: includes/admin/class-settings_page.php:1169
+#: includes/admin/class-settings_page.php:1326
 #: includes/admin/class-subscribers_page.php:130
 #: includes/admin/class-subscribers_page.php:754
 msgid "Security check failed."
@@ -102,386 +102,474 @@ msgstr ""
 msgid "Privacy section text is required."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:527
+#: includes/admin/class-settings_page.php:590
 #: includes/frontend/class-subscription_form.php:174
 msgid "I agree that my email address is used only for post update notifications."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:529
-#: includes/mailer/class-digest_builder.php:132
-#: includes/mailer/class-digest_builder.php:175
+#: includes/admin/class-settings_page.php:592
+#: includes/mailer/class-digest_builder.php:195
+#: includes/mailer/class-digest_builder.php:238
 msgid "Your latest post updates - {site_name}"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:530
-#: includes/mailer/class-digest_builder.php:130
-#: includes/mailer/class-digest_builder.php:176
+#: includes/admin/class-settings_page.php:593
+#: includes/mailer/class-digest_builder.php:193
+#: includes/mailer/class-digest_builder.php:239
 msgid "Your weekly post updates - {site_name}"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:531
-#: includes/mailer/class-digest_builder.php:131
-#: includes/mailer/class-digest_builder.php:177
+#: includes/admin/class-settings_page.php:594
+#: includes/mailer/class-digest_builder.php:194
+#: includes/mailer/class-digest_builder.php:240
 msgid "Your monthly post updates - {site_name}"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:532
-#: includes/mailer/class-digest_builder.php:125
-#: includes/mailer/class-digest_builder.php:178
+#: includes/admin/class-settings_page.php:595
+#: includes/mailer/class-digest_builder.php:188
+#: includes/mailer/class-digest_builder.php:241
 msgid "[Preview] Latest post updates - {site_name}"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:653
-msgid "Preview email sent successfully."
+#: includes/admin/class-settings_page.php:729
+msgid "Monday"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:654
-msgid "Preview email could not be sent."
+#: includes/admin/class-settings_page.php:730
+msgid "Tuesday"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:655
-msgid "Preview recipient email is invalid."
+#: includes/admin/class-settings_page.php:731
+msgid "Wednesday"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:659
-msgid "Post Subscription Settings"
+#: includes/admin/class-settings_page.php:732
+msgid "Thursday"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:674
-msgid "Privacy section text"
+#: includes/admin/class-settings_page.php:733
+msgid "Friday"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:677
-msgid "Shown next to the required consent checkbox in the signup form."
-msgstr ""
-
-#: includes/admin/class-settings_page.php:681
-msgid "Preview recipient email"
-msgstr ""
-
-#: includes/admin/class-settings_page.php:684
-msgid "Preview mails are sent to this address."
-msgstr ""
-
-#: includes/admin/class-settings_page.php:688
-msgid "Daily digest subject"
-msgstr ""
-
-#: includes/admin/class-settings_page.php:691
-msgid "Used for daily digest emails. Placeholder: {site_name}"
-msgstr ""
-
-#: includes/admin/class-settings_page.php:695
-msgid "Weekly digest subject"
-msgstr ""
-
-#: includes/admin/class-settings_page.php:698
-msgid "Used for weekly digest emails. Placeholder: {site_name}"
-msgstr ""
-
-#: includes/admin/class-settings_page.php:702
-msgid "Monthly digest subject"
-msgstr ""
-
-#: includes/admin/class-settings_page.php:705
-msgid "Used for monthly digest emails. Placeholder: {site_name}"
-msgstr ""
-
-#: includes/admin/class-settings_page.php:709
-msgid "Preview email subject"
-msgstr ""
-
-#: includes/admin/class-settings_page.php:712
-msgid "Used for admin preview emails. Placeholder: {site_name}"
-msgstr ""
-
-#: includes/admin/class-settings_page.php:716
-msgid "Daily send hour (site time)"
-msgstr ""
-
-#: includes/admin/class-settings_page.php:719
-msgid "Applies to daily sends and the dispatch time for weekly/monthly runs."
-msgstr ""
-
-#: includes/admin/class-settings_page.php:723
-msgid "Weekly send weekday"
+#: includes/admin/class-settings_page.php:734
+msgid "Saturday"
 msgstr ""
 
 #: includes/admin/class-settings_page.php:735
-msgid "Monthly send day"
+msgid "Sunday"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:738
-msgid "Use 1-28 to avoid invalid dates in shorter months."
+#: includes/admin/class-settings_page.php:739
+msgid "Preview email sent successfully."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:742
-msgid "Delete unconfirmed after days"
+#: includes/admin/class-settings_page.php:740
+msgid "Preview email could not be sent."
+msgstr ""
+
+#: includes/admin/class-settings_page.php:741
+msgid "Preview recipient email is invalid."
 msgstr ""
 
 #: includes/admin/class-settings_page.php:745
-msgid "Pending (double opt-in not confirmed) subscribers are removed by daily cleanup after this many days."
+msgid "Post Subscription Settings"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:749
-msgid "Max digest emails per minute"
-msgstr ""
-
-#: includes/admin/class-settings_page.php:752
-msgid "Recommended: keep throttling enabled to reduce hoster spam/rate-limit risk on larger sends. Use 0 only if you explicitly want no throttling."
-msgstr ""
-
-#: includes/admin/class-settings_page.php:756
-msgid "Subscribe anti-spam window (seconds)"
-msgstr ""
-
-#: includes/admin/class-settings_page.php:759
-msgid "How long the anti-spam window lasts for signup attempts. Set to 0 to disable subscribe rate limiting."
+#: includes/admin/class-settings_page.php:760
+msgid "Privacy section text"
 msgstr ""
 
 #: includes/admin/class-settings_page.php:763
-msgid "Subscribe attempts allowed per window"
+msgid "Shown next to the required consent checkbox in the signup form."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:766
-msgid "Maximum subscribe attempts per email/IP during one anti-spam window."
+#: includes/admin/class-settings_page.php:767
+msgid "Preview recipient email"
 msgstr ""
 
 #: includes/admin/class-settings_page.php:770
-msgid "Double opt-in resend cooldown (minutes)"
+msgid "Preview mails are sent to this address."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:773
-msgid "Prevents repeated confirmation mails for pending subscribers. Set to 0 to allow immediate resend."
+#: includes/admin/class-settings_page.php:774
+msgid "Daily digest subject"
 msgstr ""
 
 #: includes/admin/class-settings_page.php:777
-msgid "GitHub auto updates"
-msgstr ""
-
-#: includes/admin/class-settings_page.php:780
-msgid "Disabled"
+msgid "Used for daily digest emails. Placeholder: {site_name}"
 msgstr ""
 
 #: includes/admin/class-settings_page.php:781
-msgid "Enabled"
+msgid "Weekly digest subject"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:783
-msgid "When enabled, WordPress checks GitHub releases for plugin updates."
+#: includes/admin/class-settings_page.php:784
+msgid "Used for weekly digest emails. Placeholder: {site_name}"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:787
-msgid "Success message display"
-msgstr ""
-
-#: includes/admin/class-settings_page.php:790
-msgid "Slide-in notification"
+#: includes/admin/class-settings_page.php:788
+msgid "Monthly digest subject"
 msgstr ""
 
 #: includes/admin/class-settings_page.php:791
-msgid "Centered overlay notification"
+msgid "Used for monthly digest emails. Placeholder: {site_name}"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:792
-msgid "Inline message above the form"
-msgstr ""
-
-#: includes/admin/class-settings_page.php:794
-msgid "Choose how users see confirmation after signup."
+#: includes/admin/class-settings_page.php:795
+msgid "Preview email subject"
 msgstr ""
 
 #: includes/admin/class-settings_page.php:798
-msgid "Slide-in position"
-msgstr ""
-
-#: includes/admin/class-settings_page.php:801
-msgid "Bottom right"
+msgid "Used for admin preview emails. Placeholder: {site_name}"
 msgstr ""
 
 #: includes/admin/class-settings_page.php:802
+msgid "Daily send hour (site time)"
+msgstr ""
+
+#: includes/admin/class-settings_page.php:805
+msgid "Applies to daily sends and the dispatch time for weekly/monthly runs."
+msgstr ""
+
+#: includes/admin/class-settings_page.php:809
+msgid "Weekly send weekday"
+msgstr ""
+
+#: includes/admin/class-settings_page.php:821
+msgid "Monthly send day"
+msgstr ""
+
+#: includes/admin/class-settings_page.php:824
+msgid "Use 1-28 to avoid invalid dates in shorter months."
+msgstr ""
+
+#: includes/admin/class-settings_page.php:828
+msgid "Delete unconfirmed after days"
+msgstr ""
+
+#: includes/admin/class-settings_page.php:831
+msgid "Pending (double opt-in not confirmed) subscribers are removed by daily cleanup after this many days."
+msgstr ""
+
+#: includes/admin/class-settings_page.php:835
+msgid "Max digest emails per minute"
+msgstr ""
+
+#: includes/admin/class-settings_page.php:838
+msgid "Recommended: keep throttling enabled to reduce hoster spam/rate-limit risk on larger sends. Use 0 only if you explicitly want no throttling."
+msgstr ""
+
+#: includes/admin/class-settings_page.php:842
+msgid "Max posts per daily digest"
+msgstr ""
+
+#: includes/admin/class-settings_page.php:845
+#: includes/admin/class-settings_page.php:852
+#: includes/admin/class-settings_page.php:859
+msgid "Set to 0 to include all matching posts."
+msgstr ""
+
+#: includes/admin/class-settings_page.php:849
+msgid "Max posts per weekly digest"
+msgstr ""
+
+#: includes/admin/class-settings_page.php:856
+msgid "Max posts per monthly digest"
+msgstr ""
+
+#: includes/admin/class-settings_page.php:863
+msgid "Subscribe anti-spam window (seconds)"
+msgstr ""
+
+#: includes/admin/class-settings_page.php:866
+msgid "How long the anti-spam window lasts for signup attempts. Set to 0 to disable subscribe rate limiting."
+msgstr ""
+
+#: includes/admin/class-settings_page.php:870
+msgid "Subscribe attempts allowed per window"
+msgstr ""
+
+#: includes/admin/class-settings_page.php:873
+msgid "Maximum subscribe attempts per email/IP during one anti-spam window."
+msgstr ""
+
+#: includes/admin/class-settings_page.php:877
+msgid "Double opt-in resend cooldown (minutes)"
+msgstr ""
+
+#: includes/admin/class-settings_page.php:880
+msgid "Prevents repeated confirmation mails for pending subscribers. Set to 0 to allow immediate resend."
+msgstr ""
+
+#: includes/admin/class-settings_page.php:884
+msgid "Admin notifications for new subscribers"
+msgstr ""
+
+#: includes/admin/class-settings_page.php:887
+#: includes/admin/class-settings_page.php:922
+msgid "Disabled"
+msgstr ""
+
+#: includes/admin/class-settings_page.php:888
+#: includes/admin/class-settings_page.php:923
+msgid "Enabled"
+msgstr ""
+
+#: includes/admin/class-settings_page.php:890
+msgid "Optional notifications when new subscribers register or confirm."
+msgstr ""
+
+#: includes/admin/class-settings_page.php:894
+msgid "Notification trigger"
+msgstr ""
+
+#: includes/admin/class-settings_page.php:897
+msgid "Only after double opt-in confirmation"
+msgstr ""
+
+#: includes/admin/class-settings_page.php:898
+msgid "Both: pending signup and confirmed subscriber"
+msgstr ""
+
+#: includes/admin/class-settings_page.php:903
+msgid "Notification mode"
+msgstr ""
+
+#: includes/admin/class-settings_page.php:906
+msgid "Instant (one email per event)"
+msgstr ""
+
+#: includes/admin/class-settings_page.php:907
+msgid "Daily summary"
+msgstr ""
+
+#: includes/admin/class-settings_page.php:912
+msgid "Notification recipient email"
+msgstr ""
+
+#: includes/admin/class-settings_page.php:915
+msgid "Default is the WordPress admin email."
+msgstr ""
+
+#: includes/admin/class-settings_page.php:919
+msgid "GitHub auto updates"
+msgstr ""
+
+#: includes/admin/class-settings_page.php:925
+msgid "When enabled, WordPress checks GitHub releases for plugin updates."
+msgstr ""
+
+#: includes/admin/class-settings_page.php:929
+msgid "Success message display"
+msgstr ""
+
+#: includes/admin/class-settings_page.php:932
+msgid "Slide-in notification"
+msgstr ""
+
+#: includes/admin/class-settings_page.php:933
+msgid "Centered overlay notification"
+msgstr ""
+
+#: includes/admin/class-settings_page.php:934
+msgid "Inline message above the form"
+msgstr ""
+
+#: includes/admin/class-settings_page.php:936
+msgid "Choose how users see confirmation after signup."
+msgstr ""
+
+#: includes/admin/class-settings_page.php:940
+msgid "Slide-in position"
+msgstr ""
+
+#: includes/admin/class-settings_page.php:943
+msgid "Bottom right"
+msgstr ""
+
+#: includes/admin/class-settings_page.php:944
 msgid "Bottom left"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:803
+#: includes/admin/class-settings_page.php:945
 msgid "Top right"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:804
+#: includes/admin/class-settings_page.php:946
 msgid "Top left"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:806
+#: includes/admin/class-settings_page.php:948
 msgid "Used for slide-in notification style."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:810
+#: includes/admin/class-settings_page.php:952
 msgid "Auto-close after seconds"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:813
+#: includes/admin/class-settings_page.php:955
 msgid "Set to 0 to disable auto-close."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:818
+#: includes/admin/class-settings_page.php:960
 msgid "Save settings"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:859
+#: includes/admin/class-settings_page.php:1016
 msgid "Post Subscriptions > Digest Email Template"
 msgstr ""
 
 #. translators: %s: admin URL.
-#: includes/admin/class-settings_page.php:863
+#: includes/admin/class-settings_page.php:1020
 #, php-format
 msgid "Edit your block-based digest email template under %s."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:875
+#: includes/admin/class-settings_page.php:1032
 msgid "Edit active template"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:879
+#: includes/admin/class-settings_page.php:1036
 msgid "Create template"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:888
+#: includes/admin/class-settings_page.php:1045
 msgid "Cron reliability (recommended)"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:889
+#: includes/admin/class-settings_page.php:1046
 msgid "For reliable digest delivery, set up a real server cron job that triggers WordPress cron regularly."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:890
+#: includes/admin/class-settings_page.php:1047
 msgid "HTTP endpoint:"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:891
+#: includes/admin/class-settings_page.php:1048
 msgid "Example interval:"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:891
+#: includes/admin/class-settings_page.php:1048
 msgid "every 5 minutes"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:894
+#: includes/admin/class-settings_page.php:1051
 msgid "Email preview"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:895
+#: includes/admin/class-settings_page.php:1052
 msgid "Send a preview email with the latest 3 published posts."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:900
+#: includes/admin/class-settings_page.php:1057
 msgid "Send preview now"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:932
+#: includes/admin/class-settings_page.php:1089
 msgid "Test transport email sent successfully."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:933
+#: includes/admin/class-settings_page.php:1090
 msgid "Test transport email could not be sent."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:934
+#: includes/admin/class-settings_page.php:1091
 msgid "Please provide a valid test recipient email."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:938
+#: includes/admin/class-settings_page.php:1095
 msgid "Mail Transport Settings"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:952
+#: includes/admin/class-settings_page.php:1109
 msgid "Mail transport"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:955
+#: includes/admin/class-settings_page.php:1112
 msgid "WordPress default (wp_mail / host)"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:956
+#: includes/admin/class-settings_page.php:1113
 msgid "Custom SMTP"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:957
+#: includes/admin/class-settings_page.php:1114
 msgid "Gmail (SMTP preset)"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:962
+#: includes/admin/class-settings_page.php:1119
 msgid "Use for all WordPress emails"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:967
+#: includes/admin/class-settings_page.php:1124
 msgid "Apply this transport globally (not only this plugin)."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:972
+#: includes/admin/class-settings_page.php:1129
 msgid "From email (optional)"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:978
+#: includes/admin/class-settings_page.php:1135
 msgid "From name (optional)"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:984
+#: includes/admin/class-settings_page.php:1141
 msgid "SMTP host"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:990
+#: includes/admin/class-settings_page.php:1147
 msgid "SMTP port"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:996
+#: includes/admin/class-settings_page.php:1153
 msgid "SMTP encryption"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:999
+#: includes/admin/class-settings_page.php:1156
 msgid "None"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1006
+#: includes/admin/class-settings_page.php:1163
 msgid "SMTP authentication"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1009
+#: includes/admin/class-settings_page.php:1166
 msgid "Yes"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1010
+#: includes/admin/class-settings_page.php:1167
 msgid "No"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1015
+#: includes/admin/class-settings_page.php:1172
 msgid "SMTP username"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1021
+#: includes/admin/class-settings_page.php:1178
 msgid "SMTP password/app password"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1024
+#: includes/admin/class-settings_page.php:1181
 msgid "For Gmail use an app password and keep TLS/587."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1029
+#: includes/admin/class-settings_page.php:1186
 msgid "Save mail transport settings"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1126
+#: includes/admin/class-settings_page.php:1283
 msgid "Test transport recipient"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1128
+#: includes/admin/class-settings_page.php:1285
 msgid "Send test email"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1144
+#: includes/admin/class-settings_page.php:1301
 msgid "Active transport summary"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1146
+#: includes/admin/class-settings_page.php:1303
 msgid "Transport: WordPress default wp_mail() / host environment"
 msgstr ""
 
@@ -509,6 +597,7 @@ msgstr ""
 
 #: includes/admin/class-subscribers_page.php:287
 #: includes/admin/class-subscribers_page.php:341
+#: includes/subscription/class-admin-notification-service.php:162
 msgid "Status"
 msgstr ""
 
@@ -535,6 +624,7 @@ msgstr ""
 
 #: includes/admin/class-subscribers_page.php:296
 #: includes/admin/class-subscribers_page.php:342
+#: includes/subscription/class-admin-notification-service.php:165
 msgid "Frequency"
 msgstr ""
 
@@ -610,10 +700,12 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: includes/admin/class-subscribers_page.php:339
+#: includes/subscription/class-admin-notification-service.php:163
 msgid "Email"
 msgstr ""
 
 #: includes/admin/class-subscribers_page.php:340
+#: includes/subscription/class-admin-notification-service.php:164
 msgid "Name"
 msgstr ""
 
@@ -798,15 +890,15 @@ msgstr ""
 msgid "An unknown status occurred."
 msgstr ""
 
-#: includes/mailer/class-digest_builder.php:158
+#: includes/mailer/class-digest_builder.php:221
 msgid "Your latest post updates"
 msgstr ""
 
-#: includes/mailer/class-digest_scheduler.php:208
+#: includes/mailer/class-digest_scheduler.php:210
 msgid "wp_mail returned false."
 msgstr ""
 
-#: includes/mailer/class-digest_scheduler.php:230
+#: includes/mailer/class-digest_scheduler.php:232
 #: includes/mailer/class-digest_template_renderer.php:132
 #: templates/emails/optin-confirmation.php:13
 msgid "there"
@@ -824,12 +916,21 @@ msgstr ""
 msgid "No published posts available yet."
 msgstr ""
 
-#: includes/mailer/class-digest_template_renderer.php:230
-#: templates/emails/digest.php:51
+#. translators: %d: hidden posts count.
+#: includes/mailer/class-digest_template_renderer.php:196
+#: templates/emails/digest.php:56
+#, php-format
+msgid "Plus %d more published post not shown due to your limit."
+msgid_plural "Plus %d more published posts not shown due to your limit."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/mailer/class-digest_template_renderer.php:241
+#: templates/emails/digest.php:65
 msgid "Unsubscribe instantly"
 msgstr ""
 
-#: includes/mailer/class-digest_template_renderer.php:352
+#: includes/mailer/class-digest_template_renderer.php:363
 #: templates/emails/digest.php:45
 msgid "Read more"
 msgstr ""
@@ -846,7 +947,70 @@ msgstr ""
 msgid "This is a test email from We Subscribe To Posts transport settings."
 msgstr ""
 
-#: includes/subscription/class-double_optin_service.php:95
+#. translators: 1: site name, 2: number of events.
+#: includes/subscription/class-admin-notification-service.php:122
+#, php-format
+msgid "[%1$s] New subscriber notifications (%2$d)"
+msgstr ""
+
+#: includes/subscription/class-admin-notification-service.php:133
+msgid "Confirmed"
+msgstr ""
+
+#: includes/subscription/class-admin-notification-service.php:134
+msgid "Pending DOI"
+msgstr ""
+
+#. translators: 1: total events, 2: confirmed events, 3: pending events.
+#: includes/subscription/class-admin-notification-service.php:154
+#, php-format
+msgid "Total: %1$d, confirmed: %2$d, pending: %3$d."
+msgstr ""
+
+#: includes/subscription/class-admin-notification-service.php:166
+msgid "Time"
+msgstr ""
+
+#: includes/subscription/class-admin-notification-service.php:168
+#: includes/subscription/class-admin-notification-service.php:236
+msgid "Open Subscribers screen"
+msgstr ""
+
+#: includes/subscription/class-admin-notification-service.php:219
+msgid "subscriber confirmed"
+msgstr ""
+
+#: includes/subscription/class-admin-notification-service.php:220
+msgid "subscriber pending DOI"
+msgstr ""
+
+#. translators: 1: site name, 2: event label.
+#: includes/subscription/class-admin-notification-service.php:224
+#, php-format
+msgid "[%1$s] New %2$s"
+msgstr ""
+
+#: includes/subscription/class-admin-notification-service.php:231
+msgid "Email:"
+msgstr ""
+
+#: includes/subscription/class-admin-notification-service.php:232
+msgid "Name:"
+msgstr ""
+
+#: includes/subscription/class-admin-notification-service.php:233
+msgid "Frequency:"
+msgstr ""
+
+#: includes/subscription/class-admin-notification-service.php:234
+msgid "Status:"
+msgstr ""
+
+#: includes/subscription/class-admin-notification-service.php:235
+msgid "Time:"
+msgstr ""
+
+#: includes/subscription/class-double_optin_service.php:104
 msgid "Could not send double opt-in message."
 msgstr ""
 

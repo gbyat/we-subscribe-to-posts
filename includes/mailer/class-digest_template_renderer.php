@@ -188,6 +188,17 @@ final class Digest_Template_Renderer {
 			}
 		}
 
+		$truncated_by = isset( self::$context['posts_truncated_by'] ) ? (int) self::$context['posts_truncated_by'] : 0;
+		if ( $truncated_by > 0 ) {
+			$html .= '<p style="margin: 12px 0 0 0; color: #555;">' . esc_html(
+				sprintf(
+					/* translators: %d: hidden posts count. */
+					_n( 'Plus %d more published post not shown due to your limit.', 'Plus %d more published posts not shown due to your limit.', $truncated_by, 'we-subscribe-to-posts' ),
+					$truncated_by
+				)
+			) . '</p>';
+		}
+
 		self::$current_post = null;
 
 		return $html;

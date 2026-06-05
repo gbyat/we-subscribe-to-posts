@@ -43,5 +43,9 @@ final class Activator {
 		if ( ! wp_next_scheduled( 'wstp_cleanup_pending_event' ) ) {
 			wp_schedule_event( time() + 3600, 'daily', 'wstp_cleanup_pending_event' );
 		}
+
+		if ( ! wp_next_scheduled( 'wstp_admin_subscriber_summary_event' ) ) {
+			wp_schedule_event( time() + 3600, 'daily', 'wstp_admin_subscriber_summary_event' );
+		}
 	}
 }

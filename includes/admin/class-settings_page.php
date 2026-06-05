@@ -250,6 +250,24 @@ final class Settings_Page
 	}
 
 	/**
+	 * Sanitize max posts for digest frequency.
+	 *
+	 * @param mixed $value Raw value.
+	 * @return int
+	 */
+	public function sanitize_digest_max_posts($value): int
+	{
+		$value = $this->to_int($value, 0);
+		if ($value < 0) {
+			return 0;
+		}
+		if ($value > 500) {
+			return 500;
+		}
+		return $value;
+	}
+
+	/**
 	 * Sanitize subscribe rate-limit window in seconds.
 	 *
 	 * @param mixed $value Raw value.
@@ -345,6 +363,44 @@ final class Settings_Page
 			return 60;
 		}
 		return $value;
+	}
+
+	/**
+	 * Sanitize admin subscriber notification trigger.
+	 *
+	 * @param mixed $value Raw value.
+	 * @return string
+	 */
+	public function sanitize_admin_notification_trigger($value): string
+	{
+		$value   = sanitize_key((string) $value);
+		$allowed = array('confirmed_only', 'pending_and_confirmed');
+		return in_array($value, $allowed, true) ? $value : 'confirmed_only';
+	}
+
+	/**
+	 * Sanitize admin subscriber notification mode.
+	 *
+	 * @param mixed $value Raw value.
+	 * @return string
+	 */
+	public function sanitize_admin_notification_mode($value): string
+	{
+		$value   = sanitize_key((string) $value);
+		$allowed = array('instant', 'daily_summary');
+		return in_array($value, $allowed, true) ? $value : 'daily_summary';
+	}
+
+	/**
+	 * Sanitize admin subscriber notification recipient.
+	 *
+	 * @param mixed $value Raw value.
+	 * @return string
+	 */
+	public function sanitize_admin_notification_email($value): string
+	{
+		$email = sanitize_email((string) $value);
+		return '' !== $email ? $email : (string) get_option('admin_email');
 	}
 
 	/**
@@ -458,6 +514,9 @@ final class Settings_Page
 			'monthly_day'          => $this->sanitize_month_day($input['monthly_day'] ?? $defaults['monthly_day']),
 			'pending_cleanup_days' => $this->sanitize_pending_cleanup_days($input['pending_cleanup_days'] ?? $defaults['pending_cleanup_days']),
 			'throttle_per_minute'  => $this->sanitize_throttle_per_minute($input['throttle_per_minute'] ?? $defaults['throttle_per_minute']),
+			'max_posts_daily'      => $this->sanitize_digest_max_posts($input['max_posts_daily'] ?? $defaults['max_posts_daily']),
+			'max_posts_weekly'     => $this->sanitize_digest_max_posts($input['max_posts_weekly'] ?? $defaults['max_posts_weekly']),
+			'max_posts_monthly'    => $this->sanitize_digest_max_posts($input['max_posts_monthly'] ?? $defaults['max_posts_monthly']),
 			'subscribe_rate_limit_window_seconds' => $this->sanitize_subscribe_rate_limit_window_seconds($input['subscribe_rate_limit_window_seconds'] ?? $defaults['subscribe_rate_limit_window_seconds']),
 			'subscribe_rate_limit_max_attempts' => $this->sanitize_subscribe_rate_limit_max_attempts($input['subscribe_rate_limit_max_attempts'] ?? $defaults['subscribe_rate_limit_max_attempts']),
 			'doi_resend_cooldown_minutes' => $this->sanitize_doi_resend_cooldown_minutes($input['doi_resend_cooldown_minutes'] ?? $defaults['doi_resend_cooldown_minutes']),
@@ -465,6 +524,10 @@ final class Settings_Page
 			'status_notice_style'  => $this->sanitize_status_notice_style($input['status_notice_style'] ?? $defaults['status_notice_style']),
 			'status_notice_position' => $this->sanitize_status_notice_position($input['status_notice_position'] ?? $defaults['status_notice_position']),
 			'status_notice_seconds' => $this->sanitize_status_notice_seconds($input['status_notice_seconds'] ?? $defaults['status_notice_seconds']),
+			'admin_subscriber_notifications_enabled' => $this->sanitize_yes_no($input['admin_subscriber_notifications_enabled'] ?? $defaults['admin_subscriber_notifications_enabled']),
+			'admin_subscriber_notifications_trigger' => $this->sanitize_admin_notification_trigger($input['admin_subscriber_notifications_trigger'] ?? $defaults['admin_subscriber_notifications_trigger']),
+			'admin_subscriber_notifications_mode' => $this->sanitize_admin_notification_mode($input['admin_subscriber_notifications_mode'] ?? $defaults['admin_subscriber_notifications_mode']),
+			'admin_subscriber_notifications_email' => $this->sanitize_admin_notification_email($input['admin_subscriber_notifications_email'] ?? $defaults['admin_subscriber_notifications_email']),
 		);
 
 		return $settings;
@@ -535,6 +598,9 @@ final class Settings_Page
 			'monthly_day'          => 1,
 			'pending_cleanup_days' => 7,
 			'throttle_per_minute'  => 0,
+			'max_posts_daily'      => 0,
+			'max_posts_weekly'     => 0,
+			'max_posts_monthly'    => 0,
 			'subscribe_rate_limit_window_seconds' => 600,
 			'subscribe_rate_limit_max_attempts' => 6,
 			'doi_resend_cooldown_minutes' => 10,
@@ -542,6 +608,10 @@ final class Settings_Page
 			'status_notice_style'  => 'toast',
 			'status_notice_position' => 'bottom-right',
 			'status_notice_seconds' => 8,
+			'admin_subscriber_notifications_enabled' => 'no',
+			'admin_subscriber_notifications_trigger' => 'confirmed_only',
+			'admin_subscriber_notifications_mode' => 'daily_summary',
+			'admin_subscriber_notifications_email' => (string) get_option('admin_email'),
 		);
 
 		$stored = get_option('wstp_settings', array());
@@ -641,6 +711,9 @@ final class Settings_Page
 		$monthly_day      = (int) $general_settings['monthly_day'];
 		$cleanup_days     = (int) $general_settings['pending_cleanup_days'];
 		$throttle_per_minute   = (int) $general_settings['throttle_per_minute'];
+		$max_posts_daily       = (int) $general_settings['max_posts_daily'];
+		$max_posts_weekly      = (int) $general_settings['max_posts_weekly'];
+		$max_posts_monthly     = (int) $general_settings['max_posts_monthly'];
 		$subscribe_rate_limit_window_seconds = (int) $general_settings['subscribe_rate_limit_window_seconds'];
 		$subscribe_rate_limit_max_attempts = (int) $general_settings['subscribe_rate_limit_max_attempts'];
 		$doi_resend_cooldown_minutes = (int) $general_settings['doi_resend_cooldown_minutes'];
@@ -648,6 +721,19 @@ final class Settings_Page
 		$status_notice_style    = (string) $general_settings['status_notice_style'];
 		$status_notice_position = (string) $general_settings['status_notice_position'];
 		$status_notice_seconds  = (int) $general_settings['status_notice_seconds'];
+		$admin_subscriber_notifications_enabled = (string) $general_settings['admin_subscriber_notifications_enabled'];
+		$admin_subscriber_notifications_trigger = (string) $general_settings['admin_subscriber_notifications_trigger'];
+		$admin_subscriber_notifications_mode    = (string) $general_settings['admin_subscriber_notifications_mode'];
+		$admin_subscriber_notifications_email   = (string) $general_settings['admin_subscriber_notifications_email'];
+		$weekday_labels         = array(
+			1 => __('Monday', 'we-subscribe-to-posts'),
+			2 => __('Tuesday', 'we-subscribe-to-posts'),
+			3 => __('Wednesday', 'we-subscribe-to-posts'),
+			4 => __('Thursday', 'we-subscribe-to-posts'),
+			5 => __('Friday', 'we-subscribe-to-posts'),
+			6 => __('Saturday', 'we-subscribe-to-posts'),
+			7 => __('Sunday', 'we-subscribe-to-posts'),
+		);
 		$notice         = isset($_GET['wstp_admin_notice']) ? sanitize_key(wp_unslash($_GET['wstp_admin_notice'])) : '';
 		$notice_map     = array(
 			'preview_sent'          => array('updated', __('Preview email sent successfully.', 'we-subscribe-to-posts')),
@@ -725,7 +811,7 @@ final class Settings_Page
 											<select id="wstp_weekly_weekday" name="wstp_settings[weekly_weekday]">
 												<?php for ($weekday = 1; $weekday <= 7; $weekday++) : ?>
 													<option value="<?php echo esc_attr((string) $weekday); ?>" <?php selected($weekly_weekday, $weekday); ?>>
-														<?php echo esc_html(gmdate('l', strtotime("Sunday +{$weekday} days"))); ?>
+														<?php echo esc_html(isset($weekday_labels[$weekday]) ? (string) $weekday_labels[$weekday] : ''); ?>
 													</option>
 												<?php endfor; ?>
 											</select>
@@ -753,6 +839,27 @@ final class Settings_Page
 													</td>
 													</tr>
 													<tr>
+														<th scope="row"><label for="wstp_max_posts_daily"><?php esc_html_e('Max posts per daily digest', 'we-subscribe-to-posts'); ?></label></th>
+														<td>
+															<input id="wstp_max_posts_daily" name="wstp_settings[max_posts_daily]" type="number" min="0" max="500" value="<?php echo esc_attr((string) $max_posts_daily); ?>" />
+															<p class="description"><?php esc_html_e('Set to 0 to include all matching posts.', 'we-subscribe-to-posts'); ?></p>
+														</td>
+													</tr>
+													<tr>
+														<th scope="row"><label for="wstp_max_posts_weekly"><?php esc_html_e('Max posts per weekly digest', 'we-subscribe-to-posts'); ?></label></th>
+														<td>
+															<input id="wstp_max_posts_weekly" name="wstp_settings[max_posts_weekly]" type="number" min="0" max="500" value="<?php echo esc_attr((string) $max_posts_weekly); ?>" />
+															<p class="description"><?php esc_html_e('Set to 0 to include all matching posts.', 'we-subscribe-to-posts'); ?></p>
+														</td>
+													</tr>
+													<tr>
+														<th scope="row"><label for="wstp_max_posts_monthly"><?php esc_html_e('Max posts per monthly digest', 'we-subscribe-to-posts'); ?></label></th>
+														<td>
+															<input id="wstp_max_posts_monthly" name="wstp_settings[max_posts_monthly]" type="number" min="0" max="500" value="<?php echo esc_attr((string) $max_posts_monthly); ?>" />
+															<p class="description"><?php esc_html_e('Set to 0 to include all matching posts.', 'we-subscribe-to-posts'); ?></p>
+														</td>
+													</tr>
+													<tr>
 														<th scope="row"><label for="wstp_subscribe_rate_limit_window_seconds"><?php esc_html_e('Subscribe anti-spam window (seconds)', 'we-subscribe-to-posts'); ?></label></th>
 														<td>
 															<input id="wstp_subscribe_rate_limit_window_seconds" name="wstp_settings[subscribe_rate_limit_window_seconds]" type="number" min="0" max="3600" value="<?php echo esc_attr((string) $subscribe_rate_limit_window_seconds); ?>" />
@@ -771,6 +878,41 @@ final class Settings_Page
 														<td>
 															<input id="wstp_doi_resend_cooldown_minutes" name="wstp_settings[doi_resend_cooldown_minutes]" type="number" min="0" max="1440" value="<?php echo esc_attr((string) $doi_resend_cooldown_minutes); ?>" />
 															<p class="description"><?php esc_html_e('Prevents repeated confirmation mails for pending subscribers. Set to 0 to allow immediate resend.', 'we-subscribe-to-posts'); ?></p>
+														</td>
+													</tr>
+													<tr>
+														<th scope="row"><label for="wstp_admin_subscriber_notifications_enabled"><?php esc_html_e('Admin notifications for new subscribers', 'we-subscribe-to-posts'); ?></label></th>
+														<td>
+															<select id="wstp_admin_subscriber_notifications_enabled" name="wstp_settings[admin_subscriber_notifications_enabled]">
+																<option value="no" <?php selected($admin_subscriber_notifications_enabled, 'no'); ?>><?php esc_html_e('Disabled', 'we-subscribe-to-posts'); ?></option>
+																<option value="yes" <?php selected($admin_subscriber_notifications_enabled, 'yes'); ?>><?php esc_html_e('Enabled', 'we-subscribe-to-posts'); ?></option>
+															</select>
+															<p class="description"><?php esc_html_e('Optional notifications when new subscribers register or confirm.', 'we-subscribe-to-posts'); ?></p>
+														</td>
+													</tr>
+													<tr class="wstp-admin-notify-dependent" <?php echo 'yes' !== $admin_subscriber_notifications_enabled ? ' style="display:none;"' : ''; ?>>
+														<th scope="row"><label for="wstp_admin_subscriber_notifications_trigger"><?php esc_html_e('Notification trigger', 'we-subscribe-to-posts'); ?></label></th>
+														<td>
+															<select id="wstp_admin_subscriber_notifications_trigger" name="wstp_settings[admin_subscriber_notifications_trigger]">
+																<option value="confirmed_only" <?php selected($admin_subscriber_notifications_trigger, 'confirmed_only'); ?>><?php esc_html_e('Only after double opt-in confirmation', 'we-subscribe-to-posts'); ?></option>
+																<option value="pending_and_confirmed" <?php selected($admin_subscriber_notifications_trigger, 'pending_and_confirmed'); ?>><?php esc_html_e('Both: pending signup and confirmed subscriber', 'we-subscribe-to-posts'); ?></option>
+															</select>
+														</td>
+													</tr>
+													<tr class="wstp-admin-notify-dependent" <?php echo 'yes' !== $admin_subscriber_notifications_enabled ? ' style="display:none;"' : ''; ?>>
+														<th scope="row"><label for="wstp_admin_subscriber_notifications_mode"><?php esc_html_e('Notification mode', 'we-subscribe-to-posts'); ?></label></th>
+														<td>
+															<select id="wstp_admin_subscriber_notifications_mode" name="wstp_settings[admin_subscriber_notifications_mode]">
+																<option value="instant" <?php selected($admin_subscriber_notifications_mode, 'instant'); ?>><?php esc_html_e('Instant (one email per event)', 'we-subscribe-to-posts'); ?></option>
+																<option value="daily_summary" <?php selected($admin_subscriber_notifications_mode, 'daily_summary'); ?>><?php esc_html_e('Daily summary', 'we-subscribe-to-posts'); ?></option>
+															</select>
+														</td>
+													</tr>
+													<tr class="wstp-admin-notify-dependent" <?php echo 'yes' !== $admin_subscriber_notifications_enabled ? ' style="display:none;"' : ''; ?>>
+														<th scope="row"><label for="wstp_admin_subscriber_notifications_email"><?php esc_html_e('Notification recipient email', 'we-subscribe-to-posts'); ?></label></th>
+														<td>
+															<input id="wstp_admin_subscriber_notifications_email" name="wstp_settings[admin_subscriber_notifications_email]" type="email" class="regular-text" value="<?php echo esc_attr($admin_subscriber_notifications_email); ?>" />
+															<p class="description"><?php esc_html_e('Default is the WordPress admin email.', 'we-subscribe-to-posts'); ?></p>
 														</td>
 													</tr>
 													<tr>
@@ -827,6 +969,8 @@ final class Settings_Page
 					var toastRows = document.querySelectorAll('.wstp-status-toast-only');
 					var rateLimitWindowInput = document.getElementById('wstp_subscribe_rate_limit_window_seconds');
 					var rateLimitDependentRows = document.querySelectorAll('.wstp-subscribe-rate-limit-dependent');
+					var adminNotifyEnabledSelect = document.getElementById('wstp_admin_subscriber_notifications_enabled');
+					var adminNotifyRows = document.querySelectorAll('.wstp-admin-notify-dependent');
 					var updateStatusUi = function() {
 						var showToastRows = (styleSelect.value || 'toast') === 'toast';
 						toastRows.forEach(function(row) {
@@ -843,14 +987,27 @@ final class Settings_Page
 							row.style.display = showDependents ? '' : 'none';
 						});
 					};
+					var updateAdminNotifyUi = function() {
+						if (!adminNotifyEnabledSelect) {
+							return;
+						}
+						var showRows = (adminNotifyEnabledSelect.value || 'no') === 'yes';
+						adminNotifyRows.forEach(function(row) {
+							row.style.display = showRows ? '' : 'none';
+						});
+					};
 
 					styleSelect.addEventListener('change', updateStatusUi);
 					if (rateLimitWindowInput) {
 						rateLimitWindowInput.addEventListener('change', updateRateLimitUi);
 						rateLimitWindowInput.addEventListener('input', updateRateLimitUi);
 					}
+					if (adminNotifyEnabledSelect) {
+						adminNotifyEnabledSelect.addEventListener('change', updateAdminNotifyUi);
+					}
 					updateStatusUi();
 					updateRateLimitUi();
+					updateAdminNotifyUi();
 				})();
 			</script>
 

@@ -47,6 +47,20 @@ defined( 'ABSPATH' ) || exit;
 		</div>
 	<?php endforeach; ?>
 
+	<?php if ( isset( $posts_truncated_by ) && (int) $posts_truncated_by > 0 ) : ?>
+		<p style="margin: 12px 0 0 0; color: #555;">
+			<?php
+			echo esc_html(
+				sprintf(
+					/* translators: %d: hidden posts count. */
+					_n( 'Plus %d more published post not shown due to your limit.', 'Plus %d more published posts not shown due to your limit.', (int) $posts_truncated_by, 'we-subscribe-to-posts' ),
+					(int) $posts_truncated_by
+				)
+			);
+			?>
+		</p>
+	<?php endif; ?>
+
 	<p>
 		<a href="<?php echo esc_url( $unsubscribe_url ); ?>"><?php esc_html_e( 'Unsubscribe instantly', 'we-subscribe-to-posts' ); ?></a>
 	</p>

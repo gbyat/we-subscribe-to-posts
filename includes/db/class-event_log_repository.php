@@ -127,4 +127,27 @@ final class Event_Log_Repository {
 
 		return $stats;
 	}
+
+	/**
+	 * Get last successful send timestamp for subscriber+frequency.
+	 *
+	 * @param int    $subscriber_id Subscriber ID.
+	 * @param string $frequency Frequency key.
+	 * @return string
+	 */
+	public function get_last_success_sent_at( int $subscriber_id, string $frequency ): string {
+		$sql = "
+			SELECT sent_at
+			FROM {$this->table}
+			WHERE subscriber_id = %d
+				AND frequency = %s
+				AND result = 'sent'
+			ORDER BY id DESC
+			LIMIT 1
+		";
+		$query = $this->wpdb->prepare( $sql, $subscriber_id, $frequency );
+		$value = $this->wpdb->get_var( $query );
+
+		return is_string( $value ) ? $value : '';
+	}
 }

@@ -18,6 +18,7 @@ use WSTP\Mailer\Digest_Builder;
 use WSTP\Mailer\Digest_Scheduler;
 use WSTP\Mailer\Mailer;
 use WSTP\Subscription\Double_Optin_Service;
+use WSTP\Subscription\Admin_Notification_Service;
 use WSTP\Subscription\Pending_Cleanup;
 use WSTP\Subscription\Unsubscribe_Service;
 use WSTP\Core\Updater;
@@ -37,9 +38,10 @@ final class Plugin {
 		$subscriber_repository = new Subscriber_Repository();
 		$event_repository      = new Event_Log_Repository();
 		$mailer                = new Mailer();
-		$digest_builder        = new Digest_Builder();
+		$digest_builder        = new Digest_Builder( $event_repository );
+		$admin_notification_service = new Admin_Notification_Service( $mailer );
 
-		$double_optin_service = new Double_Optin_Service( $subscriber_repository, $mailer );
+		$double_optin_service = new Double_Optin_Service( $subscriber_repository, $mailer, $admin_notification_service );
 		$unsubscribe_service  = new Unsubscribe_Service( $subscriber_repository );
 		$pending_cleanup      = new Pending_Cleanup( $subscriber_repository );
 		$subscription_form    = new Subscription_Form( $subscriber_repository, $double_optin_service );
@@ -53,6 +55,7 @@ final class Plugin {
 		}
 
 		$mailer->register();
+		$admin_notification_service->register();
 		$double_optin_service->register();
 		$unsubscribe_service->register();
 		$pending_cleanup->register();

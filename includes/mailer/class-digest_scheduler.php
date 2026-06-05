@@ -185,6 +185,8 @@ final class Digest_Scheduler {
 			$context = array(
 				'greeting_name'   => $this->resolve_greeting_name( $subscriber ),
 				'posts'           => $payload['posts'],
+				'posts_total'     => isset( $payload['posts_total'] ) ? (int) $payload['posts_total'] : count( $payload['posts'] ),
+				'posts_truncated_by' => isset( $payload['posts_truncated_by'] ) ? (int) $payload['posts_truncated_by'] : 0,
 				'unsubscribe_url' => $unsubscribe_url,
 			);
 

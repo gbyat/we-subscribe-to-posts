@@ -14,6 +14,7 @@ $option_names = array(
 	'wstp_settings',
 	'wstp_mail_settings',
 	'wstp_legacy_single_options_purged',
+	'wstp_admin_subscriber_notification_queue',
 );
 
 foreach ( $option_names as $option_name ) {
@@ -26,6 +27,7 @@ wp_clear_scheduled_hook( 'wstp_daily_digest_event' );
 wp_clear_scheduled_hook( 'wstp_weekly_digest_event' );
 wp_clear_scheduled_hook( 'wstp_monthly_digest_event' );
 wp_clear_scheduled_hook( 'wstp_cleanup_pending_event' );
+wp_clear_scheduled_hook( 'wstp_admin_subscriber_summary_event' );
 
 // Drop plugin tables.
 $subscribers_table  = $wpdb->prefix . 'wstp_subscribers';
