@@ -1,7 +1,7 @@
 # We Subscribe To Posts
 
 **Contributors:** webentwicklerin  
-**Stable tag:** 0.1.3  
+**Stable tag:** 1.0.0  
 **Requires at least:** 6.6  
 **Tested up to:** 7.0  
 **Requires PHP:** 8.1  

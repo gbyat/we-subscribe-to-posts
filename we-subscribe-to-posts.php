@@ -3,7 +3,7 @@
  * Plugin Name: We Subscribe To Posts
  * Plugin URI: https://github.com/gbyat/we-subscribe-to-posts
  * Description: Post subscription notifications with double opt-in and one-click unsubscribe.
- * Version: 0.1.3
+ * Version: 1.0.0
  * Requires at least: 6.6
  * Tested up to: 7.0
  * Requires PHP: 8.1
@@ -19,7 +19,7 @@
 defined( 'ABSPATH' ) || exit;
 
 if ( ! defined( 'WSTP_VERSION' ) ) {
-	define( 'WSTP_VERSION', '0.1.3' );
+	define( 'WSTP_VERSION', '1.0.0' );
 }
 
 if ( ! defined( 'WSTP_FILE' ) ) {
