@@ -528,6 +528,7 @@ final class Settings_Page
 			'admin_subscriber_notifications_trigger' => $this->sanitize_admin_notification_trigger($input['admin_subscriber_notifications_trigger'] ?? $defaults['admin_subscriber_notifications_trigger']),
 			'admin_subscriber_notifications_mode' => $this->sanitize_admin_notification_mode($input['admin_subscriber_notifications_mode'] ?? $defaults['admin_subscriber_notifications_mode']),
 			'admin_subscriber_notifications_email' => $this->sanitize_admin_notification_email($input['admin_subscriber_notifications_email'] ?? $defaults['admin_subscriber_notifications_email']),
+			'dashboard_widget_enabled' => $this->sanitize_yes_no($input['dashboard_widget_enabled'] ?? $defaults['dashboard_widget_enabled']),
 		);
 
 		return $settings;
@@ -612,6 +613,7 @@ final class Settings_Page
 			'admin_subscriber_notifications_trigger' => 'confirmed_only',
 			'admin_subscriber_notifications_mode' => 'daily_summary',
 			'admin_subscriber_notifications_email' => (string) get_option('admin_email'),
+			'dashboard_widget_enabled' => 'no',
 		);
 
 		$stored = get_option('wstp_settings', array());
@@ -725,6 +727,7 @@ final class Settings_Page
 		$admin_subscriber_notifications_trigger = (string) $general_settings['admin_subscriber_notifications_trigger'];
 		$admin_subscriber_notifications_mode    = (string) $general_settings['admin_subscriber_notifications_mode'];
 		$admin_subscriber_notifications_email   = (string) $general_settings['admin_subscriber_notifications_email'];
+		$dashboard_widget_enabled               = (string) $general_settings['dashboard_widget_enabled'];
 		$weekday_labels         = array(
 			1 => __('Monday', 'we-subscribe-to-posts'),
 			2 => __('Tuesday', 'we-subscribe-to-posts'),
@@ -913,6 +916,16 @@ final class Settings_Page
 														<td>
 															<input id="wstp_admin_subscriber_notifications_email" name="wstp_settings[admin_subscriber_notifications_email]" type="email" class="regular-text" value="<?php echo esc_attr($admin_subscriber_notifications_email); ?>" />
 															<p class="description"><?php esc_html_e('Default is the WordPress admin email.', 'we-subscribe-to-posts'); ?></p>
+														</td>
+													</tr>
+													<tr>
+														<th scope="row"><label for="wstp_dashboard_widget_enabled"><?php esc_html_e('Dashboard widget', 'we-subscribe-to-posts'); ?></label></th>
+														<td>
+															<select id="wstp_dashboard_widget_enabled" name="wstp_settings[dashboard_widget_enabled]">
+																<option value="no" <?php selected($dashboard_widget_enabled, 'no'); ?>><?php esc_html_e('Disabled', 'we-subscribe-to-posts'); ?></option>
+																<option value="yes" <?php selected($dashboard_widget_enabled, 'yes'); ?>><?php esc_html_e('Enabled', 'we-subscribe-to-posts'); ?></option>
+															</select>
+															<p class="description"><?php esc_html_e('Shows an overview widget on the WordPress Dashboard with subscriber and mail stats.', 'we-subscribe-to-posts'); ?></p>
 														</td>
 													</tr>
 													<tr>

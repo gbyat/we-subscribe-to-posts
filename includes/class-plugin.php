@@ -11,6 +11,7 @@ use WSTP\Admin\Email_Template;
 use WSTP\Admin\Preview_Controller;
 use WSTP\Admin\Settings_Page;
 use WSTP\Admin\Subscribers_Page;
+use WSTP\Admin\Dashboard_Widget;
 use WSTP\DB\Event_Log_Repository;
 use WSTP\DB\Subscriber_Repository;
 use WSTP\Frontend\Subscription_Form;
@@ -48,6 +49,7 @@ final class Plugin {
 		$digest_scheduler     = new Digest_Scheduler( $subscriber_repository, $event_repository, $digest_builder, $mailer );
 		$settings_page        = new Settings_Page();
 		$subscribers_page     = new Subscribers_Page( $subscriber_repository, $event_repository );
+		$dashboard_widget     = new Dashboard_Widget( $subscriber_repository, $event_repository );
 		$preview_controller   = new Preview_Controller( $digest_builder, $mailer );
 		$email_template       = class_exists( Email_Template::class ) ? new Email_Template() : null;
 		if ( ( is_admin() || wp_doing_cron() ) && class_exists( Updater::class ) ) {
@@ -63,6 +65,7 @@ final class Plugin {
 		$digest_scheduler->register();
 		$settings_page->register();
 		$subscribers_page->register();
+		$dashboard_widget->register();
 		if ( $email_template instanceof Email_Template ) {
 			$email_template->register();
 		}

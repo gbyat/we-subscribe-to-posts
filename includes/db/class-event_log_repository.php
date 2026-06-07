@@ -150,4 +150,71 @@ final class Event_Log_Repository {
 
 		return is_string( $value ) ? $value : '';
 	}
+
+	/**
+	 * Get aggregate delivery stats for dashboard widget.
+	 *
+	 * @return array<string,mixed>
+	 */
+	public function get_dashboard_summary(): array {
+		$now_mysql = current_time( 'mysql' );
+		$sql       = "
+			SELECT
+				SUM(CASE WHEN result = 'sent' THEN 1 ELSE 0 END) AS sent_total,
+				SUM(CASE WHEN result = 'failed' THEN 1 ELSE 0 END) AS failed_total,
+				SUM(CASE WHEN result = 'sent' AND sent_at >= DATE_SUB(%s, INTERVAL 7 DAY) THEN 1 ELSE 0 END) AS sent_last_7_days,
+				SUM(CASE WHEN result = 'failed' AND sent_at >= DATE_SUB(%s, INTERVAL 7 DAY) THEN 1 ELSE 0 END) AS failed_last_7_days,
+				COUNT(DISTINCT CASE WHEN result = 'sent' THEN subscriber_id END) AS distinct_sent_subscribers,
+				MAX(sent_at) AS last_sent_at
+			FROM {$this->table}
+		";
+		$query     = $this->wpdb->prepare( $sql, $now_mysql, $now_mysql );
+		$row       = $this->wpdb->get_row( $query, 'ARRAY_A' );
+
+		$summary = array(
+			'sent_total'                => 0,
+			'failed_total'              => 0,
+			'sent_last_7_days'          => 0,
+			'failed_last_7_days'        => 0,
+			'distinct_sent_subscribers' => 0,
+			'last_sent_at'              => '',
+			'by_frequency'              => array(
+				'daily'   => array( 'sent' => 0, 'failed' => 0 ),
+				'weekly'  => array( 'sent' => 0, 'failed' => 0 ),
+				'monthly' => array( 'sent' => 0, 'failed' => 0 ),
+			),
+		);
+
+		if ( is_array( $row ) ) {
+			$summary['sent_total']                = isset( $row['sent_total'] ) ? (int) $row['sent_total'] : 0;
+			$summary['failed_total']              = isset( $row['failed_total'] ) ? (int) $row['failed_total'] : 0;
+			$summary['sent_last_7_days']          = isset( $row['sent_last_7_days'] ) ? (int) $row['sent_last_7_days'] : 0;
+			$summary['failed_last_7_days']        = isset( $row['failed_last_7_days'] ) ? (int) $row['failed_last_7_days'] : 0;
+			$summary['distinct_sent_subscribers'] = isset( $row['distinct_sent_subscribers'] ) ? (int) $row['distinct_sent_subscribers'] : 0;
+			$summary['last_sent_at']              = isset( $row['last_sent_at'] ) ? (string) $row['last_sent_at'] : '';
+		}
+
+		$freq_sql  = "
+			SELECT
+				frequency,
+				SUM(CASE WHEN result = 'sent' THEN 1 ELSE 0 END) AS sent_count,
+				SUM(CASE WHEN result = 'failed' THEN 1 ELSE 0 END) AS failed_count
+			FROM {$this->table}
+			GROUP BY frequency
+		";
+		$freq_rows = $this->wpdb->get_results( $freq_sql, 'ARRAY_A' );
+		if ( is_array( $freq_rows ) ) {
+			foreach ( $freq_rows as $freq_row ) {
+				$frequency = isset( $freq_row['frequency'] ) ? (string) $freq_row['frequency'] : '';
+				if ( ! isset( $summary['by_frequency'][ $frequency ] ) ) {
+					continue;
+				}
+
+				$summary['by_frequency'][ $frequency ]['sent']   = isset( $freq_row['sent_count'] ) ? (int) $freq_row['sent_count'] : 0;
+				$summary['by_frequency'][ $frequency ]['failed'] = isset( $freq_row['failed_count'] ) ? (int) $freq_row['failed_count'] : 0;
+			}
+		}
+
+		return $summary;
+	}
 }

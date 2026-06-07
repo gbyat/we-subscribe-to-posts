@@ -412,4 +412,96 @@ final class Subscriber_Repository {
 		$result = $this->wpdb->query( $sql );
 		return false === $result ? 0 : (int) $result;
 	}
+
+	/**
+	 * Get aggregate subscriber stats for dashboard widget.
+	 *
+	 * @return array<string,mixed>
+	 */
+	public function get_dashboard_counts(): array {
+		$sql  = "SELECT status, frequency, COUNT(*) AS total FROM {$this->table} GROUP BY status, frequency";
+		$rows = $this->wpdb->get_results( $sql, 'ARRAY_A' );
+
+		$stats = array(
+			'total'      => 0,
+			'by_status'  => array(
+				'active'       => 0,
+				'pending'      => 0,
+				'unsubscribed' => 0,
+				'suppressed'   => 0,
+			),
+			'by_frequency' => array(
+				'daily'   => 0,
+				'weekly'  => 0,
+				'monthly' => 0,
+			),
+		);
+
+		if ( ! is_array( $rows ) ) {
+			return $stats;
+		}
+
+		foreach ( $rows as $row ) {
+			$status    = isset( $row['status'] ) ? (string) $row['status'] : '';
+			$frequency = isset( $row['frequency'] ) ? (string) $row['frequency'] : '';
+			$total     = isset( $row['total'] ) ? (int) $row['total'] : 0;
+			if ( $total < 1 ) {
+				continue;
+			}
+
+			$stats['total'] += $total;
+			if ( isset( $stats['by_status'][ $status ] ) ) {
+				$stats['by_status'][ $status ] += $total;
+			}
+
+			if ( 'active' === $status && isset( $stats['by_frequency'][ $frequency ] ) ) {
+				$stats['by_frequency'][ $frequency ] += $total;
+			}
+		}
+
+		return $stats;
+	}
+
+	/**
+	 * Get signup trend for the dashboard widget.
+	 *
+	 * Compares the recent 7-day window with the previous 7-day window.
+	 *
+	 * @return array<string,int|float|null>
+	 */
+	public function get_signup_trend(): array {
+		$now_mysql = current_time( 'mysql' );
+		$sql       = "
+			SELECT
+				SUM(CASE WHEN created_at >= DATE_SUB(%s, INTERVAL 7 DAY) THEN 1 ELSE 0 END) AS recent_count,
+				SUM(
+					CASE
+						WHEN created_at >= DATE_SUB(%s, INTERVAL 14 DAY)
+							AND created_at < DATE_SUB(%s, INTERVAL 7 DAY)
+						THEN 1
+						ELSE 0
+					END
+				) AS previous_count
+			FROM {$this->table}
+			WHERE status <> 'suppressed'
+		";
+		$query     = $this->wpdb->prepare( $sql, $now_mysql, $now_mysql, $now_mysql );
+		$row       = $this->wpdb->get_row( $query, 'ARRAY_A' );
+
+		$recent_count   = is_array( $row ) && isset( $row['recent_count'] ) ? (int) $row['recent_count'] : 0;
+		$previous_count = is_array( $row ) && isset( $row['previous_count'] ) ? (int) $row['previous_count'] : 0;
+		$delta          = $recent_count - $previous_count;
+		$percent_change = null;
+
+		if ( $previous_count > 0 ) {
+			$percent_change = ( ( $recent_count - $previous_count ) / $previous_count ) * 100;
+		}
+
+		return array(
+			'recent_count'   => $recent_count,
+			'previous_count' => $previous_count,
+			'delta'          => $delta,
+			'percent_change' => $percent_change,
+		);
+	}
 }
