@@ -19,9 +19,10 @@
 			compact: { type: 'boolean', default: false },
 			default_frequency: { type: 'string', default: 'daily' },
 			button_label: { type: 'string', default: __( 'Subscribe', 'we-subscribe-to-posts' ) },
-			button_bg_color: { type: 'string', default: '#1d4ed8' },
-			button_text_color: { type: 'string', default: '#ffffff' },
-			button_radius: { type: 'number', default: 6 },
+			button_use_custom_style: { type: 'boolean', default: false },
+			button_bg_color: { type: 'string', default: '' },
+			button_text_color: { type: 'string', default: '' },
+			button_radius: { type: 'number', default: 0 },
 		},
 		edit: function ( props ) {
 			return el(
@@ -62,47 +63,56 @@
 								props.setAttributes( { button_label: value } );
 							},
 						} ),
+						el( ToggleControl, {
+							label: __( 'Use custom button style', 'we-subscribe-to-posts' ),
+							checked: !!props.attributes.button_use_custom_style,
+							onChange: function ( value ) {
+								props.setAttributes( { button_use_custom_style: value } );
+							},
+						} )
+					),
+					!!props.attributes.button_use_custom_style &&
 						el( RangeControl, {
 							label: __( 'Button radius (px)', 'we-subscribe-to-posts' ),
-							value: props.attributes.button_radius || 6,
+							value: props.attributes.button_radius || 0,
 							min: 0,
 							max: 24,
 							step: 1,
 							onChange: function ( value ) {
 								props.setAttributes( { button_radius: value || 0 } );
 							},
-						} )
-					),
-					el(
-						PanelColorSettings,
-						{
-							title: __( 'Button colors', 'we-subscribe-to-posts' ),
-							initialOpen: false,
-							colorSettings: [
-								{
-									label: __( 'Background color', 'we-subscribe-to-posts' ),
-									value: props.attributes.button_bg_color || '#1d4ed8',
-									onChange: function ( value ) {
-										props.setAttributes( { button_bg_color: value || '#1d4ed8' } );
+						} ),
+					!!props.attributes.button_use_custom_style &&
+						el(
+							PanelColorSettings,
+							{
+								title: __( 'Button colors', 'we-subscribe-to-posts' ),
+								initialOpen: false,
+								colorSettings: [
+									{
+										label: __( 'Background color', 'we-subscribe-to-posts' ),
+										value: props.attributes.button_bg_color || '',
+										onChange: function ( value ) {
+											props.setAttributes( { button_bg_color: value || '' } );
+										},
 									},
-								},
-								{
-									label: __( 'Text color', 'we-subscribe-to-posts' ),
-									value: props.attributes.button_text_color || '#ffffff',
-									onChange: function ( value ) {
-										props.setAttributes( { button_text_color: value || '#ffffff' } );
+									{
+										label: __( 'Text color', 'we-subscribe-to-posts' ),
+										value: props.attributes.button_text_color || '',
+										onChange: function ( value ) {
+											props.setAttributes( { button_text_color: value || '' } );
+										},
 									},
-								},
-							],
-						}
-					)
+								],
+							}
+						)
 				),
 				el(
 					'div',
 					{ style: { border: '1px dashed #b6b6b6', padding: '12px' } },
 					el( 'strong', {}, __( 'Post Subscription Form', 'we-subscribe-to-posts' ) ),
 					el( 'p', { style: { margin: '8px 0 0 0' } }, __( 'The form renders on the frontend.', 'we-subscribe-to-posts' ) ),
-					el( 'p', { style: { margin: '8px 0 0 0', opacity: 0.75 } }, __( 'Use the sidebar to set compact layout and button style.', 'we-subscribe-to-posts' ) )
+					el( 'p', { style: { margin: '8px 0 0 0', opacity: 0.75 } }, __( 'Use the sidebar for compact spacing and optional custom button style.', 'we-subscribe-to-posts' ) )
 				)
 			);
 		},

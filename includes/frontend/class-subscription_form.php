@@ -76,17 +76,21 @@ final class Subscription_Form {
 						'type'    => 'string',
 						'default' => __( 'Subscribe', 'we-subscribe-to-posts' ),
 					),
+					'button_use_custom_style' => array(
+						'type'    => 'boolean',
+						'default' => false,
+					),
 					'button_bg_color'   => array(
 						'type'    => 'string',
-						'default' => '#1d4ed8',
+						'default' => '',
 					),
 					'button_text_color' => array(
 						'type'    => 'string',
-						'default' => '#ffffff',
+						'default' => '',
 					),
 					'button_radius'     => array(
 						'type'    => 'number',
-						'default' => 6,
+						'default' => 0,
 					),
 				),
 				'render_callback' => array( $this, 'render_block' ),
@@ -120,6 +124,13 @@ final class Subscription_Form {
 	 * @return string
 	 */
 	public function render_shortcode( array $atts = array() ): string {
+		wp_enqueue_style(
+			'wstp-subscription-form',
+			WSTP_URL . 'assets/css/subscription-form.css',
+			array(),
+			WSTP_VERSION
+		);
+
 		$atts = $this->normalize_block_attributes( $atts );
 
 		$atts = shortcode_atts(
@@ -127,9 +138,10 @@ final class Subscription_Form {
 				'compact'           => false,
 				'default_frequency' => 'daily',
 				'button_label'      => __( 'Subscribe', 'we-subscribe-to-posts' ),
-				'button_bg_color'   => '#1d4ed8',
-				'button_text_color' => '#ffffff',
-				'button_radius'     => 6,
+				'button_use_custom_style' => false,
+				'button_bg_color'   => '',
+				'button_text_color' => '',
+				'button_radius'     => 0,
 			),
 			$atts,
 			'wstp_subscription_form'
@@ -142,6 +154,7 @@ final class Subscription_Form {
 		}
 
 		$button_label      = sanitize_text_field( (string) $atts['button_label'] );
+		$button_use_custom_style = filter_var( $atts['button_use_custom_style'], FILTER_VALIDATE_BOOLEAN );
 		$button_bg_color   = $this->resolve_color_value( (string) $atts['button_bg_color'] );
 		$button_text_color = $this->resolve_color_value( (string) $atts['button_text_color'] );
 		$button_radius     = (int) $atts['button_radius'];
@@ -152,11 +165,8 @@ final class Subscription_Form {
 			$button_radius = 24;
 		}
 
-		if ( ! $button_bg_color ) {
-			$button_bg_color = '#1d4ed8';
-		}
-		if ( ! $button_text_color ) {
-			$button_text_color = '#ffffff';
+		if ( '#1d4ed8' === $button_bg_color && '#ffffff' === $button_text_color && 6 === $button_radius ) {
+			$button_use_custom_style = false;
 		}
 
 		$frequency_options = array(
@@ -218,6 +228,7 @@ final class Subscription_Form {
 		$map = array(
 			'defaultFrequency' => 'default_frequency',
 			'buttonLabel'      => 'button_label',
+			'buttonUseCustomStyle' => 'button_use_custom_style',
 			'buttonBgColor'    => 'button_bg_color',
 			'buttonTextColor'  => 'button_text_color',
 			'buttonRadius'     => 'button_radius',

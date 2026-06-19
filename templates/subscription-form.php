@@ -34,6 +34,7 @@ $messages = array(
 $is_compact       = isset( $is_compact ) ? (bool) $is_compact : false;
 $default_frequency = isset( $default_frequency ) ? (string) $default_frequency : 'daily';
 $button_label      = isset( $button_label ) ? (string) $button_label : __( 'Subscribe', 'we-subscribe-to-posts' );
+$button_use_custom_style = isset( $button_use_custom_style ) ? (bool) $button_use_custom_style : false;
 $button_bg_color   = isset( $button_bg_color ) ? (string) $button_bg_color : '#1d4ed8';
 $button_text_color = isset( $button_text_color ) ? (string) $button_text_color : '#ffffff';
 $button_radius     = isset( $button_radius ) ? (int) $button_radius : 6;
@@ -52,11 +53,27 @@ if ( $status_notice_seconds < 0 ) {
 	$status_notice_seconds = 0;
 }
 
-$wrapper_style = $is_compact ? 'max-width: 420px; font-size: 13px; line-height: 1.4;' : 'max-width: 620px;';
-$field_margin  = $is_compact ? '0 0 8px 0' : '0 0 16px 0';
-$control_style = $is_compact ? 'width: 100%; padding: 6px 8px; font-size: 13px;' : 'width: 100%; padding: 10px 12px; font-size: 15px;';
-$button_padding = $is_compact ? '8px 12px' : '10px 14px';
-$button_style  = 'display:inline-block; border:0 !important; padding:' . $button_padding . ' !important; cursor:pointer; background:' . $button_bg_color . ' !important; color:' . $button_text_color . ' !important; border-radius:' . $button_radius . 'px !important; text-decoration:none; -webkit-appearance:none; appearance:none;';
+$button_style  = '';
+if ( $button_use_custom_style ) {
+	$button_declarations = array(
+		'display:inline-block',
+		'cursor:pointer',
+		'text-decoration:none',
+		'-webkit-appearance:none',
+		'appearance:none',
+	);
+	if ( '' !== $button_bg_color ) {
+		$button_declarations[] = 'background:' . $button_bg_color . ' !important';
+	}
+	if ( '' !== $button_text_color ) {
+		$button_declarations[] = 'color:' . $button_text_color . ' !important';
+	}
+	if ( $button_radius > 0 ) {
+		$button_declarations[] = 'border-radius:' . $button_radius . 'px !important';
+	}
+
+	$button_style = implode( '; ', $button_declarations ) . ';';
+}
 $rest_subscribe_url = rest_url( 'wstp/v1/subscribe' );
 $rest_nonce_url = rest_url( 'wstp/v1/subscribe-nonce' );
 $overlay_statuses = array( 'optin_sent', 'optin_resent', 'confirmed', 'unsubscribed' );
@@ -70,7 +87,7 @@ if ( 'bottom-left' === $status_notice_position ) {
 	$toast_position_css = 'left:16px; top:16px;';
 }
 ?>
-<div class="wstp-form-wrap" style="<?php echo esc_attr( $wrapper_style ); ?>">
+<div class="wstp-form-wrap<?php echo $is_compact ? ' wstp-form-wrap--compact' : ''; ?>">
 	<?php if ( $can_float_notice && 'toast' === $status_notice_style ) : ?>
 		<div id="wstp-status-overlay" role="status" aria-live="polite" style="position:fixed; <?php echo esc_attr( $toast_position_css ); ?> z-index:99999; max-width:420px; width:calc(100% - 32px); background:#ffffff; color:#111111; border-radius:10px; box-shadow:0 12px 32px rgba(0,0,0,0.22); border:1px solid #d9dbe1; padding:16px 16px 14px 16px; transform:translateY(130%); opacity:0; transition:transform .26s ease, opacity .26s ease;">
 			<p style="margin:0 0 10px 0; font-size:15px; line-height:1.45;"><?php echo esc_html( $messages[ $status ] ); ?></p>
@@ -153,7 +170,7 @@ if ( 'bottom-left' === $status_notice_position ) {
 		<p class="wstp-message"><?php echo esc_html( $messages[ $status ] ); ?></p>
 	<?php endif; ?>
 
-	<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+	<form class="wstp-form" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 		<input type="hidden" name="action" value="wstp_subscribe" />
 		<?php wp_nonce_field( 'wstp_subscribe', 'wstp_nonce' ); ?>
 		<input type="hidden" name="wstp_rendered_at" value="<?php echo esc_attr( (string) $form_rendered_at ); ?>" />
@@ -163,34 +180,34 @@ if ( 'bottom-left' === $status_notice_position ) {
 			<input id="wstp-website" type="text" name="wstp_website" value="" tabindex="-1" autocomplete="off" />
 		</p>
 
-		<p style="<?php echo esc_attr( $field_margin ); ?>">
+		<p class="wstp-form-field">
 			<label for="wstp-email"><?php esc_html_e( 'Email address', 'we-subscribe-to-posts' ); ?></label><br />
-			<input id="wstp-email" type="email" name="wstp_email" required style="<?php echo esc_attr( $control_style ); ?>" />
+			<input class="wstp-form-control" id="wstp-email" type="email" name="wstp_email" required />
 		</p>
 
-		<p style="<?php echo esc_attr( $field_margin ); ?>">
+		<p class="wstp-form-field">
 			<label for="wstp-name"><?php esc_html_e( 'Name (optional)', 'we-subscribe-to-posts' ); ?></label><br />
-			<input id="wstp-name" type="text" name="wstp_name" style="<?php echo esc_attr( $control_style ); ?>" />
+			<input class="wstp-form-control" id="wstp-name" type="text" name="wstp_name" />
 		</p>
 
-		<p style="<?php echo esc_attr( $field_margin ); ?>">
+		<p class="wstp-form-field">
 			<label for="wstp-frequency"><?php esc_html_e( 'Send frequency', 'we-subscribe-to-posts' ); ?></label><br />
-			<select id="wstp-frequency" name="wstp_frequency" required style="<?php echo esc_attr( $control_style ); ?>">
+			<select class="wstp-form-control" id="wstp-frequency" name="wstp_frequency" required>
 				<?php foreach ( $frequency_options as $frequency_key => $frequency_label ) : ?>
 					<option value="<?php echo esc_attr( $frequency_key ); ?>" <?php selected( $default_frequency, $frequency_key ); ?>><?php echo esc_html( $frequency_label ); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</p>
 
-		<p style="<?php echo esc_attr( $field_margin ); ?>">
+		<p class="wstp-form-field">
 			<label>
 				<input type="checkbox" name="wstp_consent" value="yes" required />
 				<?php echo esc_html( $privacy_text ); ?>
 			</label>
 		</p>
 
-		<p>
-			<button type="submit" style="<?php echo esc_attr( $button_style ); ?>"><?php echo esc_html( $button_label ); ?></button>
+		<p class="wstp-form-actions">
+			<button class="wstp-submit-button" type="submit"<?php echo '' !== $button_style ? ' style="' . esc_attr( $button_style ) . '"' : ''; ?>><?php echo esc_html( $button_label ); ?></button>
 		</p>
 	</form>
 	<script>
@@ -343,7 +360,7 @@ if ( 'bottom-left' === $status_notice_position ) {
 					}
 					form.dataset.wstpSubmitting = '1';
 
-					var submitButton = form.querySelector('button[type="submit"]');
+					var submitButton = form.querySelector('button[type="submit"], input[type="submit"]');
 					if (submitButton) {
 						submitButton.disabled = true;
 					}

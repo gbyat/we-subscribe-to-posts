@@ -152,6 +152,43 @@ final class Event_Log_Repository {
 	}
 
 	/**
+	 * Get post IDs included in the latest successful digest send.
+	 *
+	 * @param int    $subscriber_id Subscriber ID.
+	 * @param string $frequency Frequency key.
+	 * @return array<int>
+	 */
+	public function get_last_success_post_ids( int $subscriber_id, string $frequency ): array {
+		$sql = "
+			SELECT post_ids_json
+			FROM {$this->table}
+			WHERE subscriber_id = %d
+				AND frequency = %s
+				AND result = 'sent'
+			ORDER BY id DESC
+			LIMIT 1
+		";
+		$query = $this->wpdb->prepare( $sql, $subscriber_id, $frequency );
+		$value = $this->wpdb->get_var( $query );
+
+		if ( ! is_string( $value ) || '' === $value ) {
+			return array();
+		}
+
+		$decoded = json_decode( $value, true );
+		if ( ! is_array( $decoded ) ) {
+			return array();
+		}
+
+		return array_values(
+			array_filter(
+				array_map( 'intval', $decoded ),
+				static fn( int $post_id ): bool => $post_id > 0
+			)
+		);
+	}
+
+	/**
 	 * Get aggregate delivery stats for dashboard widget.
 	 *
 	 * @return array<string,mixed>

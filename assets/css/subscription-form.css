@@ -1,0 +1,25 @@
+.wstp-form-wrap {
+	max-width: 620px;
+}
+
+.wstp-form-wrap--compact {
+	max-width: 420px;
+	font-size: 13px;
+	line-height: 1.4;
+}
+
+.wstp-form .wstp-form-field {
+	margin: 0 0 16px 0;
+}
+
+.wstp-form-wrap--compact .wstp-form .wstp-form-field {
+	margin: 0 0 8px 0;
+}
+
+.wstp-form .wstp-form-control {
+	width: 100%;
+}
+
+.wstp-form .wstp-form-actions {
+	margin: 0;
+}

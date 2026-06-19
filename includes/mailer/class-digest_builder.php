@@ -104,8 +104,12 @@ final class Digest_Builder {
 			)
 		);
 
-		$this->last_collection_total = isset( $query->found_posts ) ? (int) $query->found_posts : 0;
-		return is_array( $query->posts ) ? $query->posts : array();
+		$posts = is_array( $query->posts ) ? $query->posts : array();
+		$posts = $this->exclude_already_sent_posts( $subscriber, $frequency, $posts );
+
+		$this->last_collection_total = isset( $query->found_posts ) ? (int) $query->found_posts : count( $posts );
+
+		return $posts;
 	}
 
 	/**
@@ -117,7 +121,9 @@ final class Digest_Builder {
 	 */
 	private function resolve_after_date( array $subscriber, string $frequency ): string {
 		$subscriber_id = isset( $subscriber['id'] ) ? (int) $subscriber['id'] : 0;
-		if ( $subscriber_id > 0 ) {
+
+		// Daily digests are incremental since the last successful daily send.
+		if ( 'daily' === $frequency && $subscriber_id > 0 ) {
 			$frequency_last_sent_at = $this->event_repository->get_last_success_sent_at( $subscriber_id, $frequency );
 			if ( '' !== $frequency_last_sent_at ) {
 				return $frequency_last_sent_at;
@@ -131,9 +137,14 @@ final class Digest_Builder {
 		};
 
 		$base_timestamp = current_time( 'timestamp' );
-		$after_ts       = strtotime( $modifier, $base_timestamp );
+		$day_start_ts   = strtotime( wp_date( 'Y-m-d 00:00:00', $base_timestamp ) );
+		if ( false === $day_start_ts ) {
+			$day_start_ts = $base_timestamp;
+		}
+
+		$after_ts = strtotime( $modifier, $day_start_ts );
 		if ( false === $after_ts ) {
-			$after_ts = $base_timestamp;
+			$after_ts = $day_start_ts;
 		}
 
 		$window_start = wp_date( 'Y-m-d H:i:s', $after_ts );
@@ -149,6 +160,43 @@ final class Digest_Builder {
 		}
 
 		return $window_start;
+	}
+
+	/**
+	 * Remove posts already included in the previous successful digest.
+	 *
+	 * Weekly and monthly digests use a rolling period window. Excluding the
+	 * previous send's post IDs prevents duplicates while still recovering posts
+	 * that were missed in an earlier partial send.
+	 *
+	 * @param array<string,mixed> $subscriber Subscriber row.
+	 * @param string              $frequency Frequency key.
+	 * @param array<int,WP_Post>    $posts Candidate posts.
+	 * @return array<int,WP_Post>
+	 */
+	private function exclude_already_sent_posts( array $subscriber, string $frequency, array $posts ): array {
+		if ( ! in_array( $frequency, array( 'weekly', 'monthly' ), true ) || empty( $posts ) ) {
+			return $posts;
+		}
+
+		$subscriber_id = isset( $subscriber['id'] ) ? (int) $subscriber['id'] : 0;
+		if ( $subscriber_id <= 0 ) {
+			return $posts;
+		}
+
+		$exclude_ids = $this->event_repository->get_last_success_post_ids( $subscriber_id, $frequency );
+		if ( empty( $exclude_ids ) ) {
+			return $posts;
+		}
+
+		$exclude_lookup = array_fill_keys( $exclude_ids, true );
+
+		return array_values(
+			array_filter(
+				$posts,
+				static fn( WP_Post $post ): bool => ! isset( $exclude_lookup[ $post->ID ] )
+			)
+		);
 	}
 
 	/**
