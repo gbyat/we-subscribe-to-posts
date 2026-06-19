@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the WE Subscribe To Posts plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: WE Subscribe To Posts 1.1.1\n"
+"Project-Id-Version: WE Subscribe To Posts 1.1.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/we-subscribe-to-posts\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-06-07T12:33:36+02:00\n"
+"POT-Creation-Date: 2026-06-19T10:19:25+02:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: we-subscribe-to-posts\n"
@@ -266,31 +266,31 @@ msgid "Privacy section text is required."
 msgstr ""
 
 #: includes/admin/class-settings_page.php:591
-#: includes/frontend/class-subscription_form.php:174
+#: includes/frontend/class-subscription_form.php:184
 msgid "I agree that my email address is used only for post update notifications."
 msgstr ""
 
 #: includes/admin/class-settings_page.php:593
-#: includes/mailer/class-digest_builder.php:195
-#: includes/mailer/class-digest_builder.php:238
+#: includes/mailer/class-digest_builder.php:243
+#: includes/mailer/class-digest_builder.php:286
 msgid "Your latest post updates - {site_name}"
 msgstr ""
 
 #: includes/admin/class-settings_page.php:594
-#: includes/mailer/class-digest_builder.php:193
-#: includes/mailer/class-digest_builder.php:239
+#: includes/mailer/class-digest_builder.php:241
+#: includes/mailer/class-digest_builder.php:287
 msgid "Your weekly post updates - {site_name}"
 msgstr ""
 
 #: includes/admin/class-settings_page.php:595
-#: includes/mailer/class-digest_builder.php:194
-#: includes/mailer/class-digest_builder.php:240
+#: includes/mailer/class-digest_builder.php:242
+#: includes/mailer/class-digest_builder.php:288
 msgid "Your monthly post updates - {site_name}"
 msgstr ""
 
 #: includes/admin/class-settings_page.php:596
-#: includes/mailer/class-digest_builder.php:188
-#: includes/mailer/class-digest_builder.php:241
+#: includes/mailer/class-digest_builder.php:236
+#: includes/mailer/class-digest_builder.php:289
 msgid "[Preview] Latest post updates - {site_name}"
 msgstr ""
 
@@ -780,19 +780,19 @@ msgid "Frequency"
 msgstr ""
 
 #: includes/admin/class-subscribers_page.php:299
-#: assets/js/subscription-form-block.js:50
+#: assets/js/subscription-form-block.js:51
 msgid "Daily"
 msgstr ""
 
 #: includes/admin/class-subscribers_page.php:300
-#: includes/frontend/class-subscription_form.php:164
-#: assets/js/subscription-form-block.js:51
+#: includes/frontend/class-subscription_form.php:174
+#: assets/js/subscription-form-block.js:52
 msgid "Weekly"
 msgstr ""
 
 #: includes/admin/class-subscribers_page.php:301
-#: includes/frontend/class-subscription_form.php:165
-#: assets/js/subscription-form-block.js:52
+#: includes/frontend/class-subscription_form.php:175
+#: assets/js/subscription-form-block.js:53
 msgid "Monthly"
 msgstr ""
 
@@ -929,119 +929,119 @@ msgid "No changelog available."
 msgstr ""
 
 #: includes/frontend/class-subscription_form.php:77
-#: includes/frontend/class-subscription_form.php:129
+#: includes/frontend/class-subscription_form.php:140
 #: templates/subscription-form.php:36
 #: assets/js/subscription-form-block.js:21
-#: assets/js/subscription-form-block.js:60
+#: assets/js/subscription-form-block.js:61
 msgid "Subscribe"
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:163
+#: includes/frontend/class-subscription_form.php:173
 msgid "Daily (on days with new posts)"
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:572
-#: templates/subscription-form.php:119
-#: templates/subscription-form.php:299
+#: includes/frontend/class-subscription_form.php:583
+#: templates/subscription-form.php:136
+#: templates/subscription-form.php:316
 msgid "Continue to website"
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:594
-#: templates/subscription-form.php:78
-#: templates/subscription-form.php:321
+#: includes/frontend/class-subscription_form.php:605
+#: templates/subscription-form.php:95
+#: templates/subscription-form.php:338
 msgid "OK"
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:620
+#: includes/frontend/class-subscription_form.php:631
 #: templates/subscription-form.php:15
 msgid "Please check your inbox and confirm your subscription."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:621
+#: includes/frontend/class-subscription_form.php:632
 #: templates/subscription-form.php:29
 msgid "We sent a fresh confirmation email. Please check your inbox."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:622
+#: includes/frontend/class-subscription_form.php:633
 #: templates/subscription-form.php:30
 msgid "A confirmation email was sent recently. Please wait a few minutes before requesting another one."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:623
+#: includes/frontend/class-subscription_form.php:634
 #: templates/subscription-form.php:16
 msgid "Subscription confirmed. You are now subscribed."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:624
+#: includes/frontend/class-subscription_form.php:635
 #: templates/subscription-form.php:17
 msgid "You have been unsubscribed successfully."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:625
+#: includes/frontend/class-subscription_form.php:636
 #: templates/subscription-form.php:18
 msgid "Security check failed. Please try again."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:626
+#: includes/frontend/class-subscription_form.php:637
 #: templates/subscription-form.php:19
 msgid "Please enter a valid email address."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:627
+#: includes/frontend/class-subscription_form.php:638
 #: templates/subscription-form.php:20
 msgid "Please enter a valid name without links or suspicious patterns."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:628
+#: includes/frontend/class-subscription_form.php:639
 #: templates/subscription-form.php:21
 msgid "Please select a valid delivery frequency."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:629
+#: includes/frontend/class-subscription_form.php:640
 #: templates/subscription-form.php:22
 msgid "Please accept the privacy section before subscribing."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:630
+#: includes/frontend/class-subscription_form.php:641
 #: templates/subscription-form.php:23
 msgid "Submission could not be processed. Please try again."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:631
+#: includes/frontend/class-subscription_form.php:642
 #: templates/subscription-form.php:24
 msgid "Too many subscribe attempts in a short time. Please wait a moment and try again."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:632
+#: includes/frontend/class-subscription_form.php:643
 #: templates/subscription-form.php:25
 msgid "We could not send the confirmation email right now. Please try again later."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:633
+#: includes/frontend/class-subscription_form.php:644
 #: templates/subscription-form.php:26
 msgid "This confirmation or unsubscribe link is invalid or expired."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:634
+#: includes/frontend/class-subscription_form.php:645
 #: templates/subscription-form.php:27
 msgid "This email is already subscribed with the selected frequency."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:635
+#: includes/frontend/class-subscription_form.php:646
 #: templates/subscription-form.php:28
 msgid "A confirmation email was already sent for this address. Please check your inbox."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:636
+#: includes/frontend/class-subscription_form.php:647
 #: templates/subscription-form.php:31
 msgid "This email is blocked from subscriptions and cannot be added again."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:652
+#: includes/frontend/class-subscription_form.php:663
 msgid "An unknown status occurred."
 msgstr ""
 
-#: includes/mailer/class-digest_builder.php:221
+#: includes/mailer/class-digest_builder.php:269
 msgid "Your latest post updates"
 msgstr ""
 
@@ -1173,19 +1173,19 @@ msgstr ""
 msgid "Confirm subscription"
 msgstr ""
 
-#: templates/subscription-form.php:162
+#: templates/subscription-form.php:179
 msgid "Website"
 msgstr ""
 
-#: templates/subscription-form.php:167
+#: templates/subscription-form.php:184
 msgid "Email address"
 msgstr ""
 
-#: templates/subscription-form.php:172
+#: templates/subscription-form.php:189
 msgid "Name (optional)"
 msgstr ""
 
-#: templates/subscription-form.php:177
+#: templates/subscription-form.php:194
 msgid "Send frequency"
 msgstr ""
 
@@ -1266,7 +1266,7 @@ msgid "Read more link renders here."
 msgstr ""
 
 #: assets/js/subscription-form-block.js:14
-#: assets/js/subscription-form-block.js:103
+#: assets/js/subscription-form-block.js:113
 msgid "Post Subscription Form"
 msgstr ""
 
@@ -1274,42 +1274,46 @@ msgstr ""
 msgid "Signup form for post update notifications."
 msgstr ""
 
-#: assets/js/subscription-form-block.js:36
+#: assets/js/subscription-form-block.js:37
 msgid "Form options"
 msgstr ""
 
-#: assets/js/subscription-form-block.js:40
+#: assets/js/subscription-form-block.js:41
 msgid "Compact layout"
 msgstr ""
 
-#: assets/js/subscription-form-block.js:47
+#: assets/js/subscription-form-block.js:48
 msgid "Default frequency"
 msgstr ""
 
-#: assets/js/subscription-form-block.js:59
+#: assets/js/subscription-form-block.js:60
 msgid "Button label"
 msgstr ""
 
-#: assets/js/subscription-form-block.js:66
+#: assets/js/subscription-form-block.js:67
+msgid "Use custom button style"
+msgstr ""
+
+#: assets/js/subscription-form-block.js:76
 msgid "Button radius (px)"
 msgstr ""
 
-#: assets/js/subscription-form-block.js:79
+#: assets/js/subscription-form-block.js:89
 msgid "Button colors"
 msgstr ""
 
-#: assets/js/subscription-form-block.js:83
+#: assets/js/subscription-form-block.js:93
 msgid "Background color"
 msgstr ""
 
-#: assets/js/subscription-form-block.js:90
+#: assets/js/subscription-form-block.js:100
 msgid "Text color"
 msgstr ""
 
-#: assets/js/subscription-form-block.js:104
+#: assets/js/subscription-form-block.js:114
 msgid "The form renders on the frontend."
 msgstr ""
 
-#: assets/js/subscription-form-block.js:105
-msgid "Use the sidebar to set compact layout and button style."
+#: assets/js/subscription-form-block.js:115
+msgid "Use the sidebar for compact spacing and optional custom button style."
 msgstr ""
