@@ -44,11 +44,25 @@ final class Digest_Template_Renderer {
 	private static string $inherited_text_color = '';
 
 	/**
-	 * Target content width for fluid email columns.
+	 * Resolve attributes from a render callback or parsed block source.
 	 *
-	 * @var int
+	 * @param array<string,mixed> $attributes Render callback attributes.
+	 * @param mixed               $block Block instance.
+	 * @return array<string,mixed>
 	 */
-	private const EMAIL_CONTENT_WIDTH = 600;
+	private function attributes_from_block( array $attributes, $block = null ): array {
+		if ( is_object( $block ) && isset( $block->parsed_block ) && is_array( $block->parsed_block ) ) {
+			return $this->resolve_block_attributes( $block->parsed_block );
+		}
+
+		return $this->resolve_block_attributes(
+			array(
+				'attrs'        => $attributes,
+				'innerHTML'    => '',
+				'innerContent' => array(),
+			)
+		);
+	}
 
 	/**
 	 * Register dynamic blocks.
@@ -69,9 +83,12 @@ final class Digest_Template_Renderer {
 	 * @return void
 	 */
 	public function register_blocks(): void {
+		$color_attributes = $this->get_color_block_attributes();
+
 		register_block_type(
 			'wstp/greeting',
 			array(
+				'attributes'      => $color_attributes,
 				'render_callback' => array( $this, 'render_greeting_block' ),
 			)
 		);
@@ -79,6 +96,7 @@ final class Digest_Template_Renderer {
 		register_block_type(
 			'wstp/unsubscribe-link',
 			array(
+				'attributes'      => $color_attributes,
 				'render_callback' => array( $this, 'render_unsubscribe_block' ),
 			)
 		);
@@ -93,6 +111,15 @@ final class Digest_Template_Renderer {
 		register_block_type(
 			'wstp/post-image',
 			array(
+				'attributes'      => array_merge(
+					$color_attributes,
+					array(
+						'maxWidth' => array(
+							'type'    => 'number',
+							'default' => 180,
+						),
+					)
+				),
 				'render_callback' => array( $this, 'render_post_image_block' ),
 			)
 		);
@@ -100,6 +127,7 @@ final class Digest_Template_Renderer {
 		register_block_type(
 			'wstp/post-title',
 			array(
+				'attributes'      => $color_attributes,
 				'render_callback' => array( $this, 'render_post_title_block' ),
 			)
 		);
@@ -107,6 +135,7 @@ final class Digest_Template_Renderer {
 		register_block_type(
 			'wstp/post-excerpt',
 			array(
+				'attributes'      => $color_attributes,
 				'render_callback' => array( $this, 'render_post_excerpt_block' ),
 			)
 		);
@@ -114,8 +143,24 @@ final class Digest_Template_Renderer {
 		register_block_type(
 			'wstp/post-read-more',
 			array(
+				'attributes'      => $color_attributes,
 				'render_callback' => array( $this, 'render_post_read_more_block' ),
 			)
+		);
+	}
+
+	/**
+	 * Shared color-related block attributes.
+	 *
+	 * @return array<string,array<string,mixed>>
+	 */
+	private function get_color_block_attributes(): array {
+		return array(
+			'textColor'              => array( 'type' => 'string' ),
+			'backgroundColor'        => array( 'type' => 'string' ),
+			'customTextColor'        => array( 'type' => 'string' ),
+			'customBackgroundColor'  => array( 'type' => 'string' ),
+			'style'                  => array( 'type' => 'object' ),
 		);
 	}
 
@@ -177,10 +222,10 @@ final class Digest_Template_Renderer {
 	 */
 	private function get_email_responsive_styles(): string {
 		return '@media only screen and (max-width: 620px) {'
-			. '.wstp-stack-table, .wstp-stack-table tbody, .wstp-stack-table tr, .wstp-stack-table td { display: block !important; width: 100% !important; max-width: 100% !important; }'
-			. '.wstp-stack-cell { display: block !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; padding-right: 0 !important; padding-bottom: 12px !important; }'
-			. '.wstp-stack-cell:last-child { padding-bottom: 0 !important; }'
-			. '.wstp-stack-table img, .wstp-stack-cell img { max-width: 100% !important; width: auto !important; height: auto !important; }'
+			. '.wstp-stack-table, .wstp-stack-table tbody, .wstp-stack-table tr { display: block !important; width: 100% !important; max-width: 100% !important; }'
+			. '.wstp-stack-table td.wstp-stack-cell { display: block !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; padding-right: 0 !important; padding-bottom: 12px !important; }'
+			. '.wstp-stack-table td.wstp-stack-cell:last-child { padding-bottom: 0 !important; }'
+			. '.wstp-stack-table img { max-width: 100% !important; height: auto !important; }'
 			. '}';
 	}
 
@@ -202,6 +247,7 @@ final class Digest_Template_Renderer {
 		}
 
 		$attrs = isset( $block['attrs'] ) && is_array( $block['attrs'] ) ? $block['attrs'] : array();
+		$attrs = $this->merge_attrs_from_block_comment( $attrs, $block );
 		$attrs = $this->merge_color_from_inner_html( $attrs, $block );
 
 		return $this->ensure_inline_block_colors( $html, $attrs );
@@ -212,7 +258,8 @@ final class Digest_Template_Renderer {
 	 *
 	 * @return string
 	 */
-	public function render_greeting_block( array $attributes = array() ): string {
+	public function render_greeting_block( array $attributes = array(), string $content = '', $block = null ): string {
+		$attributes    = $this->attributes_from_block( $attributes, $block );
 		$greeting_name = isset( self::$context['greeting_name'] ) ? (string) self::$context['greeting_name'] : __( 'there', 'we-subscribe-to-posts' );
 		$style_attr    = $this->build_style_attribute(
 			$attributes,
@@ -305,7 +352,8 @@ final class Digest_Template_Renderer {
 	 *
 	 * @return string
 	 */
-	public function render_unsubscribe_block( array $attributes = array() ): string {
+	public function render_unsubscribe_block( array $attributes = array(), string $content = '', $block = null ): string {
+		$attributes = $this->attributes_from_block( $attributes, $block );
 		$unsubscribe_url = isset( self::$context['unsubscribe_url'] ) ? (string) self::$context['unsubscribe_url'] : '';
 		if ( '' === $unsubscribe_url ) {
 			return '';
@@ -332,7 +380,8 @@ final class Digest_Template_Renderer {
 	 *
 	 * @return string
 	 */
-	public function render_post_image_block( array $attributes = array() ): string {
+	public function render_post_image_block( array $attributes = array(), string $content = '', $block = null ): string {
+		$attributes = $this->attributes_from_block( $attributes, $block );
 		if ( ! is_array( self::$current_post ) ) {
 			return '';
 		}
@@ -372,7 +421,8 @@ final class Digest_Template_Renderer {
 	 *
 	 * @return string
 	 */
-	public function render_post_title_block( array $attributes = array() ): string {
+	public function render_post_title_block( array $attributes = array(), string $content = '', $block = null ): string {
+		$attributes = $this->attributes_from_block( $attributes, $block );
 		if ( ! is_array( self::$current_post ) ) {
 			return '';
 		}
@@ -405,7 +455,8 @@ final class Digest_Template_Renderer {
 	 *
 	 * @return string
 	 */
-	public function render_post_excerpt_block( array $attributes = array() ): string {
+	public function render_post_excerpt_block( array $attributes = array(), string $content = '', $block = null ): string {
+		$attributes = $this->attributes_from_block( $attributes, $block );
 		if ( ! is_array( self::$current_post ) ) {
 			return '';
 		}
@@ -436,7 +487,8 @@ final class Digest_Template_Renderer {
 	 *
 	 * @return string
 	 */
-	public function render_post_read_more_block( array $attributes = array() ): string {
+	public function render_post_read_more_block( array $attributes = array(), string $content = '', $block = null ): string {
+		$attributes = $this->attributes_from_block( $attributes, $block );
 		if ( ! is_array( self::$current_post ) ) {
 			return '';
 		}
@@ -568,6 +620,7 @@ final class Digest_Template_Renderer {
 	 */
 	private function resolve_block_attributes( array $parsed_block ): array {
 		$attributes = isset( $parsed_block['attrs'] ) && is_array( $parsed_block['attrs'] ) ? $parsed_block['attrs'] : array();
+		$attributes = $this->merge_attrs_from_block_comment( $attributes, $parsed_block );
 		$attributes = $this->merge_color_from_inner_html( $attributes, $parsed_block );
 
 		if ( '' === $this->extract_text_color_from_attributes( $attributes ) && '' !== self::$inherited_text_color ) {
@@ -604,8 +657,14 @@ final class Digest_Template_Renderer {
 			return $attributes;
 		}
 
-		if ( preg_match( '/\bhas-([a-z0-9-]+)-color\b/i', $inner_html, $matches ) ) {
-			$attributes['textColor'] = sanitize_key( $matches[1] );
+		if ( preg_match_all( '/\bhas-([a-z0-9-]+)-color\b/i', $inner_html, $matches ) ) {
+			foreach ( $matches[1] as $slug ) {
+				$slug = sanitize_key( (string) $slug );
+				if ( 'text' !== $slug && 'background' !== $slug ) {
+					$attributes['textColor'] = $slug;
+					break;
+				}
+			}
 		}
 
 		if ( preg_match( '/\bstyle="[^"]*?\bcolor\s*:\s*(#[0-9a-fA-F]{3,8}|rgba?\([^"\)]+)\)/i', $inner_html, $matches ) ) {
@@ -616,6 +675,39 @@ final class Digest_Template_Renderer {
 				$attributes['style']['color'] = array();
 			}
 			$attributes['style']['color']['text'] = trim( $matches[1] );
+		}
+
+		return $attributes;
+	}
+
+	/**
+	 * Recover attrs from serialized block comment when parser omits them.
+	 *
+	 * @param array<string,mixed> $attributes Block attributes.
+	 * @param array<string,mixed> $parsed_block Parsed block.
+	 * @return array<string,mixed>
+	 */
+	private function merge_attrs_from_block_comment( array $attributes, array $parsed_block ): array {
+		$chunks = array();
+		if ( isset( $parsed_block['innerContent'] ) && is_array( $parsed_block['innerContent'] ) ) {
+			$chunks = $parsed_block['innerContent'];
+		}
+
+		foreach ( $chunks as $chunk ) {
+			if ( ! is_string( $chunk ) || ! str_contains( $chunk, '<!-- wp:' ) ) {
+				continue;
+			}
+
+			if ( ! preg_match( '/<!--\s+wp:[^\s]+\s+(\{.*\})\s+\/-->/s', $chunk, $matches ) ) {
+				continue;
+			}
+
+			$decoded = json_decode( $matches[1], true );
+			if ( ! is_array( $decoded ) ) {
+				continue;
+			}
+
+			$attributes = array_replace_recursive( $decoded, $attributes );
 		}
 
 		return $attributes;
@@ -645,61 +737,35 @@ final class Digest_Template_Renderer {
 		$parent_vertical     = $this->normalize_vertical_alignment( $parent_vertical_raw );
 		$stack_on_mobile     = ! array_key_exists( 'isStackedOnMobile', $columns_attrs ) || ! empty( $columns_attrs['isStackedOnMobile'] );
 		$count               = count( $columns );
+		$table_class         = $stack_on_mobile ? ' class="wstp-stack-table"' : '';
+		$columns_color       = $this->extract_text_color( $columns_attrs );
+		$saved_inherited     = self::$inherited_text_color;
 
-		if ( $stack_on_mobile ) {
-			return $this->render_columns_fluid_stack( $columns, $parent_vertical, $count );
+		if ( '' !== $columns_color ) {
+			self::$inherited_text_color = $columns_color;
 		}
 
-		$html = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; width: 100%;"><tr>';
+		$html = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"' . $table_class . ' style="border-collapse: collapse; width: 100%;"><tr>';
 
 		foreach ( $columns as $index => $column ) {
 			$width         = $this->normalize_column_width( $column, $count );
-			$column_blocks = isset( $column['innerBlocks'] ) && is_array( $column['innerBlocks'] ) ? $column['innerBlocks'] : array();
+			$column_blocks = $this->resolve_column_inner_blocks( $column );
 			$cell_content  = $this->render_column_blocks( $column, $column_blocks );
 			$padding_right = $index < ( $count - 1 ) ? '16px' : '0';
 			$column_attrs  = isset( $column['attrs'] ) && is_array( $column['attrs'] ) ? $column['attrs'] : array();
 			$vertical_raw  = isset( $column_attrs['verticalAlignment'] ) && is_string( $column_attrs['verticalAlignment'] ) ? $column_attrs['verticalAlignment'] : $parent_vertical;
 			$vertical_css  = $this->normalize_vertical_alignment( $vertical_raw );
 			$vertical_attr = $this->vertical_align_to_valign( $vertical_css );
+			$cell_class    = $stack_on_mobile ? ' class="wstp-stack-cell"' : '';
 
-			$html .= '<td valign="' . esc_attr( $vertical_attr ) . '" width="' . esc_attr( $width ) . '" style="vertical-align: ' . esc_attr( $vertical_css ) . '; width: ' . esc_attr( $width ) . '; padding-right: ' . esc_attr( $padding_right ) . ';">';
+			$html .= '<td' . $cell_class . ' valign="' . esc_attr( $vertical_attr ) . '" width="' . esc_attr( $width ) . '" style="vertical-align: ' . esc_attr( $vertical_css ) . '; width: ' . esc_attr( $width ) . '; padding-right: ' . esc_attr( $padding_right ) . ';">';
 			$html .= $cell_content;
 			$html .= '</td>';
 		}
 
 		$html .= '</tr></table>';
 
-		return $html;
-	}
-
-	/**
-	 * Render columns using inline-block stacking for narrow screens.
-	 *
-	 * @param array<int,array<string,mixed>> $columns Parsed column blocks.
-	 * @param string                         $parent_vertical Parent vertical alignment.
-	 * @param int                            $count Number of columns.
-	 * @return string
-	 */
-	private function render_columns_fluid_stack( array $columns, string $parent_vertical, int $count ): string {
-		$html = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" class="wstp-stack-table" style="border-collapse: collapse; width: 100%;"><tr><td align="left" style="font-size: 0; line-height: 0; mso-line-height-rule: exactly;">';
-
-		foreach ( $columns as $index => $column ) {
-			$width_pct     = $this->normalize_column_width_value( $column, $count );
-			$max_width_px  = max( 120, (int) round( self::EMAIL_CONTENT_WIDTH * ( $width_pct / 100 ) ) );
-			$column_blocks = isset( $column['innerBlocks'] ) && is_array( $column['innerBlocks'] ) ? $column['innerBlocks'] : array();
-			$cell_content  = $this->render_column_blocks( $column, $column_blocks );
-			$column_attrs  = isset( $column['attrs'] ) && is_array( $column['attrs'] ) ? $column['attrs'] : array();
-			$vertical_raw  = isset( $column_attrs['verticalAlignment'] ) && is_string( $column_attrs['verticalAlignment'] ) ? $column_attrs['verticalAlignment'] : $parent_vertical;
-			$vertical_css  = $this->normalize_vertical_alignment( $vertical_raw );
-			$padding_right = $index < ( $count - 1 ) ? '16px' : '0';
-			$column_style  = 'display: inline-block; vertical-align: ' . $vertical_css . '; width: 100%; max-width: ' . $max_width_px . 'px; font-size: 16px; line-height: 1.6; box-sizing: border-box; padding-right: ' . $padding_right . ';';
-
-			$html .= '<div class="wstp-stack-cell" style="' . esc_attr( $column_style ) . '">';
-			$html .= $cell_content;
-			$html .= '</div>';
-		}
-
-		$html .= '</td></tr></table>';
+		self::$inherited_text_color = $saved_inherited;
 
 		return $html;
 	}
@@ -713,6 +779,7 @@ final class Digest_Template_Renderer {
 	 */
 	private function render_column_blocks( array $column, array $column_blocks ): string {
 		$column_attrs   = isset( $column['attrs'] ) && is_array( $column['attrs'] ) ? $column['attrs'] : array();
+		$column_attrs   = $this->merge_attrs_from_block_comment( $column_attrs, $column );
 		$previous_color = self::$inherited_text_color;
 		$column_color   = $this->extract_text_color( $column_attrs );
 
@@ -725,6 +792,29 @@ final class Digest_Template_Renderer {
 		self::$inherited_text_color = $previous_color;
 
 		return $html;
+	}
+
+	/**
+	 * Resolve inner blocks for a column, including serialized fallback content.
+	 *
+	 * @param array<string,mixed> $column Parsed column block.
+	 * @return array<int,array<string,mixed>>
+	 */
+	private function resolve_column_inner_blocks( array $column ): array {
+		$blocks = isset( $column['innerBlocks'] ) && is_array( $column['innerBlocks'] ) ? $column['innerBlocks'] : array();
+		$blocks = $this->filter_parsed_blocks( $blocks );
+		if ( ! empty( $blocks ) ) {
+			return $blocks;
+		}
+
+		if ( isset( $column['innerContent'] ) && is_array( $column['innerContent'] ) ) {
+			$content = implode( '', array_map( 'strval', $column['innerContent'] ) );
+			if ( '' !== trim( $content ) ) {
+				return $this->filter_parsed_blocks( parse_blocks( $content ) );
+			}
+		}
+
+		return array();
 	}
 
 	/**
@@ -978,6 +1068,16 @@ final class Digest_Template_Renderer {
 			$settings   = $theme_json->get_settings();
 			if ( isset( $settings['color']['palette'] ) && is_array( $settings['color']['palette'] ) ) {
 				foreach ( $settings['color']['palette'] as $entry ) {
+					if ( is_array( $entry ) ) {
+						$palette[] = $entry;
+					}
+				}
+			}
+
+			$user_json = \WP_Theme_JSON_Resolver::get_user_data();
+			$user_settings = $user_json->get_settings();
+			if ( isset( $user_settings['color']['palette'] ) && is_array( $user_settings['color']['palette'] ) ) {
+				foreach ( $user_settings['color']['palette'] as $entry ) {
 					if ( is_array( $entry ) ) {
 						$palette[] = $entry;
 					}

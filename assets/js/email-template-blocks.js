@@ -9,6 +9,8 @@
 	const colorAttributes = {
 		textColor: { type: 'string' },
 		backgroundColor: { type: 'string' },
+		customTextColor: { type: 'string' },
+		customBackgroundColor: { type: 'string' },
 		style: { type: 'object' },
 	};
 
@@ -115,7 +117,7 @@
 			title: title,
 			icon: icon,
 			category: 'widgets',
-			parent: [ 'wstp/posts-loop' ],
+			ancestor: [ 'wstp/posts-loop' ],
 			attributes: colorAttributes,
 			supports: supports || {},
 			edit: function () {
@@ -132,7 +134,7 @@
 		title: __( 'Digest Post Image', 'we-subscribe-to-posts' ),
 		icon: 'format-image',
 		category: 'widgets',
-		parent: [ 'wstp/posts-loop' ],
+		ancestor: [ 'wstp/posts-loop' ],
 		attributes: {
 			maxWidth: {
 				type: 'number',
