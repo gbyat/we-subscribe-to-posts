@@ -37,6 +37,20 @@ final class Digest_Template_Renderer {
 	private static bool $is_rendering_digest = false;
 
 	/**
+	 * Text color inherited from a parent column/group block.
+	 *
+	 * @var string
+	 */
+	private static string $inherited_text_color = '';
+
+	/**
+	 * Target content width for fluid email columns.
+	 *
+	 * @var int
+	 */
+	private const EMAIL_CONTENT_WIDTH = 600;
+
+	/**
 	 * Register dynamic blocks.
 	 *
 	 * @return void
@@ -151,6 +165,7 @@ final class Digest_Template_Renderer {
 			. '<meta name="viewport" content="width=device-width, initial-scale=1.0" />'
 			. '<style type="text/css">' . $styles . '</style>'
 			. '</head><body style="font-family: Arial, sans-serif; line-height: 1.6; color: #111; margin: 0; padding: 0;">'
+			. '<style type="text/css">' . $styles . '</style>'
 			. $body_html
 			. '</body></html>';
 	}
@@ -162,10 +177,10 @@ final class Digest_Template_Renderer {
 	 */
 	private function get_email_responsive_styles(): string {
 		return '@media only screen and (max-width: 620px) {'
-			. '.wstp-stack-table, .wstp-stack-table tbody, .wstp-stack-table tr { display: block !important; width: 100% !important; max-width: 100% !important; }'
-			. '.wstp-stack-table td { display: block !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; padding-right: 0 !important; padding-bottom: 12px !important; }'
-			. '.wstp-stack-table td:last-child { padding-bottom: 0 !important; }'
-			. '.wstp-stack-table img { max-width: 100% !important; height: auto !important; }'
+			. '.wstp-stack-table, .wstp-stack-table tbody, .wstp-stack-table tr, .wstp-stack-table td { display: block !important; width: 100% !important; max-width: 100% !important; }'
+			. '.wstp-stack-cell { display: block !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; padding-right: 0 !important; padding-bottom: 12px !important; }'
+			. '.wstp-stack-cell:last-child { padding-bottom: 0 !important; }'
+			. '.wstp-stack-table img, .wstp-stack-cell img { max-width: 100% !important; width: auto !important; height: auto !important; }'
 			. '}';
 	}
 
@@ -187,6 +202,7 @@ final class Digest_Template_Renderer {
 		}
 
 		$attrs = isset( $block['attrs'] ) && is_array( $block['attrs'] ) ? $block['attrs'] : array();
+		$attrs = $this->merge_color_from_inner_html( $attrs, $block );
 
 		return $this->ensure_inline_block_colors( $html, $attrs );
 	}
@@ -234,32 +250,30 @@ final class Digest_Template_Renderer {
 			return '<p>' . esc_html__( 'No published posts available yet.', 'we-subscribe-to-posts' ) . '</p>';
 		}
 
-		$layout_blocks = array();
-		if ( is_object( $block ) && isset( $block->parsed_block['innerBlocks'] ) && is_array( $block->parsed_block['innerBlocks'] ) && ! empty( $block->parsed_block['innerBlocks'] ) ) {
-			$layout_blocks = $block->parsed_block['innerBlocks'];
-		}
-
-		if ( empty( $layout_blocks ) ) {
-			$layout_blocks = parse_blocks( Email_Template::default_loop_item_content() );
-		}
+		$layout_blocks = $this->resolve_layout_blocks( $block, $content );
 
 		$html       = '';
 		$posts      = array_values( self::$context['posts'] );
 		$post_count = count( $posts );
+		$saved_inherited_color = self::$inherited_text_color;
+
 		foreach ( $posts as $index => $post_item ) {
 			if ( ! is_array( $post_item ) ) {
 				continue;
 			}
 
-			self::$current_post = $post_item;
-			$html              .= '<div style="margin-bottom: 20px;">';
-			$html              .= $this->render_loop_blocks( $layout_blocks );
-			$html              .= '</div>';
+			self::$current_post      = $post_item;
+			self::$inherited_text_color = $saved_inherited_color;
+			$html                   .= '<div style="margin-bottom: 20px;">';
+			$html                   .= $this->render_loop_blocks( $layout_blocks );
+			$html                   .= '</div>';
 
 			if ( $index < ( $post_count - 1 ) ) {
 				$html .= '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; width: 100%; margin: 8px 0 18px 0;"><tr><td style="border-top: 1px solid #e5e5e5; line-height: 1px; font-size: 1px;">&nbsp;</td></tr></table>';
 			}
 		}
+
+		self::$inherited_text_color = $saved_inherited_color;
 
 		$truncated_by = isset( self::$context['posts_truncated_by'] ) ? (int) self::$context['posts_truncated_by'] : 0;
 		if ( $truncated_by > 0 ) {
@@ -487,7 +501,124 @@ final class Digest_Template_Renderer {
 			return $this->render_columns_as_table( $parsed_block );
 		}
 
-		return render_block( $parsed_block );
+		$attributes = $this->resolve_block_attributes( $parsed_block );
+
+		return match ( $block_name ) {
+			'wstp/post-image'    => $this->render_post_image_block( $attributes ),
+			'wstp/post-title'    => $this->render_post_title_block( $attributes ),
+			'wstp/post-excerpt'  => $this->render_post_excerpt_block( $attributes ),
+			'wstp/post-read-more'=> $this->render_post_read_more_block( $attributes ),
+			default              => render_block( $parsed_block ),
+		};
+	}
+
+	/**
+	 * Resolve loop layout blocks from saved posts-loop content.
+	 *
+	 * @param mixed  $block Block instance.
+	 * @param string $content Serialized inner block markup.
+	 * @return array<int,array<string,mixed>>
+	 */
+	private function resolve_layout_blocks( $block, string $content ): array {
+		$layout_blocks = array();
+
+		if ( is_object( $block ) && isset( $block->inner_blocks ) && ! empty( $block->inner_blocks ) ) {
+			foreach ( $block->inner_blocks as $inner_block ) {
+				if ( is_object( $inner_block ) && isset( $inner_block->parsed_block ) && is_array( $inner_block->parsed_block ) && ! empty( $inner_block->parsed_block['blockName'] ) ) {
+					$layout_blocks[] = $inner_block->parsed_block;
+				}
+			}
+		}
+
+		if ( empty( $layout_blocks ) && is_object( $block ) && isset( $block->parsed_block['innerBlocks'] ) && is_array( $block->parsed_block['innerBlocks'] ) ) {
+			$layout_blocks = $this->filter_parsed_blocks( $block->parsed_block['innerBlocks'] );
+		}
+
+		if ( empty( $layout_blocks ) && '' !== trim( $content ) ) {
+			$layout_blocks = $this->filter_parsed_blocks( parse_blocks( $content ) );
+		}
+
+		if ( empty( $layout_blocks ) ) {
+			$layout_blocks = $this->filter_parsed_blocks( parse_blocks( Email_Template::default_loop_item_content() ) );
+		}
+
+		return $layout_blocks;
+	}
+
+	/**
+	 * Remove empty parser entries.
+	 *
+	 * @param array<int,array<string,mixed>> $blocks Parsed blocks.
+	 * @return array<int,array<string,mixed>>
+	 */
+	private function filter_parsed_blocks( array $blocks ): array {
+		return array_values(
+			array_filter(
+				$blocks,
+				static fn( $block ): bool => is_array( $block ) && ! empty( $block['blockName'] )
+			)
+		);
+	}
+
+	/**
+	 * Merge saved attrs, innerHTML class hints, and inherited colors.
+	 *
+	 * @param array<string,mixed> $parsed_block Parsed block.
+	 * @return array<string,mixed>
+	 */
+	private function resolve_block_attributes( array $parsed_block ): array {
+		$attributes = isset( $parsed_block['attrs'] ) && is_array( $parsed_block['attrs'] ) ? $parsed_block['attrs'] : array();
+		$attributes = $this->merge_color_from_inner_html( $attributes, $parsed_block );
+
+		if ( '' === $this->extract_text_color_from_attributes( $attributes ) && '' !== self::$inherited_text_color ) {
+			if ( ! isset( $attributes['style'] ) || ! is_array( $attributes['style'] ) ) {
+				$attributes['style'] = array();
+			}
+			if ( ! isset( $attributes['style']['color'] ) || ! is_array( $attributes['style']['color'] ) ) {
+				$attributes['style']['color'] = array();
+			}
+			$attributes['style']['color']['text'] = self::$inherited_text_color;
+		}
+
+		return $attributes;
+	}
+
+	/**
+	 * Recover palette colors from serialized block class names.
+	 *
+	 * @param array<string,mixed> $attributes Block attributes.
+	 * @param array<string,mixed> $parsed_block Parsed block.
+	 * @return array<string,mixed>
+	 */
+	private function merge_color_from_inner_html( array $attributes, array $parsed_block ): array {
+		if ( '' !== $this->extract_text_color_from_attributes( $attributes ) ) {
+			return $attributes;
+		}
+
+		$inner_html = isset( $parsed_block['innerHTML'] ) ? (string) $parsed_block['innerHTML'] : '';
+		if ( '' === $inner_html && isset( $parsed_block['innerContent'] ) && is_array( $parsed_block['innerContent'] ) ) {
+			$inner_html = implode( '', array_map( 'strval', $parsed_block['innerContent'] ) );
+		}
+
+		if ( '' === $inner_html ) {
+			return $attributes;
+		}
+
+		if ( preg_match( '/\bhas-([a-z0-9-]+)-color\b/i', $inner_html, $matches ) ) {
+			$attributes['textColor'] = sanitize_key( $matches[1] );
+		}
+
+		if ( preg_match( '/\bstyle="[^"]*?\bcolor\s*:\s*(#[0-9a-fA-F]{3,8}|rgba?\([^"\)]+)\)/i', $inner_html, $matches ) ) {
+			if ( ! isset( $attributes['style'] ) || ! is_array( $attributes['style'] ) ) {
+				$attributes['style'] = array();
+			}
+			if ( ! isset( $attributes['style']['color'] ) || ! is_array( $attributes['style']['color'] ) ) {
+				$attributes['style']['color'] = array();
+			}
+			$attributes['style']['color']['text'] = trim( $matches[1] );
+		}
+
+		return $attributes;
 	}
 
 	/**
@@ -513,27 +644,85 @@ final class Digest_Template_Renderer {
 		$parent_vertical_raw = isset( $columns_attrs['verticalAlignment'] ) && is_string( $columns_attrs['verticalAlignment'] ) ? $columns_attrs['verticalAlignment'] : 'top';
 		$parent_vertical     = $this->normalize_vertical_alignment( $parent_vertical_raw );
 		$stack_on_mobile     = ! array_key_exists( 'isStackedOnMobile', $columns_attrs ) || ! empty( $columns_attrs['isStackedOnMobile'] );
-		$table_class         = $stack_on_mobile ? ' class="wstp-stack-table"' : '';
 		$count               = count( $columns );
-		$html                = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"' . $table_class . ' style="border-collapse: collapse; width: 100%;"><tr>';
+
+		if ( $stack_on_mobile ) {
+			return $this->render_columns_fluid_stack( $columns, $parent_vertical, $count );
+		}
+
+		$html = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; width: 100%;"><tr>';
 
 		foreach ( $columns as $index => $column ) {
 			$width         = $this->normalize_column_width( $column, $count );
 			$column_blocks = isset( $column['innerBlocks'] ) && is_array( $column['innerBlocks'] ) ? $column['innerBlocks'] : array();
-			$cell_content  = $this->render_loop_blocks( $column_blocks );
+			$cell_content  = $this->render_column_blocks( $column, $column_blocks );
 			$padding_right = $index < ( $count - 1 ) ? '16px' : '0';
 			$column_attrs  = isset( $column['attrs'] ) && is_array( $column['attrs'] ) ? $column['attrs'] : array();
 			$vertical_raw  = isset( $column_attrs['verticalAlignment'] ) && is_string( $column_attrs['verticalAlignment'] ) ? $column_attrs['verticalAlignment'] : $parent_vertical;
 			$vertical_css  = $this->normalize_vertical_alignment( $vertical_raw );
 			$vertical_attr = $this->vertical_align_to_valign( $vertical_css );
-			$cell_class    = $stack_on_mobile ? ' class="wstp-stack-cell"' : '';
 
-			$html .= '<td' . $cell_class . ' valign="' . esc_attr( $vertical_attr ) . '" width="' . esc_attr( $width ) . '" style="vertical-align: ' . esc_attr( $vertical_css ) . '; width: ' . esc_attr( $width ) . '; padding-right: ' . esc_attr( $padding_right ) . ';">';
+			$html .= '<td valign="' . esc_attr( $vertical_attr ) . '" width="' . esc_attr( $width ) . '" style="vertical-align: ' . esc_attr( $vertical_css ) . '; width: ' . esc_attr( $width ) . '; padding-right: ' . esc_attr( $padding_right ) . ';">';
 			$html .= $cell_content;
 			$html .= '</td>';
 		}
 
 		$html .= '</tr></table>';
+
+		return $html;
+	}
+
+	/**
+	 * Render columns using inline-block stacking for narrow screens.
+	 *
+	 * @param array<int,array<string,mixed>> $columns Parsed column blocks.
+	 * @param string                         $parent_vertical Parent vertical alignment.
+	 * @param int                            $count Number of columns.
+	 * @return string
+	 */
+	private function render_columns_fluid_stack( array $columns, string $parent_vertical, int $count ): string {
+		$html = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" class="wstp-stack-table" style="border-collapse: collapse; width: 100%;"><tr><td align="left" style="font-size: 0; line-height: 0; mso-line-height-rule: exactly;">';
+
+		foreach ( $columns as $index => $column ) {
+			$width_pct     = $this->normalize_column_width_value( $column, $count );
+			$max_width_px  = max( 120, (int) round( self::EMAIL_CONTENT_WIDTH * ( $width_pct / 100 ) ) );
+			$column_blocks = isset( $column['innerBlocks'] ) && is_array( $column['innerBlocks'] ) ? $column['innerBlocks'] : array();
+			$cell_content  = $this->render_column_blocks( $column, $column_blocks );
+			$column_attrs  = isset( $column['attrs'] ) && is_array( $column['attrs'] ) ? $column['attrs'] : array();
+			$vertical_raw  = isset( $column_attrs['verticalAlignment'] ) && is_string( $column_attrs['verticalAlignment'] ) ? $column_attrs['verticalAlignment'] : $parent_vertical;
+			$vertical_css  = $this->normalize_vertical_alignment( $vertical_raw );
+			$padding_right = $index < ( $count - 1 ) ? '16px' : '0';
+			$column_style  = 'display: inline-block; vertical-align: ' . $vertical_css . '; width: 100%; max-width: ' . $max_width_px . 'px; font-size: 16px; line-height: 1.6; box-sizing: border-box; padding-right: ' . $padding_right . ';';
+
+			$html .= '<div class="wstp-stack-cell" style="' . esc_attr( $column_style ) . '">';
+			$html .= $cell_content;
+			$html .= '</div>';
+		}
+
+		$html .= '</td></tr></table>';
+
+		return $html;
+	}
+
+	/**
+	 * Render blocks inside a column while inheriting column text color.
+	 *
+	 * @param array<string,mixed>            $column Parsed column block.
+	 * @param array<int,array<string,mixed>> $column_blocks Parsed inner blocks.
+	 * @return string
+	 */
+	private function render_column_blocks( array $column, array $column_blocks ): string {
+		$column_attrs   = isset( $column['attrs'] ) && is_array( $column['attrs'] ) ? $column['attrs'] : array();
+		$previous_color = self::$inherited_text_color;
+		$column_color   = $this->extract_text_color( $column_attrs );
+
+		if ( '' !== $column_color ) {
+			self::$inherited_text_color = $column_color;
+		}
+
+		$html = $this->render_loop_blocks( $column_blocks );
+
+		self::$inherited_text_color = $previous_color;
 
 		return $html;
 	}
@@ -546,13 +735,25 @@ final class Digest_Template_Renderer {
 	 * @return string
 	 */
 	private function normalize_column_width( array $column, int $count ): string {
+		$value = $this->normalize_column_width_value( $column, $count );
+
+		return number_format( $value, 2, '.', '' ) . '%';
+	}
+
+	/**
+	 * Normalize column width to numeric percentage.
+	 *
+	 * @param array<string,mixed> $column Parsed column block.
+	 * @param int                 $count Number of columns.
+	 * @return float
+	 */
+	private function normalize_column_width_value( array $column, int $count ): float {
 		$attrs = isset( $column['attrs'] ) && is_array( $column['attrs'] ) ? $column['attrs'] : array();
 		if ( isset( $attrs['width'] ) && is_string( $attrs['width'] ) && str_ends_with( trim( $attrs['width'] ), '%' ) ) {
-			return trim( $attrs['width'] );
+			return (float) rtrim( trim( $attrs['width'] ), '%' );
 		}
 
-		$default = 100 / max( 1, $count );
-		return number_format( $default, 2, '.', '' ) . '%';
+		return 100 / max( 1, $count );
 	}
 
 	/**
@@ -639,6 +840,21 @@ final class Digest_Template_Renderer {
 	 * @return string
 	 */
 	private function extract_text_color( array $attributes ): string {
+		$color = $this->extract_text_color_from_attributes( $attributes );
+		if ( '' !== $color ) {
+			return $color;
+		}
+
+		return self::$inherited_text_color;
+	}
+
+	/**
+	 * Extract text color only from explicit block attributes.
+	 *
+	 * @param array<string,mixed> $attributes Block attributes.
+	 * @return string
+	 */
+	private function extract_text_color_from_attributes( array $attributes ): string {
 		if ( isset( $attributes['style'] ) && is_array( $attributes['style'] ) ) {
 			$style = $attributes['style'];
 
@@ -658,6 +874,10 @@ final class Digest_Template_Renderer {
 		}
 
 		if ( isset( $attributes['textColor'] ) && is_string( $attributes['textColor'] ) ) {
+			if ( preg_match( '/^#([0-9a-f]{3}|[0-9a-f]{6})$/i', $attributes['textColor'] ) ) {
+				return $attributes['textColor'];
+			}
+
 			$resolved = $this->resolve_color_slug( $attributes['textColor'] );
 			if ( '' !== $resolved ) {
 				return $resolved;

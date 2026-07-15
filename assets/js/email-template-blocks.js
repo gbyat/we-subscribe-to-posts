@@ -6,12 +6,19 @@
 	const RangeControl = components.RangeControl;
 	const __ = i18n.__;
 
+	const colorAttributes = {
+		textColor: { type: 'string' },
+		backgroundColor: { type: 'string' },
+		style: { type: 'object' },
+	};
+
 	blocks.registerBlockType( 'wstp/greeting', {
 		apiVersion: 2,
 		title: __( 'Digest Greeting', 'we-subscribe-to-posts' ),
 		icon: 'admin-users',
 		category: 'widgets',
 		description: __( 'Dynamic personalized greeting for the subscriber.', 'we-subscribe-to-posts' ),
+		attributes: colorAttributes,
 		supports: {
 			typography: {
 				fontSize: true,
@@ -35,6 +42,7 @@
 		icon: 'dismiss',
 		category: 'widgets',
 		description: __( 'Required one-click unsubscribe link.', 'we-subscribe-to-posts' ),
+		attributes: colorAttributes,
 		supports: {
 			typography: {
 				fontSize: true,
@@ -108,6 +116,7 @@
 			icon: icon,
 			category: 'widgets',
 			parent: [ 'wstp/posts-loop' ],
+			attributes: colorAttributes,
 			supports: supports || {},
 			edit: function () {
 				return el( 'p', {}, text );
@@ -129,6 +138,7 @@
 				type: 'number',
 				default: 180,
 			},
+			...colorAttributes,
 		},
 		edit: function ( props ) {
 			return el(
