@@ -30,6 +30,13 @@ final class Digest_Template_Renderer {
 	private static ?array $current_post = null;
 
 	/**
+	 * Whether digest email rendering is active.
+	 *
+	 * @var bool
+	 */
+	private static bool $is_rendering_digest = false;
+
+	/**
 	 * Register dynamic blocks.
 	 *
 	 * @return void
@@ -105,12 +112,16 @@ final class Digest_Template_Renderer {
 	 * @return string
 	 */
 	public function render_digest( array $context ): string {
-		self::$context = $context;
+		self::$context           = $context;
+		self::$is_rendering_digest = true;
+		add_filter( 'render_block', array( $this, 'filter_render_block_for_email' ), 10, 2 );
 
 		$template_content = Email_Template::get_latest_template_content();
 		if ( '' === $template_content ) {
 			$output = $this->render_fallback_template( $context );
-			self::$context = array();
+			remove_filter( 'render_block', array( $this, 'filter_render_block_for_email' ), 10 );
+			self::$is_rendering_digest = false;
+			self::$context             = array();
 
 			return $output;
 		}
@@ -118,9 +129,66 @@ final class Digest_Template_Renderer {
 		$output = do_blocks( $template_content );
 		$output = (string) $output;
 
-		self::$context = array();
+		remove_filter( 'render_block', array( $this, 'filter_render_block_for_email' ), 10 );
+		self::$is_rendering_digest = false;
+		self::$context             = array();
 
-		return '<html><body style="font-family: Arial, sans-serif; line-height: 1.6; color: #111;">' . $output . '</body></html>';
+		return $this->wrap_email_document( $output );
+	}
+
+	/**
+	 * Wrap rendered digest markup in an email-safe HTML document.
+	 *
+	 * @param string $body_html Rendered body markup.
+	 * @return string
+	 */
+	private function wrap_email_document( string $body_html ): string {
+		$styles = $this->get_email_responsive_styles();
+
+		return '<!DOCTYPE html>'
+			. '<html><head>'
+			. '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'
+			. '<meta name="viewport" content="width=device-width, initial-scale=1.0" />'
+			. '<style type="text/css">' . $styles . '</style>'
+			. '</head><body style="font-family: Arial, sans-serif; line-height: 1.6; color: #111; margin: 0; padding: 0;">'
+			. $body_html
+			. '</body></html>';
+	}
+
+	/**
+	 * Responsive CSS for stacked columns in supporting mail clients.
+	 *
+	 * @return string
+	 */
+	private function get_email_responsive_styles(): string {
+		return '@media only screen and (max-width: 620px) {'
+			. '.wstp-stack-table, .wstp-stack-table tbody, .wstp-stack-table tr { display: block !important; width: 100% !important; max-width: 100% !important; }'
+			. '.wstp-stack-table td { display: block !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; padding-right: 0 !important; padding-bottom: 12px !important; }'
+			. '.wstp-stack-table td:last-child { padding-bottom: 0 !important; }'
+			. '.wstp-stack-table img { max-width: 100% !important; height: auto !important; }'
+			. '}';
+	}
+
+	/**
+	 * Convert blocks to email-safe markup during digest rendering.
+	 *
+	 * @param string               $html Block HTML.
+	 * @param array<string,mixed>  $block Parsed block.
+	 * @return string
+	 */
+	public function filter_render_block_for_email( string $html, array $block ): string {
+		if ( ! self::$is_rendering_digest || '' === $html ) {
+			return $html;
+		}
+
+		$block_name = isset( $block['blockName'] ) ? (string) $block['blockName'] : '';
+		if ( 'core/columns' === $block_name ) {
+			return $this->render_columns_as_table( $block );
+		}
+
+		$attrs = isset( $block['attrs'] ) && is_array( $block['attrs'] ) ? $block['attrs'] : array();
+
+		return $this->ensure_inline_block_colors( $html, $attrs );
 	}
 
 	/**
@@ -136,14 +204,19 @@ final class Digest_Template_Renderer {
 				'margin' => '0 0 16px 0',
 			)
 		);
-
-		return '<p' . $style_attr . '>' . esc_html(
+		$text_color = $this->extract_text_color( $attributes );
+		$greeting   = esc_html(
 			sprintf(
 				/* translators: %s: subscriber name. */
 				__( 'Hi %s,', 'we-subscribe-to-posts' ),
 				$greeting_name
 			)
-		) . '</p>';
+		);
+		if ( '' !== $text_color ) {
+			$greeting = $this->wrap_email_colored_text( $greeting, $text_color );
+		}
+
+		return '<p' . $style_attr . '>' . $greeting . '</p>';
 	}
 
 	/**
@@ -231,14 +304,13 @@ final class Digest_Template_Renderer {
 			)
 		);
 		$link_color = $this->extract_text_color( $attributes );
-		$link_style = 'text-decoration: underline;';
-		if ( '' !== $link_color ) {
-			$link_style .= ' color: ' . $link_color . ' !important;';
-		}
 
-		$link_color_attr = '' !== $link_color ? ' color="' . esc_attr( $link_color ) . '"' : '';
-
-		return '<p' . $style_attr . '><a href="' . esc_url( $unsubscribe_url ) . '"' . $link_color_attr . ' style="' . esc_attr( $link_style ) . '"><span' . ( '' !== $link_color ? ' style="color:' . esc_attr( $link_color ) . ' !important;"' : '' ) . '>' . esc_html__( 'Unsubscribe instantly', 'we-subscribe-to-posts' ) . '</span></a></p>';
+		return '<p' . $style_attr . '>' . $this->build_email_link(
+			$unsubscribe_url,
+			esc_html__( 'Unsubscribe instantly', 'we-subscribe-to-posts' ),
+			$link_color,
+			'text-decoration: underline;'
+		) . '</p>';
 	}
 
 	/**
@@ -305,9 +377,13 @@ final class Digest_Template_Renderer {
 				'margin' => '0 0 8px 0',
 			)
 		);
-		$link_style = 'text-decoration: none;' . ( $color ? ' color: ' . $color . ';' : ' color: #111;' );
 
-		return '<h3' . $style_attr . '><a href="' . esc_url( $permalink ) . '" style="' . esc_attr( $link_style ) . '">' . esc_html( $title ) . '</a></h3>';
+		return '<h3' . $style_attr . '>' . $this->build_email_link(
+			$permalink,
+			esc_html( $title ),
+			'' !== $color ? $color : '#111111',
+			'text-decoration: none;'
+		) . '</h3>';
 	}
 
 	/**
@@ -332,7 +408,13 @@ final class Digest_Template_Renderer {
 			)
 		);
 
-		return '<p' . $style_attr . '>' . esc_html( $excerpt ) . '</p>';
+		$text_color = $this->extract_text_color( $attributes );
+		$excerpt_html = esc_html( $excerpt );
+		if ( '' !== $text_color ) {
+			$excerpt_html = $this->wrap_email_colored_text( $excerpt_html, $text_color );
+		}
+
+		return '<p' . $style_attr . '>' . $excerpt_html . '</p>';
 	}
 
 	/**
@@ -357,10 +439,12 @@ final class Digest_Template_Renderer {
 			)
 		);
 		$link_color = $this->extract_text_color( $attributes );
-		$link_style = '' !== $link_color ? 'color: ' . $link_color . ' !important;' : '';
-		$link_color_attr = '' !== $link_color ? ' color="' . esc_attr( $link_color ) . '"' : '';
 
-		return '<p' . $style_attr . '><a href="' . esc_url( $permalink ) . '"' . $link_color_attr . ' style="' . esc_attr( $link_style ) . '"><span' . ( '' !== $link_color ? ' style="color:' . esc_attr( $link_color ) . ' !important;"' : '' ) . '>' . esc_html__( 'Read more', 'we-subscribe-to-posts' ) . '</span></a></p>';
+		return '<p' . $style_attr . '>' . $this->build_email_link(
+			$permalink,
+			esc_html__( 'Read more', 'we-subscribe-to-posts' ),
+			$link_color
+		) . '</p>';
 	}
 
 	/**
@@ -428,8 +512,10 @@ final class Digest_Template_Renderer {
 		$columns_attrs       = isset( $parsed_block['attrs'] ) && is_array( $parsed_block['attrs'] ) ? $parsed_block['attrs'] : array();
 		$parent_vertical_raw = isset( $columns_attrs['verticalAlignment'] ) && is_string( $columns_attrs['verticalAlignment'] ) ? $columns_attrs['verticalAlignment'] : 'top';
 		$parent_vertical     = $this->normalize_vertical_alignment( $parent_vertical_raw );
-		$count = count( $columns );
-		$html  = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; width: 100%;"><tr>';
+		$stack_on_mobile     = ! array_key_exists( 'isStackedOnMobile', $columns_attrs ) || ! empty( $columns_attrs['isStackedOnMobile'] );
+		$table_class         = $stack_on_mobile ? ' class="wstp-stack-table"' : '';
+		$count               = count( $columns );
+		$html                = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"' . $table_class . ' style="border-collapse: collapse; width: 100%;"><tr>';
 
 		foreach ( $columns as $index => $column ) {
 			$width         = $this->normalize_column_width( $column, $count );
@@ -440,8 +526,9 @@ final class Digest_Template_Renderer {
 			$vertical_raw  = isset( $column_attrs['verticalAlignment'] ) && is_string( $column_attrs['verticalAlignment'] ) ? $column_attrs['verticalAlignment'] : $parent_vertical;
 			$vertical_css  = $this->normalize_vertical_alignment( $vertical_raw );
 			$vertical_attr = $this->vertical_align_to_valign( $vertical_css );
+			$cell_class    = $stack_on_mobile ? ' class="wstp-stack-cell"' : '';
 
-			$html .= '<td valign="' . esc_attr( $vertical_attr ) . '" width="' . esc_attr( $width ) . '" style="vertical-align: ' . esc_attr( $vertical_css ) . '; width: ' . esc_attr( $width ) . '; padding-right: ' . esc_attr( $padding_right ) . ';">';
+			$html .= '<td' . $cell_class . ' valign="' . esc_attr( $vertical_attr ) . '" width="' . esc_attr( $width ) . '" style="vertical-align: ' . esc_attr( $vertical_css ) . '; width: ' . esc_attr( $width ) . '; padding-right: ' . esc_attr( $padding_right ) . ';">';
 			$html .= $cell_content;
 			$html .= '</td>';
 		}
@@ -521,7 +608,7 @@ final class Digest_Template_Renderer {
 
 		$text_color = $this->extract_text_color( $attributes );
 		if ( '' !== $text_color ) {
-			$styles['color'] = $text_color;
+			$styles['color'] = $text_color . ' !important';
 		}
 
 		$background_color = $this->extract_background_color( $attributes );
@@ -552,12 +639,29 @@ final class Digest_Template_Renderer {
 	 * @return string
 	 */
 	private function extract_text_color( array $attributes ): string {
-		if ( isset( $attributes['style'] ) && is_array( $attributes['style'] ) && isset( $attributes['style']['color'] ) && is_array( $attributes['style']['color'] ) && isset( $attributes['style']['color']['text'] ) && is_string( $attributes['style']['color']['text'] ) ) {
-			return $this->resolve_color_value( $attributes['style']['color']['text'] );
+		if ( isset( $attributes['style'] ) && is_array( $attributes['style'] ) ) {
+			$style = $attributes['style'];
+
+			if ( isset( $style['color'] ) && is_array( $style['color'] ) && isset( $style['color']['text'] ) && is_string( $style['color']['text'] ) ) {
+				$resolved = $this->resolve_color_value( $style['color']['text'] );
+				if ( '' !== $resolved ) {
+					return $resolved;
+				}
+			}
+
+			if ( isset( $style['elements']['link']['color']['text'] ) && is_string( $style['elements']['link']['color']['text'] ) ) {
+				$resolved = $this->resolve_color_value( $style['elements']['link']['color']['text'] );
+				if ( '' !== $resolved ) {
+					return $resolved;
+				}
+			}
 		}
 
 		if ( isset( $attributes['textColor'] ) && is_string( $attributes['textColor'] ) ) {
-			return $this->resolve_color_slug( $attributes['textColor'] );
+			$resolved = $this->resolve_color_slug( $attributes['textColor'] );
+			if ( '' !== $resolved ) {
+				return $resolved;
+			}
 		}
 
 		if ( isset( $attributes['customTextColor'] ) && is_string( $attributes['customTextColor'] ) ) {
@@ -621,28 +725,166 @@ final class Digest_Template_Renderer {
 			return '';
 		}
 
-		$settings = function_exists( 'wp_get_global_settings' ) ? wp_get_global_settings() : array();
-		$palette  = array();
-
-		if ( isset( $settings['color']['palette'] ) && is_array( $settings['color']['palette'] ) ) {
-			foreach ( $settings['color']['palette'] as $source_palette ) {
-				if ( is_array( $source_palette ) ) {
-					$palette = array_merge( $palette, $source_palette );
-				}
-			}
-		}
-
-		foreach ( $palette as $entry ) {
-			if ( ! is_array( $entry ) ) {
-				continue;
-			}
-
+		foreach ( $this->get_color_palette_entries() as $entry ) {
 			if ( isset( $entry['slug'], $entry['color'] ) && $slug === $entry['slug'] && is_string( $entry['color'] ) ) {
 				return $entry['color'];
 			}
 		}
 
 		return '';
+	}
+
+	/**
+	 * Collect palette entries from theme.json and legacy theme supports.
+	 *
+	 * @return array<int,array<string,string>>
+	 */
+	private function get_color_palette_entries(): array {
+		$palette = array();
+
+		if ( function_exists( 'wp_get_global_settings' ) ) {
+			$settings = wp_get_global_settings();
+			if ( isset( $settings['color']['palette'] ) && is_array( $settings['color']['palette'] ) ) {
+				foreach ( $settings['color']['palette'] as $source_palette ) {
+					if ( is_array( $source_palette ) ) {
+						$palette = array_merge( $palette, $source_palette );
+					}
+				}
+			}
+		}
+
+		if ( class_exists( '\WP_Theme_JSON_Resolver' ) ) {
+			$theme_json = \WP_Theme_JSON_Resolver::get_merged_data();
+			$settings   = $theme_json->get_settings();
+			if ( isset( $settings['color']['palette'] ) && is_array( $settings['color']['palette'] ) ) {
+				foreach ( $settings['color']['palette'] as $entry ) {
+					if ( is_array( $entry ) ) {
+						$palette[] = $entry;
+					}
+				}
+			}
+		}
+
+		$theme_palette = get_theme_support( 'editor-color-palette' );
+		if ( is_array( $theme_palette ) && isset( $theme_palette[0] ) && is_array( $theme_palette[0] ) ) {
+			$palette = array_merge( $palette, $theme_palette[0] );
+		}
+
+		$palette = array_merge( $palette, $this->get_default_wordpress_palette_entries() );
+
+		return $palette;
+	}
+
+	/**
+	 * Default WordPress editor palette slugs.
+	 *
+	 * @return array<int,array<string,string>>
+	 */
+	private function get_default_wordpress_palette_entries(): array {
+		$defaults = array(
+			'black'                 => '#000000',
+			'cyan-bluish-gray'      => '#abb8c3',
+			'white'                 => '#ffffff',
+			'pale-pink'             => '#f78da7',
+			'vivid-red'             => '#cf2e2e',
+			'luminous-vivid-orange' => '#ff6900',
+			'luminous-vivid-amber'  => '#fcb900',
+			'light-green-cyan'      => '#7bdcb5',
+			'vivid-green-cyan'      => '#00d084',
+			'pale-cyan-blue'        => '#8ed1fc',
+			'vivid-cyan-blue'       => '#0693e3',
+			'vivid-purple'          => '#9b51e0',
+		);
+
+		$entries = array();
+		foreach ( $defaults as $slug => $color ) {
+			$entries[] = array(
+				'slug'  => $slug,
+				'color' => $color,
+			);
+		}
+
+		return $entries;
+	}
+
+	/**
+	 * Build an email-safe link with inline and legacy color attributes.
+	 *
+	 * @param string $url Link URL.
+	 * @param string $label Link label HTML (already escaped).
+	 * @param string $color Text color.
+	 * @param string $extra_link_style Additional link CSS declarations.
+	 * @return string
+	 */
+	private function build_email_link( string $url, string $label, string $color = '', string $extra_link_style = '' ): string {
+		$link_style = trim( $extra_link_style );
+		if ( '' !== $color ) {
+			$link_style .= ( '' !== $link_style ? ' ' : '' ) . 'color: ' . $color . ' !important;';
+		}
+
+		$color_attr = '' !== $color ? ' color="' . esc_attr( $color ) . '"' : '';
+		$style_attr = '' !== $link_style ? ' style="' . esc_attr( $link_style ) . '"' : '';
+		$label_html = '' !== $color ? $this->wrap_email_colored_text( $label, $color ) : $label;
+
+		return '<a href="' . esc_url( $url ) . '"' . $color_attr . $style_attr . '>' . $label_html . '</a>';
+	}
+
+	/**
+	 * Wrap text with email-client-safe color markup.
+	 *
+	 * @param string $html Inner HTML (already escaped).
+	 * @param string $color Text color.
+	 * @return string
+	 */
+	private function wrap_email_colored_text( string $html, string $color ): string {
+		if ( '' === $color ) {
+			return $html;
+		}
+
+		return '<span style="color:' . esc_attr( $color ) . ' !important;"><font color="' . esc_attr( $color ) . '">' . $html . '</font></span>';
+	}
+
+	/**
+	 * Ensure core block output includes inline text colors for mail clients.
+	 *
+	 * @param string               $html Block HTML.
+	 * @param array<string,mixed>  $attributes Block attributes.
+	 * @return string
+	 */
+	private function ensure_inline_block_colors( string $html, array $attributes ): string {
+		$text_color = $this->extract_text_color( $attributes );
+		if ( '' === $text_color ) {
+			return $html;
+		}
+
+		if ( preg_match( '/\bcolor\s*:\s*[^;"\'\s]/i', $html ) ) {
+			return $html;
+		}
+
+		return (string) preg_replace_callback(
+			'/^(\<[a-z0-9]+)([^>]*>)/i',
+			function ( array $matches ) use ( $text_color ): string {
+				$tag   = $matches[1];
+				$rest  = $matches[2];
+				$color = 'color: ' . $text_color . ' !important;';
+
+				if ( preg_match( '/\sstyle=(["\'])(.*?)\1/i', $rest, $style_match ) ) {
+					$new_style = rtrim( $style_match[2], '; ' ) . '; ' . $color;
+					$rest      = (string) preg_replace(
+						'/\sstyle=(["\']).*?\1/i',
+						' style="' . esc_attr( $new_style ) . '"',
+						$rest,
+						1
+					);
+				} else {
+					$rest = ' style="' . esc_attr( $color ) . '"' . $rest;
+				}
+
+				return $tag . $rest;
+			},
+			$html,
+			1
+		);
 	}
 
 	/**

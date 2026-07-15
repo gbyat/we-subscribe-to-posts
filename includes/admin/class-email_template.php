@@ -337,7 +337,7 @@ final class Email_Template {
 	 */
 	public static function default_loop_item_content(): string {
 		return '
-<!-- wp:columns -->
+<!-- wp:columns {"isStackedOnMobile":true} -->
 <div class="wp-block-columns"><!-- wp:column {"width":"30%"} -->
 <div class="wp-block-column" style="flex-basis:30%"><!-- wp:wstp/post-image /--></div>
 <!-- /wp:column -->

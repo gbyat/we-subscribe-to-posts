@@ -63,7 +63,7 @@
 			const template = [
 				[
 					'core/columns',
-					{},
+					{ isStackedOnMobile: true },
 					[
 						[
 							'core/column',
