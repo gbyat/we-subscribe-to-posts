@@ -156,6 +156,7 @@ final class Digest_Template_Renderer {
 	 */
 	private function get_color_block_attributes(): array {
 		return array(
+			'textColorHex'           => array( 'type' => 'string' ),
 			'textColor'              => array( 'type' => 'string' ),
 			'backgroundColor'        => array( 'type' => 'string' ),
 			'customTextColor'        => array( 'type' => 'string' ),
@@ -221,11 +222,12 @@ final class Digest_Template_Renderer {
 	 * @return string
 	 */
 	private function get_email_responsive_styles(): string {
-		return '@media only screen and (max-width: 620px) {'
-			. '.wstp-stack-table, .wstp-stack-table tbody, .wstp-stack-table tr { display: block !important; width: 100% !important; max-width: 100% !important; }'
-			. '.wstp-stack-table td.wstp-stack-cell { display: block !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; padding-right: 0 !important; padding-bottom: 12px !important; }'
-			. '.wstp-stack-table td.wstp-stack-cell:last-child { padding-bottom: 0 !important; }'
-			. '.wstp-stack-table img { max-width: 100% !important; height: auto !important; }'
+		return '.wstp-mobile-cols{display:none!important;max-height:0;overflow:hidden;mso-hide:all;}'
+			. '.wstp-desktop-cols{display:block!important;}'
+			. '@media only screen and (max-width:620px){'
+			. '.wstp-desktop-cols{display:none!important;max-height:0!important;overflow:hidden!important;mso-hide:all!important;}'
+			. '.wstp-mobile-cols{display:block!important;max-height:none!important;overflow:visible!important;}'
+			. '.wstp-mobile-cols img{max-width:100%!important;height:auto!important;}'
 			. '}';
 	}
 
@@ -572,9 +574,21 @@ final class Digest_Template_Renderer {
 	 * @return array<int,array<string,mixed>>
 	 */
 	private function resolve_layout_blocks( $block, string $content ): array {
+		$from_template = $this->resolve_layout_blocks_from_template();
+		if ( ! empty( $from_template ) ) {
+			return $from_template;
+		}
+
 		$layout_blocks = array();
 
-		if ( is_object( $block ) && isset( $block->inner_blocks ) && ! empty( $block->inner_blocks ) ) {
+		if ( is_object( $block ) && isset( $block->parsed_block['innerContent'] ) && is_array( $block->parsed_block['innerContent'] ) ) {
+			$raw = implode( '', array_map( 'strval', $block->parsed_block['innerContent'] ) );
+			if ( '' !== trim( $raw ) ) {
+				$layout_blocks = $this->filter_parsed_blocks( parse_blocks( $raw ) );
+			}
+		}
+
+		if ( empty( $layout_blocks ) && is_object( $block ) && isset( $block->inner_blocks ) && ! empty( $block->inner_blocks ) ) {
 			foreach ( $block->inner_blocks as $inner_block ) {
 				if ( is_object( $inner_block ) && isset( $inner_block->parsed_block ) && is_array( $inner_block->parsed_block ) && ! empty( $inner_block->parsed_block['blockName'] ) ) {
 					$layout_blocks[] = $inner_block->parsed_block;
@@ -586,7 +600,7 @@ final class Digest_Template_Renderer {
 			$layout_blocks = $this->filter_parsed_blocks( $block->parsed_block['innerBlocks'] );
 		}
 
-		if ( empty( $layout_blocks ) && '' !== trim( $content ) ) {
+		if ( empty( $layout_blocks ) && '' !== trim( $content ) && str_contains( $content, '<!-- wp:' ) ) {
 			$layout_blocks = $this->filter_parsed_blocks( parse_blocks( $content ) );
 		}
 
@@ -594,7 +608,108 @@ final class Digest_Template_Renderer {
 			$layout_blocks = $this->filter_parsed_blocks( parse_blocks( Email_Template::default_loop_item_content() ) );
 		}
 
-		return $layout_blocks;
+		return $this->normalize_parsed_blocks_tree( $layout_blocks );
+	}
+
+	/**
+	 * Read loop layout directly from the saved email template post content.
+	 *
+	 * @return array<int,array<string,mixed>>
+	 */
+	private function resolve_layout_blocks_from_template(): array {
+		$template_content = Email_Template::get_latest_template_content();
+		if ( '' === trim( $template_content ) ) {
+			return array();
+		}
+
+		$loop_block = $this->find_block_recursive( parse_blocks( $template_content ), 'wstp/posts-loop' );
+		if ( ! is_array( $loop_block ) ) {
+			return array();
+		}
+
+		$layout_blocks = $this->parse_child_blocks_from_parsed_block( $loop_block );
+		if ( empty( $layout_blocks ) ) {
+			return array();
+		}
+
+		return $this->normalize_parsed_blocks_tree( $layout_blocks );
+	}
+
+	/**
+	 * Find a block by name in a parsed block tree.
+	 *
+	 * @param array<int,array<string,mixed>> $blocks Parsed blocks.
+	 * @param string                         $block_name Block name.
+	 * @return array<string,mixed>|null
+	 */
+	private function find_block_recursive( array $blocks, string $block_name ): ?array {
+		foreach ( $blocks as $block ) {
+			if ( ! is_array( $block ) || empty( $block['blockName'] ) ) {
+				continue;
+			}
+
+			if ( $block_name === $block['blockName'] ) {
+				return $block;
+			}
+
+			if ( ! empty( $block['innerBlocks'] ) && is_array( $block['innerBlocks'] ) ) {
+				$found = $this->find_block_recursive( $block['innerBlocks'], $block_name );
+				if ( is_array( $found ) ) {
+					return $found;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Parse child blocks from saved inner markup.
+	 *
+	 * @param array<string,mixed> $parsed_block Parsed block.
+	 * @return array<int,array<string,mixed>>
+	 */
+	private function parse_child_blocks_from_parsed_block( array $parsed_block ): array {
+		if ( ! empty( $parsed_block['innerBlocks'] ) && is_array( $parsed_block['innerBlocks'] ) ) {
+			$blocks = $this->filter_parsed_blocks( $parsed_block['innerBlocks'] );
+			if ( ! empty( $blocks ) ) {
+				return $blocks;
+			}
+		}
+
+		if ( ! empty( $parsed_block['innerContent'] ) && is_array( $parsed_block['innerContent'] ) ) {
+			$raw = implode( '', array_map( 'strval', $parsed_block['innerContent'] ) );
+			if ( '' !== trim( $raw ) ) {
+				return $this->filter_parsed_blocks( parse_blocks( $raw ) );
+			}
+		}
+
+		return array();
+	}
+
+	/**
+	 * Resolve and attach block attributes throughout a parsed block tree.
+	 *
+	 * @param array<int,array<string,mixed>> $blocks Parsed blocks.
+	 * @return array<int,array<string,mixed>>
+	 */
+	private function normalize_parsed_blocks_tree( array $blocks ): array {
+		$normalized = array();
+
+		foreach ( $blocks as $block ) {
+			if ( ! is_array( $block ) || empty( $block['blockName'] ) ) {
+				continue;
+			}
+
+			$block['attrs'] = $this->resolve_block_attributes( $block );
+			if ( ! empty( $block['innerBlocks'] ) && is_array( $block['innerBlocks'] ) ) {
+				$block['innerBlocks'] = $this->normalize_parsed_blocks_tree( $block['innerBlocks'] );
+			}
+
+			$normalized[] = $block;
+		}
+
+		return $normalized;
 	}
 
 	/**
@@ -688,26 +803,36 @@ final class Digest_Template_Renderer {
 	 * @return array<string,mixed>
 	 */
 	private function merge_attrs_from_block_comment( array $attributes, array $parsed_block ): array {
-		$chunks = array();
+		$block_name = isset( $parsed_block['blockName'] ) ? (string) $parsed_block['blockName'] : '';
+		$sources    = array();
+
 		if ( isset( $parsed_block['innerContent'] ) && is_array( $parsed_block['innerContent'] ) ) {
-			$chunks = $parsed_block['innerContent'];
+			$sources[] = implode( '', array_map( 'strval', $parsed_block['innerContent'] ) );
 		}
 
-		foreach ( $chunks as $chunk ) {
-			if ( ! is_string( $chunk ) || ! str_contains( $chunk, '<!-- wp:' ) ) {
+		foreach ( $sources as $source ) {
+			if ( '' === $source || ! str_contains( $source, '<!-- wp:' ) ) {
 				continue;
 			}
 
-			if ( ! preg_match( '/<!--\s+wp:[^\s]+\s+(\{.*\})\s+\/-->/s', $chunk, $matches ) ) {
-				continue;
+			if ( '' !== $block_name ) {
+				$comment_name = 'wp:' . $block_name;
+				if ( preg_match( '/<!--\s+' . preg_quote( $comment_name, '/' ) . '\s+(\{.*\})\s+\/-->/s', $source, $matches ) ) {
+					$decoded = json_decode( $matches[1], true );
+					if ( is_array( $decoded ) ) {
+						$attributes = array_replace_recursive( $decoded, $attributes );
+					}
+				}
 			}
 
-			$decoded = json_decode( $matches[1], true );
-			if ( ! is_array( $decoded ) ) {
-				continue;
+			if ( preg_match_all( '/<!--\s+wp:[^\s]+\s+(\{.*?\})\s+\/-->/s', $source, $matches ) ) {
+				foreach ( $matches[1] as $json ) {
+					$decoded = json_decode( $json, true );
+					if ( is_array( $decoded ) ) {
+						$attributes = array_replace_recursive( $decoded, $attributes );
+					}
+				}
 			}
-
-			$attributes = array_replace_recursive( $decoded, $attributes );
 		}
 
 		return $attributes;
@@ -737,7 +862,6 @@ final class Digest_Template_Renderer {
 		$parent_vertical     = $this->normalize_vertical_alignment( $parent_vertical_raw );
 		$stack_on_mobile     = ! array_key_exists( 'isStackedOnMobile', $columns_attrs ) || ! empty( $columns_attrs['isStackedOnMobile'] );
 		$count               = count( $columns );
-		$table_class         = $stack_on_mobile ? ' class="wstp-stack-table"' : '';
 		$columns_color       = $this->extract_text_color( $columns_attrs );
 		$saved_inherited     = self::$inherited_text_color;
 
@@ -745,27 +869,73 @@ final class Digest_Template_Renderer {
 			self::$inherited_text_color = $columns_color;
 		}
 
-		$html = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"' . $table_class . ' style="border-collapse: collapse; width: 100%;"><tr>';
+		$desktop_html = $this->render_columns_side_by_side_table( $columns, $parent_vertical, $count );
+
+		if ( ! $stack_on_mobile ) {
+			self::$inherited_text_color = $saved_inherited;
+			return $desktop_html;
+		}
+
+		$mobile_html = $this->render_columns_stacked_tables( $columns, $parent_vertical, $count );
+		self::$inherited_text_color = $saved_inherited;
+
+		return '<div class="wstp-desktop-cols">' . $desktop_html . '</div>'
+			. '<div class="wstp-mobile-cols">' . $mobile_html . '</div>';
+	}
+
+	/**
+	 * Render columns side-by-side in one table row.
+	 *
+	 * @param array<int,array<string,mixed>> $columns Parsed columns.
+	 * @param string                         $parent_vertical Parent vertical alignment.
+	 * @param int                            $count Column count.
+	 * @return string
+	 */
+	private function render_columns_side_by_side_table( array $columns, string $parent_vertical, int $count ): string {
+		$html = '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; width: 100%;"><tr>';
 
 		foreach ( $columns as $index => $column ) {
 			$width         = $this->normalize_column_width( $column, $count );
-			$column_blocks = $this->resolve_column_inner_blocks( $column );
+			$column_blocks = $this->parse_child_blocks_from_parsed_block( $column );
+			$column_blocks = $this->normalize_parsed_blocks_tree( $column_blocks );
 			$cell_content  = $this->render_column_blocks( $column, $column_blocks );
 			$padding_right = $index < ( $count - 1 ) ? '16px' : '0';
 			$column_attrs  = isset( $column['attrs'] ) && is_array( $column['attrs'] ) ? $column['attrs'] : array();
 			$vertical_raw  = isset( $column_attrs['verticalAlignment'] ) && is_string( $column_attrs['verticalAlignment'] ) ? $column_attrs['verticalAlignment'] : $parent_vertical;
 			$vertical_css  = $this->normalize_vertical_alignment( $vertical_raw );
 			$vertical_attr = $this->vertical_align_to_valign( $vertical_css );
-			$cell_class    = $stack_on_mobile ? ' class="wstp-stack-cell"' : '';
 
-			$html .= '<td' . $cell_class . ' valign="' . esc_attr( $vertical_attr ) . '" width="' . esc_attr( $width ) . '" style="vertical-align: ' . esc_attr( $vertical_css ) . '; width: ' . esc_attr( $width ) . '; padding-right: ' . esc_attr( $padding_right ) . ';">';
+			$html .= '<td valign="' . esc_attr( $vertical_attr ) . '" width="' . esc_attr( $width ) . '" style="vertical-align: ' . esc_attr( $vertical_css ) . '; width: ' . esc_attr( $width ) . '; padding-right: ' . esc_attr( $padding_right ) . ';">';
 			$html .= $cell_content;
 			$html .= '</td>';
 		}
 
 		$html .= '</tr></table>';
 
-		self::$inherited_text_color = $saved_inherited;
+		return $html;
+	}
+
+	/**
+	 * Render each column as its own full-width table row for mobile clients.
+	 *
+	 * @param array<int,array<string,mixed>> $columns Parsed columns.
+	 * @param string                         $parent_vertical Parent vertical alignment.
+	 * @param int                            $count Column count.
+	 * @return string
+	 */
+	private function render_columns_stacked_tables( array $columns, string $parent_vertical, int $count ): string {
+		$html = '';
+
+		foreach ( $columns as $index => $column ) {
+			$column_blocks = $this->parse_child_blocks_from_parsed_block( $column );
+			$column_blocks = $this->normalize_parsed_blocks_tree( $column_blocks );
+			$cell_content  = $this->render_column_blocks( $column, $column_blocks );
+			$margin_bottom = $index < ( $count - 1 ) ? '12px' : '0';
+
+			$html .= '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse; width: 100%; margin-bottom: ' . esc_attr( $margin_bottom ) . ';"><tr><td style="width: 100%;">';
+			$html .= $cell_content;
+			$html .= '</td></tr></table>';
+		}
 
 		return $html;
 	}
@@ -792,29 +962,6 @@ final class Digest_Template_Renderer {
 		self::$inherited_text_color = $previous_color;
 
 		return $html;
-	}
-
-	/**
-	 * Resolve inner blocks for a column, including serialized fallback content.
-	 *
-	 * @param array<string,mixed> $column Parsed column block.
-	 * @return array<int,array<string,mixed>>
-	 */
-	private function resolve_column_inner_blocks( array $column ): array {
-		$blocks = isset( $column['innerBlocks'] ) && is_array( $column['innerBlocks'] ) ? $column['innerBlocks'] : array();
-		$blocks = $this->filter_parsed_blocks( $blocks );
-		if ( ! empty( $blocks ) ) {
-			return $blocks;
-		}
-
-		if ( isset( $column['innerContent'] ) && is_array( $column['innerContent'] ) ) {
-			$content = implode( '', array_map( 'strval', $column['innerContent'] ) );
-			if ( '' !== trim( $content ) ) {
-				return $this->filter_parsed_blocks( parse_blocks( $content ) );
-			}
-		}
-
-		return array();
 	}
 
 	/**
@@ -945,6 +1092,13 @@ final class Digest_Template_Renderer {
 	 * @return string
 	 */
 	private function extract_text_color_from_attributes( array $attributes ): string {
+		if ( isset( $attributes['textColorHex'] ) && is_string( $attributes['textColorHex'] ) && '' !== trim( $attributes['textColorHex'] ) ) {
+			$hex = sanitize_hex_color( $attributes['textColorHex'] );
+			if ( is_string( $hex ) && '' !== $hex ) {
+				return $hex;
+			}
+		}
+
 		if ( isset( $attributes['style'] ) && is_array( $attributes['style'] ) ) {
 			$style = $attributes['style'];
 
