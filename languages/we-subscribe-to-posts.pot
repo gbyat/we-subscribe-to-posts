@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-15T17:08:04+02:00\n"
+"POT-Creation-Date: 2026-07-16T12:04:06+02:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: we-subscribe-to-posts\n"
@@ -44,12 +44,12 @@ msgid "Post Subscriptions Overview"
 msgstr ""
 
 #: includes/admin/class-dashboard-widget.php:86
-#: includes/admin/class-settings_page.php:1179
+#: includes/admin/class-settings-page.php:1174
 msgid "Yes"
 msgstr ""
 
 #: includes/admin/class-dashboard-widget.php:87
-#: includes/admin/class-settings_page.php:1180
+#: includes/admin/class-settings-page.php:1175
 msgid "No"
 msgstr ""
 
@@ -58,9 +58,9 @@ msgid "No sends yet"
 msgstr ""
 
 #: includes/admin/class-dashboard-widget.php:96
-#: includes/admin/class-subscribers_page.php:79
-#: includes/admin/class-subscribers_page.php:80
-#: includes/admin/class-subscribers_page.php:193
+#: includes/admin/class-subscribers-page.php:79
+#: includes/admin/class-subscribers-page.php:80
+#: includes/admin/class-subscribers-page.php:193
 msgid "Subscribers"
 msgstr ""
 
@@ -143,7 +143,7 @@ msgid "Last digest send: %s"
 msgstr ""
 
 #: includes/admin/class-dashboard-widget.php:123
-#: includes/admin/class-settings_page.php:1122
+#: includes/admin/class-settings-page.php:1117
 msgid "Mail transport"
 msgstr ""
 
@@ -166,7 +166,7 @@ msgid "Open Settings"
 msgstr ""
 
 #: includes/admin/class-dashboard-widget.php:178
-#: includes/admin/class-settings_page.php:1126
+#: includes/admin/class-settings-page.php:1121
 msgid "Custom SMTP"
 msgstr ""
 
@@ -202,888 +202,1059 @@ msgstr ""
 msgid "Trend vs previous 7 days: %1$s by %2$d (%3$s%%)"
 msgstr ""
 
-#: includes/admin/class-email_template.php:59
-#: includes/admin/class-email_template.php:60
-#: includes/admin/class-email_template.php:61
-#: includes/admin/class-email_template.php:252
-#: includes/admin/class-email_template.php:253
+#: includes/admin/class-mjml-template.php:67
+#: includes/admin/class-mjml-template.php:68
+#: includes/admin/class-mjml-template.php:400
 msgid "Digest Email Template"
 msgstr ""
 
-#: includes/admin/class-email_template.php:62
-msgid "Add Email Template"
+#: includes/admin/class-mjml-template.php:113
+msgid "Select email header logo"
 msgstr ""
 
-#: includes/admin/class-email_template.php:63
-msgid "Edit Email Template"
+#: includes/admin/class-mjml-template.php:114
+msgid "Use logo"
 msgstr ""
 
-#: includes/admin/class-email_template.php:126
-msgid "Default Digest Email Template"
+#: includes/admin/class-mjml-template.php:218
+msgid "Stacked"
 msgstr ""
 
-#: includes/admin/class-email_template.php:324
-#: templates/emails/digest.php:27
-msgid "Here are the latest published posts:"
+#: includes/admin/class-mjml-template.php:219
+msgid "Featured image above title and excerpt."
 msgstr ""
 
-#: includes/admin/class-email_template.php:328
-msgid "Add your legal sender details here (company name, address, contact)."
+#: includes/admin/class-mjml-template.php:223
+msgid "Image left"
 msgstr ""
 
-#: includes/admin/class-preview_controller.php:58
-#: includes/admin/class-settings_page.php:1335
-#: includes/admin/class-subscribers_page.php:126
-#: includes/admin/class-subscribers_page.php:520
-#: includes/admin/class-subscribers_page.php:750
+#: includes/admin/class-mjml-template.php:224
+msgid "Two-column layout with image on the left."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:228
+msgid "Minimal"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:229
+msgid "Text-only digest with a simple serif style."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:285
+msgid "Personalized greeting line, e.g. “Hi Anna,”"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:289
+msgid "Subscriber name only"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:293
+msgid "Intro line above the post list"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:297
+msgid "Repeat the block inside for each post in the digest"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:301
+msgid "Post title (inside loop)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:305
+msgid "Post excerpt (inside loop)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:309
+msgid "Post permalink (inside loop)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:313
+msgid "Featured image HTML for stacked layouts (inside loop)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:317
+msgid "Featured image HTML for side-by-side layouts (inside loop)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:321
+msgid "Featured image URL only (inside loop)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:325
+msgid "Read-more button label"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:329
+msgid "Ready-made header HTML built from the branding settings below"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:333
+msgid "Ready-made footer HTML built from the branding settings below"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:337
+msgid "Outer email background (theme: base)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:341
+msgid "Content card background (theme: base-two)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:345
+msgid "Heading text color (theme: darkest readable accent/base-three)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:349
+msgid "Body/footer text color (theme: accent)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:353
+msgid "Button background color (theme: accent-two)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:357
+msgid "Link color (theme: accent-two)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:361
+msgid "Optional notice when post limit hides additional posts"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:365
+msgid "One-click unsubscribe URL"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:369
+#: templates/admin/email-branding-form.php:156
+msgid "Unsubscribe link label"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:373
+msgid "Site name"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:406
+msgid "Template"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:409
+msgid "Branding"
+msgstr ""
+
+#. translators: %s: external MJML editor URL.
+#: includes/admin/class-mjml-template.php:419
+#, php-format
+msgid "Design your email with <a href=\"%s\" target=\"_blank\" rel=\"noopener noreferrer\">MJML</a>, paste the source here, and save. MJML is compiled in your browser; sent digests use the stored HTML and need no Node.js on the server."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:432
+msgid "MJML source"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:439
+msgid "Save template"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:441
+msgid "Preview HTML"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:453
+msgid "Starter templates"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:459
+msgid "Replace the current template with this starter?"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:463
+msgid "Use this starter"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:469
+msgid "Placeholders"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:473
+msgid "Token"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:474
+msgid "Description"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:585
+msgid "No compiled HTML template available for preview."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:586
+msgid "Preview failed"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:670
+#: includes/admin/class-preview-controller.php:58
+#: includes/admin/class-settings-page.php:1330
+#: includes/admin/class-subscribers-page.php:126
+#: includes/admin/class-subscribers-page.php:520
+#: includes/admin/class-subscribers-page.php:750
 msgid "You are not allowed to do this."
 msgstr ""
 
-#: includes/admin/class-preview_controller.php:62
-#: includes/admin/class-settings_page.php:1339
-#: includes/admin/class-subscribers_page.php:130
-#: includes/admin/class-subscribers_page.php:754
+#: includes/admin/class-mjml-template.php:674
+#: includes/admin/class-preview-controller.php:62
+#: includes/admin/class-settings-page.php:1334
+#: includes/admin/class-subscribers-page.php:130
+#: includes/admin/class-subscribers-page.php:754
 msgid "Security check failed."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:70
-#: includes/admin/class-settings_page.php:71
+#: includes/admin/class-mjml-template.php:713
+msgid "MJML template saved and compiled HTML updated."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:714
+msgid "Email branding saved."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:715
+msgid "Starter template loaded."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:716
+msgid "Starter template could not be loaded."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:717
+msgid "Compiled HTML is missing. Save again from the template screen so MJML can compile in your browser."
+msgstr ""
+
+#: includes/admin/class-settings-page.php:70
+#: includes/admin/class-settings-page.php:71
 msgid "Post Subscriptions"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:81
-#: includes/admin/class-settings_page.php:82
+#: includes/admin/class-settings-page.php:81
+#: includes/admin/class-settings-page.php:82
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:90
-#: includes/admin/class-settings_page.php:91
+#: includes/admin/class-settings-page.php:90
+#: includes/admin/class-settings-page.php:91
 msgid "Mail Transport"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:139
+#: includes/admin/class-settings-page.php:139
 msgid "Privacy section text is required."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:591
-#: includes/frontend/class-subscription_form.php:184
+#: includes/admin/class-settings-page.php:591
+#: includes/frontend/class-subscription-form.php:184
 msgid "I agree that my email address is used only for post update notifications."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:593
-#: includes/mailer/class-digest_builder.php:243
-#: includes/mailer/class-digest_builder.php:286
+#: includes/admin/class-settings-page.php:593
+#: includes/mailer/class-digest-builder.php:243
+#: includes/mailer/class-digest-builder.php:286
 msgid "Your latest post updates - {site_name}"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:594
-#: includes/mailer/class-digest_builder.php:241
-#: includes/mailer/class-digest_builder.php:287
+#: includes/admin/class-settings-page.php:594
+#: includes/mailer/class-digest-builder.php:241
+#: includes/mailer/class-digest-builder.php:287
 msgid "Your weekly post updates - {site_name}"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:595
-#: includes/mailer/class-digest_builder.php:242
-#: includes/mailer/class-digest_builder.php:288
+#: includes/admin/class-settings-page.php:595
+#: includes/mailer/class-digest-builder.php:242
+#: includes/mailer/class-digest-builder.php:288
 msgid "Your monthly post updates - {site_name}"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:596
-#: includes/mailer/class-digest_builder.php:236
-#: includes/mailer/class-digest_builder.php:289
+#: includes/admin/class-settings-page.php:596
+#: includes/mailer/class-digest-builder.php:236
+#: includes/mailer/class-digest-builder.php:289
 msgid "[Preview] Latest post updates - {site_name}"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:732
+#: includes/admin/class-settings-page.php:732
 msgid "Monday"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:733
+#: includes/admin/class-settings-page.php:733
 msgid "Tuesday"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:734
+#: includes/admin/class-settings-page.php:734
 msgid "Wednesday"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:735
+#: includes/admin/class-settings-page.php:735
 msgid "Thursday"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:736
+#: includes/admin/class-settings-page.php:736
 msgid "Friday"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:737
+#: includes/admin/class-settings-page.php:737
 msgid "Saturday"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:738
+#: includes/admin/class-settings-page.php:738
 msgid "Sunday"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:742
+#: includes/admin/class-settings-page.php:742
 msgid "Preview email sent successfully."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:743
+#: includes/admin/class-settings-page.php:743
 msgid "Preview email could not be sent."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:744
+#: includes/admin/class-settings-page.php:744
 msgid "Preview recipient email is invalid."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:748
+#: includes/admin/class-settings-page.php:748
 msgid "Post Subscription Settings"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:763
+#: includes/admin/class-settings-page.php:763
 msgid "Privacy section text"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:766
+#: includes/admin/class-settings-page.php:766
 msgid "Shown next to the required consent checkbox in the signup form."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:770
+#: includes/admin/class-settings-page.php:770
 msgid "Preview recipient email"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:773
+#: includes/admin/class-settings-page.php:773
 msgid "Preview mails are sent to this address."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:777
+#: includes/admin/class-settings-page.php:777
 msgid "Daily digest subject"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:780
+#: includes/admin/class-settings-page.php:780
 msgid "Used for daily digest emails. Placeholder: {site_name}"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:784
+#: includes/admin/class-settings-page.php:784
 msgid "Weekly digest subject"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:787
+#: includes/admin/class-settings-page.php:787
 msgid "Used for weekly digest emails. Placeholder: {site_name}"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:791
+#: includes/admin/class-settings-page.php:791
 msgid "Monthly digest subject"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:794
+#: includes/admin/class-settings-page.php:794
 msgid "Used for monthly digest emails. Placeholder: {site_name}"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:798
+#: includes/admin/class-settings-page.php:798
 msgid "Preview email subject"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:801
+#: includes/admin/class-settings-page.php:801
 msgid "Used for admin preview emails. Placeholder: {site_name}"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:805
+#: includes/admin/class-settings-page.php:806
+msgid "Digest delivery"
+msgstr ""
+
+#: includes/admin/class-settings-page.php:809
 msgid "Daily send hour (site time)"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:808
+#: includes/admin/class-settings-page.php:812
 msgid "Applies to daily sends and the dispatch time for weekly/monthly runs."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:812
+#: includes/admin/class-settings-page.php:816
 msgid "Weekly send weekday"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:824
+#: includes/admin/class-settings-page.php:828
 msgid "Monthly send day"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:827
+#: includes/admin/class-settings-page.php:831
 msgid "Use 1-28 to avoid invalid dates in shorter months."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:831
+#: includes/admin/class-settings-page.php:835
 msgid "Delete unconfirmed after days"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:834
+#: includes/admin/class-settings-page.php:838
 msgid "Pending (double opt-in not confirmed) subscribers are removed by daily cleanup after this many days."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:838
+#: includes/admin/class-settings-page.php:842
 msgid "Max digest emails per minute"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:841
+#: includes/admin/class-settings-page.php:845
 msgid "Recommended: keep throttling enabled to reduce hoster spam/rate-limit risk on larger sends. Use 0 only if you explicitly want no throttling."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:845
+#: includes/admin/class-settings-page.php:849
 msgid "Max posts per daily digest"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:848
-#: includes/admin/class-settings_page.php:855
-#: includes/admin/class-settings_page.php:862
+#: includes/admin/class-settings-page.php:852
+#: includes/admin/class-settings-page.php:859
+#: includes/admin/class-settings-page.php:866
 msgid "Set to 0 to include all matching posts."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:852
+#: includes/admin/class-settings-page.php:856
 msgid "Max posts per weekly digest"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:859
+#: includes/admin/class-settings-page.php:863
 msgid "Max posts per monthly digest"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:866
+#: includes/admin/class-settings-page.php:870
 msgid "Subscribe anti-spam window (seconds)"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:869
+#: includes/admin/class-settings-page.php:873
 msgid "How long the anti-spam window lasts for signup attempts. Set to 0 to disable subscribe rate limiting."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:873
+#: includes/admin/class-settings-page.php:877
 msgid "Subscribe attempts allowed per window"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:876
+#: includes/admin/class-settings-page.php:880
 msgid "Maximum subscribe attempts per email/IP during one anti-spam window."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:880
+#: includes/admin/class-settings-page.php:884
 msgid "Double opt-in resend cooldown (minutes)"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:883
+#: includes/admin/class-settings-page.php:887
 msgid "Prevents repeated confirmation mails for pending subscribers. Set to 0 to allow immediate resend."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:887
+#: includes/admin/class-settings-page.php:891
 msgid "Admin notifications for new subscribers"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:890
-#: includes/admin/class-settings_page.php:925
-#: includes/admin/class-settings_page.php:935
+#: includes/admin/class-settings-page.php:894
+#: includes/admin/class-settings-page.php:929
+#: includes/admin/class-settings-page.php:939
 msgid "Disabled"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:891
-#: includes/admin/class-settings_page.php:926
-#: includes/admin/class-settings_page.php:936
+#: includes/admin/class-settings-page.php:895
+#: includes/admin/class-settings-page.php:930
+#: includes/admin/class-settings-page.php:940
 msgid "Enabled"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:893
+#: includes/admin/class-settings-page.php:897
 msgid "Optional notifications when new subscribers register or confirm."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:897
+#: includes/admin/class-settings-page.php:901
 msgid "Notification trigger"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:900
+#: includes/admin/class-settings-page.php:904
 msgid "Only after double opt-in confirmation"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:901
+#: includes/admin/class-settings-page.php:905
 msgid "Both: pending signup and confirmed subscriber"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:906
+#: includes/admin/class-settings-page.php:910
 msgid "Notification mode"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:909
+#: includes/admin/class-settings-page.php:913
 msgid "Instant (one email per event)"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:910
+#: includes/admin/class-settings-page.php:914
 msgid "Daily summary"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:915
+#: includes/admin/class-settings-page.php:919
 msgid "Notification recipient email"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:918
+#: includes/admin/class-settings-page.php:922
 msgid "Default is the WordPress admin email."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:922
+#: includes/admin/class-settings-page.php:926
 msgid "Dashboard widget"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:928
+#: includes/admin/class-settings-page.php:932
 msgid "Shows an overview widget on the WordPress Dashboard with subscriber and mail stats."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:932
+#: includes/admin/class-settings-page.php:936
 msgid "GitHub auto updates"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:938
+#: includes/admin/class-settings-page.php:942
 msgid "When enabled, WordPress checks GitHub releases for plugin updates."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:942
+#: includes/admin/class-settings-page.php:946
 msgid "Success message display"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:945
+#: includes/admin/class-settings-page.php:949
 msgid "Slide-in notification"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:946
+#: includes/admin/class-settings-page.php:950
 msgid "Centered overlay notification"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:947
+#: includes/admin/class-settings-page.php:951
 msgid "Inline message above the form"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:949
+#: includes/admin/class-settings-page.php:953
 msgid "Choose how users see confirmation after signup."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:953
+#: includes/admin/class-settings-page.php:957
 msgid "Slide-in position"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:956
+#: includes/admin/class-settings-page.php:960
 msgid "Bottom right"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:957
+#: includes/admin/class-settings-page.php:961
 msgid "Bottom left"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:958
+#: includes/admin/class-settings-page.php:962
 msgid "Top right"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:959
+#: includes/admin/class-settings-page.php:963
 msgid "Top left"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:961
+#: includes/admin/class-settings-page.php:965
 msgid "Used for slide-in notification style."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:965
+#: includes/admin/class-settings-page.php:969
 msgid "Auto-close after seconds"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:968
+#: includes/admin/class-settings-page.php:972
 msgid "Set to 0 to disable auto-close."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:973
+#: includes/admin/class-settings-page.php:977
 msgid "Save settings"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1029
+#: includes/admin/class-settings-page.php:1033
 msgid "Post Subscriptions > Digest Email Template"
 msgstr ""
 
 #. translators: %s: admin URL.
-#: includes/admin/class-settings_page.php:1033
+#: includes/admin/class-settings-page.php:1037
 #, php-format
-msgid "Edit your block-based digest email template under %s."
+msgid "Edit your MJML digest email template under %s."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1045
-msgid "Edit active template"
+#: includes/admin/class-settings-page.php:1045
+msgid "Edit email template"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1049
-msgid "Create template"
-msgstr ""
-
-#: includes/admin/class-settings_page.php:1058
+#: includes/admin/class-settings-page.php:1053
 msgid "Cron reliability (recommended)"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1059
+#: includes/admin/class-settings-page.php:1054
 msgid "For reliable digest delivery, set up a real server cron job that triggers WordPress cron regularly."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1060
+#: includes/admin/class-settings-page.php:1055
 msgid "HTTP endpoint:"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1061
+#: includes/admin/class-settings-page.php:1056
 msgid "Example interval:"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1061
+#: includes/admin/class-settings-page.php:1056
 msgid "every 5 minutes"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1064
+#: includes/admin/class-settings-page.php:1059
 msgid "Email preview"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1065
+#: includes/admin/class-settings-page.php:1060
 msgid "Send a preview email with the latest 3 published posts."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1070
+#: includes/admin/class-settings-page.php:1065
 msgid "Send preview now"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1102
+#: includes/admin/class-settings-page.php:1097
 msgid "Test transport email sent successfully."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1103
+#: includes/admin/class-settings-page.php:1098
 msgid "Test transport email could not be sent."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1104
+#: includes/admin/class-settings-page.php:1099
 msgid "Please provide a valid test recipient email."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1108
+#: includes/admin/class-settings-page.php:1103
 msgid "Mail Transport Settings"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1125
+#: includes/admin/class-settings-page.php:1120
 msgid "WordPress default (wp_mail / host)"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1127
+#: includes/admin/class-settings-page.php:1122
 msgid "Gmail (SMTP preset)"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1132
+#: includes/admin/class-settings-page.php:1127
 msgid "Use for all WordPress emails"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1137
+#: includes/admin/class-settings-page.php:1132
 msgid "Apply this transport globally (not only this plugin)."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1142
+#: includes/admin/class-settings-page.php:1137
 msgid "From email (optional)"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1148
+#: includes/admin/class-settings-page.php:1143
 msgid "From name (optional)"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1154
+#: includes/admin/class-settings-page.php:1149
 msgid "SMTP host"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1160
+#: includes/admin/class-settings-page.php:1155
 msgid "SMTP port"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1166
+#: includes/admin/class-settings-page.php:1161
 msgid "SMTP encryption"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1169
+#: includes/admin/class-settings-page.php:1164
 msgid "None"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1176
+#: includes/admin/class-settings-page.php:1171
 msgid "SMTP authentication"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1185
+#: includes/admin/class-settings-page.php:1180
 msgid "SMTP username"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1191
+#: includes/admin/class-settings-page.php:1186
 msgid "SMTP password/app password"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1194
+#: includes/admin/class-settings-page.php:1189
 msgid "For Gmail use an app password and keep TLS/587."
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1199
+#: includes/admin/class-settings-page.php:1194
 msgid "Save mail transport settings"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1296
+#: includes/admin/class-settings-page.php:1291
 msgid "Test transport recipient"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1298
+#: includes/admin/class-settings-page.php:1293
 msgid "Send test email"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1314
+#: includes/admin/class-settings-page.php:1309
 msgid "Active transport summary"
 msgstr ""
 
-#: includes/admin/class-settings_page.php:1316
+#: includes/admin/class-settings-page.php:1311
 msgid "Transport: WordPress default wp_mail() / host environment"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:274
+#: includes/admin/class-subscribers-page.php:274
 msgid "Add email to suppression list (never send again)"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:276
+#: includes/admin/class-subscribers-page.php:276
 msgid "Add to suppression list"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:282
+#: includes/admin/class-subscribers-page.php:282
 msgid "Search subscribers"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:284
+#: includes/admin/class-subscribers-page.php:284
 msgid "Search"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:287
-#: includes/admin/class-subscribers_page.php:341
+#: includes/admin/class-subscribers-page.php:287
+#: includes/admin/class-subscribers-page.php:341
 #: includes/subscription/class-admin-notification-service.php:162
 msgid "Status"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:289
-#: includes/admin/class-subscribers_page.php:298
+#: includes/admin/class-subscribers-page.php:289
+#: includes/admin/class-subscribers-page.php:298
 msgid "All"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:290
+#: includes/admin/class-subscribers-page.php:290
 msgid "Pending"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:291
+#: includes/admin/class-subscribers-page.php:291
 msgid "Active"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:292
+#: includes/admin/class-subscribers-page.php:292
 msgid "Unsubscribed"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:293
+#: includes/admin/class-subscribers-page.php:293
 msgid "Suppressed"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:296
-#: includes/admin/class-subscribers_page.php:342
+#: includes/admin/class-subscribers-page.php:296
+#: includes/admin/class-subscribers-page.php:342
 #: includes/subscription/class-admin-notification-service.php:165
 msgid "Frequency"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:299
+#: includes/admin/class-subscribers-page.php:299
 #: assets/js/subscription-form-block.js:51
 msgid "Daily"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:300
-#: includes/frontend/class-subscription_form.php:174
+#: includes/admin/class-subscribers-page.php:300
+#: includes/frontend/class-subscription-form.php:174
 #: assets/js/subscription-form-block.js:52
 msgid "Weekly"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:301
-#: includes/frontend/class-subscription_form.php:175
+#: includes/admin/class-subscribers-page.php:301
+#: includes/frontend/class-subscription-form.php:175
 #: assets/js/subscription-form-block.js:53
 msgid "Monthly"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:304
+#: includes/admin/class-subscribers-page.php:304
 msgid "Filter"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:310
+#: includes/admin/class-subscribers-page.php:310
 msgid "Export CSV"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:319
-#: includes/admin/class-subscribers_page.php:411
+#: includes/admin/class-subscribers-page.php:319
+#: includes/admin/class-subscribers-page.php:411
 msgid "Select bulk action"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:321
-#: includes/admin/class-subscribers_page.php:413
+#: includes/admin/class-subscribers-page.php:321
+#: includes/admin/class-subscribers-page.php:413
 msgid "Bulk actions"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:322
-#: includes/admin/class-subscribers_page.php:414
-#: includes/admin/class-subscribers_page.php:602
+#: includes/admin/class-subscribers-page.php:322
+#: includes/admin/class-subscribers-page.php:414
+#: includes/admin/class-subscribers-page.php:602
 msgid "Unsubscribe"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:323
-#: includes/admin/class-subscribers_page.php:415
-#: includes/admin/class-subscribers_page.php:610
+#: includes/admin/class-subscribers-page.php:323
+#: includes/admin/class-subscribers-page.php:415
+#: includes/admin/class-subscribers-page.php:610
 msgid "Suppress"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:324
-#: includes/admin/class-subscribers_page.php:416
-#: includes/admin/class-subscribers_page.php:618
+#: includes/admin/class-subscribers-page.php:324
+#: includes/admin/class-subscribers-page.php:416
+#: includes/admin/class-subscribers-page.php:618
 msgid "Reactivate"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:325
-#: includes/admin/class-subscribers_page.php:417
+#: includes/admin/class-subscribers-page.php:325
+#: includes/admin/class-subscribers-page.php:417
 msgid "Delete permanently"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:327
-#: includes/admin/class-subscribers_page.php:419
+#: includes/admin/class-subscribers-page.php:327
+#: includes/admin/class-subscribers-page.php:419
 msgid "Apply"
 msgstr ""
 
 #. translators: %d: subscriber count.
-#: includes/admin/class-subscribers_page.php:330
+#: includes/admin/class-subscribers-page.php:330
 #, php-format
 msgid "%d subscriber"
 msgid_plural "%d subscribers"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/admin/class-subscribers_page.php:339
+#: includes/admin/class-subscribers-page.php:339
 #: includes/subscription/class-admin-notification-service.php:163
 msgid "Email"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:340
+#: includes/admin/class-subscribers-page.php:340
 #: includes/subscription/class-admin-notification-service.php:164
 msgid "Name"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:343
+#: includes/admin/class-subscribers-page.php:343
 msgid "Created"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:344
+#: includes/admin/class-subscribers-page.php:344
 msgid "Deliveries"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:345
+#: includes/admin/class-subscribers-page.php:345
 msgid "Last Result"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:346
+#: includes/admin/class-subscribers-page.php:346
 msgid "Consent Proof"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:347
+#: includes/admin/class-subscribers-page.php:347
 msgid "Actions"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:353
+#: includes/admin/class-subscribers-page.php:353
 msgid "No subscribers found."
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:473
+#: includes/admin/class-subscribers-page.php:473
 msgid "Delete selected subscribers permanently?"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:625
+#: includes/admin/class-subscribers-page.php:625
 msgid "Delete subscriber permanently?"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:626
+#: includes/admin/class-subscribers-page.php:626
 msgid "Delete"
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:723
+#: includes/admin/class-subscribers-page.php:723
 msgid "Subscriber action completed."
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:724
+#: includes/admin/class-subscribers-page.php:724
 msgid "Subscriber action failed."
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:725
+#: includes/admin/class-subscribers-page.php:725
 msgid "Bulk action completed for all selected subscribers."
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:726
+#: includes/admin/class-subscribers-page.php:726
 msgid "Bulk action completed with partial failures."
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:727
+#: includes/admin/class-subscribers-page.php:727
 msgid "Please select a bulk action and at least one subscriber."
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:728
+#: includes/admin/class-subscribers-page.php:728
 msgid "Email added to suppression list."
 msgstr ""
 
-#: includes/admin/class-subscribers_page.php:729
+#: includes/admin/class-subscribers-page.php:729
 msgid "Please provide a valid email to suppress."
 msgstr ""
 
-#: includes/core/class-updater.php:209
-msgid "No changelog available."
+#: includes/core/class-updater.php:342
+msgid "Upgrade notice:"
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:77
-#: includes/frontend/class-subscription_form.php:140
+#: includes/core/class-updater.php:479
+msgid "No changelog available for this release."
+msgstr ""
+
+#: includes/core/class-updater.php:481
+msgid "View release on GitHub"
+msgstr ""
+
+#: includes/frontend/class-subscription-form.php:77
+#: includes/frontend/class-subscription-form.php:140
 #: templates/subscription-form.php:36
 #: assets/js/subscription-form-block.js:21
 #: assets/js/subscription-form-block.js:61
 msgid "Subscribe"
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:173
+#: includes/frontend/class-subscription-form.php:173
 msgid "Daily (on days with new posts)"
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:583
+#: includes/frontend/class-subscription-form.php:583
 #: templates/subscription-form.php:136
 #: templates/subscription-form.php:316
 msgid "Continue to website"
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:605
+#: includes/frontend/class-subscription-form.php:605
 #: templates/subscription-form.php:95
 #: templates/subscription-form.php:338
 msgid "OK"
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:631
+#: includes/frontend/class-subscription-form.php:631
 #: templates/subscription-form.php:15
 msgid "Please check your inbox and confirm your subscription."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:632
+#: includes/frontend/class-subscription-form.php:632
 #: templates/subscription-form.php:29
 msgid "We sent a fresh confirmation email. Please check your inbox."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:633
+#: includes/frontend/class-subscription-form.php:633
 #: templates/subscription-form.php:30
 msgid "A confirmation email was sent recently. Please wait a few minutes before requesting another one."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:634
+#: includes/frontend/class-subscription-form.php:634
 #: templates/subscription-form.php:16
 msgid "Subscription confirmed. You are now subscribed."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:635
+#: includes/frontend/class-subscription-form.php:635
 #: templates/subscription-form.php:17
 msgid "You have been unsubscribed successfully."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:636
+#: includes/frontend/class-subscription-form.php:636
 #: templates/subscription-form.php:18
 msgid "Security check failed. Please try again."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:637
+#: includes/frontend/class-subscription-form.php:637
 #: templates/subscription-form.php:19
 msgid "Please enter a valid email address."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:638
+#: includes/frontend/class-subscription-form.php:638
 #: templates/subscription-form.php:20
 msgid "Please enter a valid name without links or suspicious patterns."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:639
+#: includes/frontend/class-subscription-form.php:639
 #: templates/subscription-form.php:21
 msgid "Please select a valid delivery frequency."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:640
+#: includes/frontend/class-subscription-form.php:640
 #: templates/subscription-form.php:22
 msgid "Please accept the privacy section before subscribing."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:641
+#: includes/frontend/class-subscription-form.php:641
 #: templates/subscription-form.php:23
 msgid "Submission could not be processed. Please try again."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:642
+#: includes/frontend/class-subscription-form.php:642
 #: templates/subscription-form.php:24
 msgid "Too many subscribe attempts in a short time. Please wait a moment and try again."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:643
+#: includes/frontend/class-subscription-form.php:643
 #: templates/subscription-form.php:25
 msgid "We could not send the confirmation email right now. Please try again later."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:644
+#: includes/frontend/class-subscription-form.php:644
 #: templates/subscription-form.php:26
 msgid "This confirmation or unsubscribe link is invalid or expired."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:645
+#: includes/frontend/class-subscription-form.php:645
 #: templates/subscription-form.php:27
 msgid "This email is already subscribed with the selected frequency."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:646
+#: includes/frontend/class-subscription-form.php:646
 #: templates/subscription-form.php:28
 msgid "A confirmation email was already sent for this address. Please check your inbox."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:647
+#: includes/frontend/class-subscription-form.php:647
 #: templates/subscription-form.php:31
 msgid "This email is blocked from subscriptions and cannot be added again."
 msgstr ""
 
-#: includes/frontend/class-subscription_form.php:663
+#: includes/frontend/class-subscription-form.php:663
 msgid "An unknown status occurred."
 msgstr ""
 
-#: includes/mailer/class-digest_builder.php:269
+#: includes/mailer/class-digest-builder.php:269
 msgid "Your latest post updates"
 msgstr ""
 
-#: includes/mailer/class-digest_scheduler.php:210
+#: includes/mailer/class-digest-scheduler.php:210
 msgid "wp_mail returned false."
 msgstr ""
 
-#: includes/mailer/class-digest_scheduler.php:232
-#: includes/mailer/class-digest_template_renderer.php:200
+#: includes/mailer/class-digest-scheduler.php:232
+#: includes/mailer/class-mjml-template-renderer.php:93
 #: templates/emails/optin-confirmation.php:13
 msgid "there"
 msgstr ""
 
-#. translators: %s: subscriber name.
-#: includes/mailer/class-digest_template_renderer.php:211
-#: templates/emails/digest.php:21
-#: templates/emails/optin-confirmation.php:22
-#, php-format
-msgid "Hi %s,"
+#: includes/mailer/class-email-branding.php:285
+#: templates/subscription-form.php:179
+msgid "Website"
 msgstr ""
 
-#: includes/mailer/class-digest_template_renderer.php:234
-msgid "No published posts available yet."
-msgstr ""
-
-#. translators: %d: hidden posts count.
-#: includes/mailer/class-digest_template_renderer.php:269
-#: templates/emails/digest.php:56
-#, php-format
-msgid "Plus %d more published post not shown due to your limit."
-msgid_plural "Plus %d more published posts not shown due to your limit."
-msgstr[0] ""
-msgstr[1] ""
-
-#: includes/mailer/class-digest_template_renderer.php:310
+#: includes/mailer/class-email-branding.php:290
+#: includes/mailer/class-mjml-template-renderer.php:106
+#: includes/mailer/class-mjml-template-renderer.php:315
 #: templates/emails/digest.php:65
 msgid "Unsubscribe instantly"
-msgstr ""
-
-#: includes/mailer/class-digest_template_renderer.php:445
-#: templates/emails/digest.php:45
-msgid "Read more"
 msgstr ""
 
 #: includes/mailer/class-mailer.php:55
@@ -1096,6 +1267,46 @@ msgstr ""
 
 #: includes/mailer/class-mailer.php:111
 msgid "This is a test email from We Subscribe To Posts transport settings."
+msgstr ""
+
+#. translators: %s: subscriber name.
+#: includes/mailer/class-mjml-template-renderer.php:96
+#: templates/emails/digest.php:21
+#: templates/emails/optin-confirmation.php:22
+#, php-format
+msgid "Hi %s,"
+msgstr ""
+
+#: includes/mailer/class-mjml-template-renderer.php:104
+#: templates/emails/digest.php:27
+msgid "Here are the latest published posts:"
+msgstr ""
+
+#: includes/mailer/class-mjml-template-renderer.php:107
+#: includes/mailer/class-mjml-template-renderer.php:143
+#: templates/emails/digest.php:45
+msgid "Read more"
+msgstr ""
+
+#. translators: %d: hidden posts count.
+#: includes/mailer/class-mjml-template-renderer.php:193
+#: templates/emails/digest.php:56
+#, php-format
+msgid "Plus %d more published post not shown due to your limit."
+msgid_plural "Plus %d more published posts not shown due to your limit."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/mailer/class-mjml-template-renderer.php:300
+msgid "Phone:"
+msgstr ""
+
+#: includes/mailer/class-mjml-template-renderer.php:306
+msgid "Privacy"
+msgstr ""
+
+#: includes/mailer/class-mjml-template-renderer.php:307
+msgid "Imprint"
 msgstr ""
 
 #. translators: 1: site name, 2: number of events.
@@ -1161,8 +1372,141 @@ msgstr ""
 msgid "Time:"
 msgstr ""
 
-#: includes/subscription/class-double_optin_service.php:104
+#: includes/subscription/class-double-optin-service.php:104
 msgid "Could not send double opt-in message."
+msgstr ""
+
+#: templates/admin/email-branding-form.php:18
+msgid "Outer background"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:19
+msgid "Content, header, footer, posts"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:20
+msgid "Theme surface (optional)"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:21
+msgid "Body and footer text"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:22
+msgid "Buttons and links"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:23
+msgid "Headings (darkest readable theme color)"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:31
+msgid "Colors are applied automatically via placeholders such as {{wstp:color_body_bg}}, {{wstp:color_content_bg}}, {{wstp:color_text}} (headings), {{wstp:color_muted}} (body text), {{wstp:color_accent}}, and {{wstp:color_link}}."
+msgstr ""
+
+#: templates/admin/email-branding-form.php:34
+msgid "Colors"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:37
+msgid "Palette loaded from your theme. Click a swatch to edit."
+msgstr ""
+
+#: templates/admin/email-branding-form.php:39
+msgid "Click a swatch to edit the email palette."
+msgstr ""
+
+#: templates/admin/email-branding-form.php:71
+msgid "Reload colors from theme"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:75
+msgid "Header"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:78
+msgid "Logo"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:82
+msgid "Select logo"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:83
+msgid "Remove logo"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:89
+msgid "Link URL"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:93
+msgid "Logo alt text"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:97
+msgid "Logo max width (px)"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:101
+msgid "Text fallback"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:104
+msgid "Used only when no logo image is set."
+msgstr ""
+
+#: templates/admin/email-branding-form.php:108
+#: templates/admin/email-branding-form.php:120
+msgid "Tagline"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:113
+msgid "Footer"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:116
+msgid "Name or company"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:124
+msgid "Address"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:128
+msgid "Phone"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:132
+msgid "Primary URL"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:136
+msgid "Primary label"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:140
+msgid "Secondary URL"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:144
+msgid "Secondary label"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:148
+msgid "Privacy URL"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:152
+msgid "Imprint URL"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:159
+msgid "Text of the unsubscribe link in the footer block."
+msgstr ""
+
+#: templates/admin/email-branding-form.php:164
+msgid "Save branding"
 msgstr ""
 
 #: templates/emails/optin-confirmation.php:28
@@ -1171,10 +1515,6 @@ msgstr ""
 
 #: templates/emails/optin-confirmation.php:29
 msgid "Confirm subscription"
-msgstr ""
-
-#: templates/subscription-form.php:179
-msgid "Website"
 msgstr ""
 
 #: templates/subscription-form.php:184
@@ -1187,82 +1527,6 @@ msgstr ""
 
 #: templates/subscription-form.php:194
 msgid "Send frequency"
-msgstr ""
-
-#: assets/js/email-template-blocks.js:11
-msgid "Digest Greeting"
-msgstr ""
-
-#: assets/js/email-template-blocks.js:14
-msgid "Dynamic personalized greeting for the subscriber."
-msgstr ""
-
-#: assets/js/email-template-blocks.js:25
-msgid "Greeting is rendered dynamically in the email."
-msgstr ""
-
-#: assets/js/email-template-blocks.js:34
-msgid "Unsubscribe Link"
-msgstr ""
-
-#: assets/js/email-template-blocks.js:37
-msgid "Required one-click unsubscribe link."
-msgstr ""
-
-#: assets/js/email-template-blocks.js:49
-msgid "Unsubscribe link is rendered dynamically in the email."
-msgstr ""
-
-#: assets/js/email-template-blocks.js:58
-msgid "Digest Posts Loop"
-msgstr ""
-
-#: assets/js/email-template-blocks.js:61
-msgid "Loop layout for digest posts. Add columns and post field blocks inside."
-msgstr ""
-
-#: assets/js/email-template-blocks.js:94
-msgid "This layout is repeated for each digest post."
-msgstr ""
-
-#: assets/js/email-template-blocks.js:123
-msgid "Digest Post Image"
-msgstr ""
-
-#: assets/js/email-template-blocks.js:143
-msgid "Image size"
-msgstr ""
-
-#: assets/js/email-template-blocks.js:147
-msgid "Max width (px)"
-msgstr ""
-
-#: assets/js/email-template-blocks.js:161
-msgid "Post image renders here."
-msgstr ""
-
-#: assets/js/email-template-blocks.js:172
-msgid "Digest Post Title"
-msgstr ""
-
-#: assets/js/email-template-blocks.js:174
-msgid "Post title renders here."
-msgstr ""
-
-#: assets/js/email-template-blocks.js:189
-msgid "Digest Post Excerpt"
-msgstr ""
-
-#: assets/js/email-template-blocks.js:191
-msgid "Post excerpt renders here."
-msgstr ""
-
-#: assets/js/email-template-blocks.js:205
-msgid "Digest Post Read More Link"
-msgstr ""
-
-#: assets/js/email-template-blocks.js:207
-msgid "Read more link renders here."
 msgstr ""
 
 #: assets/js/subscription-form-block.js:14

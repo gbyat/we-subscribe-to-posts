@@ -15,6 +15,9 @@ $option_names = array(
 	'wstp_mail_settings',
 	'wstp_legacy_single_options_purged',
 	'wstp_admin_subscriber_notification_queue',
+	'wstp_digest_mjml_template',
+	'wstp_digest_html_template',
+	'wstp_digest_branding',
 );
 
 foreach ( $option_names as $option_name ) {

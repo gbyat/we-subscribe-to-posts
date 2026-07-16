@@ -801,6 +801,10 @@ final class Settings_Page
 									<p class="description"><?php esc_html_e('Used for admin preview emails. Placeholder: {site_name}', 'we-subscribe-to-posts'); ?></p>
 								</td>
 							</tr>
+				</table>
+
+				<h2><?php esc_html_e('Digest delivery', 'we-subscribe-to-posts'); ?></h2>
+				<table class="form-table" role="presentation">
 								<tr>
 									<th scope="row"><label for="wstp_send_hour"><?php esc_html_e('Daily send hour (site time)', 'we-subscribe-to-posts'); ?></label></th>
 									<td>
@@ -1026,30 +1030,21 @@ final class Settings_Page
 
 			<p>
 				<?php
-				$template_list_link = '<a href="' . esc_url(admin_url('admin.php?page=wstp-email-template')) . '">' . esc_html__('Post Subscriptions > Digest Email Template', 'we-subscribe-to-posts') . '</a>';
+				$template_link = '<a href="' . esc_url( admin_url( 'admin.php?page=wstp-email-template' ) ) . '">' . esc_html__( 'Post Subscriptions > Digest Email Template', 'we-subscribe-to-posts' ) . '</a>';
 				echo wp_kses_post(
 					sprintf(
 						/* translators: %s: admin URL. */
-						esc_html__('Edit your block-based digest email template under %s.', 'we-subscribe-to-posts'),
-						$template_list_link
+						esc_html__( 'Edit your MJML digest email template under %s.', 'we-subscribe-to-posts' ),
+						$template_link
 					)
 				);
 				?>
-				</p>
-				<p>
-					<?php
-					$template_id = Email_Template::get_primary_template_id();
-					if ($template_id > 0) :
-					?>
-						<a class="button" href="<?php echo esc_url(get_edit_post_link($template_id, 'url')); ?>">
-							<?php esc_html_e('Edit active template', 'we-subscribe-to-posts'); ?>
-						</a>
-					<?php else : ?>
-						<a class="button" href="<?php echo esc_url(admin_url('post-new.php?post_type=wstp_email_template')); ?>">
-							<?php esc_html_e('Create template', 'we-subscribe-to-posts'); ?>
-						</a>
-					<?php endif; ?>
-					</p>
+			</p>
+			<p>
+				<a class="button" href="<?php echo esc_url( admin_url( 'admin.php?page=wstp-email-template' ) ); ?>">
+					<?php esc_html_e( 'Edit email template', 'we-subscribe-to-posts' ); ?>
+				</a>
+			</p>
 
 					<?php
 					$cron_url = add_query_arg('doing_wp_cron', '1', home_url('/wp-cron.php'));

@@ -7,7 +7,7 @@
 
 namespace WSTP;
 
-use WSTP\Admin\Email_Template;
+use WSTP\Admin\Mjml_Template;
 use WSTP\Admin\Preview_Controller;
 use WSTP\Admin\Settings_Page;
 use WSTP\Admin\Subscribers_Page;
@@ -51,7 +51,7 @@ final class Plugin {
 		$subscribers_page     = new Subscribers_Page( $subscriber_repository, $event_repository );
 		$dashboard_widget     = new Dashboard_Widget( $subscriber_repository, $event_repository );
 		$preview_controller   = new Preview_Controller( $digest_builder, $mailer );
-		$email_template       = class_exists( Email_Template::class ) ? new Email_Template() : null;
+		$mjml_template      = new Mjml_Template();
 		if ( ( is_admin() || wp_doing_cron() ) && class_exists( Updater::class ) ) {
 			new Updater( WSTP_FILE );
 		}
@@ -66,9 +66,7 @@ final class Plugin {
 		$settings_page->register();
 		$subscribers_page->register();
 		$dashboard_widget->register();
-		if ( $email_template instanceof Email_Template ) {
-			$email_template->register();
-		}
+		$mjml_template->register();
 		$preview_controller->register();
 	}
 

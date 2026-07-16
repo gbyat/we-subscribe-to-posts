@@ -10,7 +10,15 @@
     "sync:version": "node scripts/sync-version.js",
     "release:patch": "node scripts/release.js patch",
     "release:minor": "node scripts/release.js minor",
-    "release:major": "node scripts/release.js major"
+    "release:major": "node scripts/release.js major",
+    "build:mjml-browser": "node scripts/build-mjml-browser.js",
+    "build:mjml-starters": "node scripts/compile-mjml-starters.js",
+    "build:mjml": "npm run build:mjml-browser && npm run build:mjml-starters"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "mjml": "^4.15.3",
+    "mjml-browser": "^4.15.3"
   },
   "repository": {
     "type": "git",

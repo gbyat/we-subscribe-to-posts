@@ -109,6 +109,9 @@ jobs:
             npm install
           fi
 
+      - name: Build MJML assets
+        run: npm run build:mjml
+
       - name: Prepare release notes
         run: |
           VERSION="${GITHUB_REF#refs/tags/v}"

@@ -16,9 +16,9 @@ final class Mailer {
 	/**
 	 * Digest renderer.
 	 *
-	 * @var Digest_Template_Renderer
+	 * @var Mjml_Template_Renderer
 	 */
-	private Digest_Template_Renderer $digest_renderer;
+	private Mjml_Template_Renderer $digest_renderer;
 
 	/**
 	 * Whether current wp_mail call belongs to this plugin.
@@ -31,7 +31,7 @@ final class Mailer {
 	 * Constructor.
 	 */
 	public function __construct() {
-		$this->digest_renderer = new Digest_Template_Renderer();
+		$this->digest_renderer = new Mjml_Template_Renderer();
 	}
 
 	/**

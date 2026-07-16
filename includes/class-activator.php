@@ -7,7 +7,7 @@
 
 namespace WSTP;
 
-use WSTP\Admin\Email_Template;
+use WSTP\Admin\Mjml_Template;
 use WSTP\DB\Schema_Manager;
 
 defined( 'ABSPATH' ) || exit;
@@ -22,11 +22,7 @@ final class Activator {
 	public function activate(): void {
 		$schema_manager = new Schema_Manager();
 		$schema_manager->create_tables();
-		if ( class_exists( Email_Template::class ) ) {
-			$email_template = new Email_Template();
-			$email_template->register_post_type();
-			Email_Template::maybe_create_default_template();
-		}
+		Mjml_Template::maybe_install_default();
 
 		if ( ! wp_next_scheduled( 'wstp_daily_digest_event' ) ) {
 			wp_schedule_event( time() + 300, 'hourly', 'wstp_daily_digest_event' );

@@ -41,12 +41,12 @@ final class Autoloader {
 		}
 
 		$class_segment = strtolower( array_pop( $parts ) );
-		$directory = implode( '/', array_map( 'strtolower', $parts ) );
-		$base_path = WSTP_PATH . 'includes/' . ( $directory ? $directory . '/' : '' );
+		$directory     = implode( '/', array_map( 'strtolower', $parts ) );
+		$base_path     = WSTP_PATH . 'includes/' . ( $directory ? $directory . '/' : '' );
 
 		$candidates = array(
-			$base_path . 'class-' . $class_segment . '.php',
 			$base_path . 'class-' . str_replace( '_', '-', $class_segment ) . '.php',
+			$base_path . 'class-' . $class_segment . '.php',
 		);
 
 		foreach ( $candidates as $path ) {

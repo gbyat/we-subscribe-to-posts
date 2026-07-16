@@ -55,6 +55,9 @@ jobs:
             npm install
           fi
 
+      - name: Build MJML assets
+        run: npm run build:mjml
+
       - name: Validate package.json version
         run: |
           node -e "

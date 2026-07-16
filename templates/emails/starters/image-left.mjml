@@ -1,0 +1,57 @@
+<mjml>
+  <mj-head>
+    <mj-attributes>
+      <mj-all font-family="Arial, Helvetica, sans-serif" />
+      <mj-text line-height="1.6" color="{{wstp:color_muted}}" font-size="15px" padding="0" />
+      <mj-button background-color="{{wstp:color_accent}}" color="#ffffff" border-radius="4px" font-size="14px" inner-padding="10px 18px" padding="0" align="left" />
+    </mj-attributes>
+    <mj-style inline="inline">
+      a { color: {{wstp:color_link}}; }
+    </mj-style>
+    <mj-style>
+      @media only screen and (max-width: 479px) {
+        .wstp-post-image-col td {
+          padding-right: 0 !important;
+          padding-bottom: 16px !important;
+        }
+        .wstp-post-image-side {
+          width: 100% !important;
+          max-width: 100% !important;
+        }
+      }
+    </mj-style>
+  </mj-head>
+  <mj-body background-color="{{wstp:color_body_bg}}">
+    <mj-raw>{{wstp:header_block}}</mj-raw>
+
+    <mj-section background-color="{{wstp:color_content_bg}}" padding="28px 24px 12px">
+      <mj-column padding="0">
+        <mj-text font-size="22px" font-weight="bold" color="{{wstp:color_text}}" padding="0 0 8px">{{wstp:greeting}}</mj-text>
+        <mj-text color="{{wstp:color_muted}}" padding="0">{{wstp:posts_intro}}</mj-text>
+      </mj-column>
+    </mj-section>
+
+    <mj-raw>{{wstp:posts_loop}}</mj-raw>
+    <mj-section background-color="{{wstp:color_content_bg}}" padding="16px 24px">
+      <mj-column css-class="wstp-post-image-col" width="34%" vertical-align="top" padding="0 16px 0 0">
+        <mj-raw>{{wstp:post_image_side}}</mj-raw>
+      </mj-column>
+      <mj-column width="66%" vertical-align="top" padding="0">
+        <mj-text font-size="20px" font-weight="bold" color="{{wstp:color_text}}" padding="0 0 4px">
+          <a href="{{wstp:post_url}}" style="color:{{wstp:color_text}};text-decoration:none;">{{wstp:post_title}}</a>
+        </mj-text>
+        <mj-text color="{{wstp:color_muted}}" padding="0 0 10px">{{wstp:post_excerpt}}</mj-text>
+        <mj-button href="{{wstp:post_url}}">{{wstp:read_more_label}}</mj-button>
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="{{wstp:color_content_bg}}" padding="0 24px 16px">
+      <mj-column padding="0">
+        <mj-divider border-color="#e5e7eb" border-width="1px" padding="0" />
+      </mj-column>
+    </mj-section>
+    <mj-raw>{{/wstp:posts_loop}}</mj-raw>
+
+    <mj-raw>{{wstp:truncation_notice_block}}</mj-raw>
+    <mj-raw>{{wstp:footer_block}}</mj-raw>
+  </mj-body>
+</mjml>
