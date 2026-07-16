@@ -63,140 +63,156 @@ msgstr "Noch keine Sendungen"
 msgid "Subscribers"
 msgstr "Abonnenten"
 
-#: includes/admin/class-dashboard-widget.php:98
+#. translators: %d: total subscriber count.
+#: includes/admin/class-dashboard-widget.php:100
 #, php-format
 msgid "Total: %d"
 msgstr "Gesamt: %d"
 
-#: includes/admin/class-dashboard-widget.php:99
+#. translators: %d: active subscriber count.
+#: includes/admin/class-dashboard-widget.php:102
 #, php-format
 msgid "Active: %d"
 msgstr "Aktiv: %d"
 
-#: includes/admin/class-dashboard-widget.php:100
+#. translators: %d: pending subscriber count.
+#: includes/admin/class-dashboard-widget.php:104
 #, php-format
 msgid "Pending: %d"
 msgstr "Ausstehend: %d"
 
-#: includes/admin/class-dashboard-widget.php:101
+#. translators: %d: unsubscribed subscriber count.
+#: includes/admin/class-dashboard-widget.php:106
 #, php-format
 msgid "Unsubscribed: %d"
 msgstr "Abgemeldet: %d"
 
-#: includes/admin/class-dashboard-widget.php:102
+#. translators: %d: suppressed subscriber count.
+#: includes/admin/class-dashboard-widget.php:108
 #, php-format
 msgid "Suppressed: %d"
 msgstr "Unterdrückt: %d"
 
-#: includes/admin/class-dashboard-widget.php:103
+#. translators: %d: signup count in the last 7 days.
+#: includes/admin/class-dashboard-widget.php:110
 #, php-format
 msgid "Signups (last 7 days): %d"
 msgstr "Anmeldungen (letzte 7 Tage): %d"
 
-#: includes/admin/class-dashboard-widget.php:107
+#: includes/admin/class-dashboard-widget.php:115
 msgid "Active by frequency"
 msgstr "Nach Frequenz sortiert"
 
-#: includes/admin/class-dashboard-widget.php:109
+#. translators: %d: active daily subscriber count.
+#: includes/admin/class-dashboard-widget.php:119
 #, php-format
 msgid "Daily: %d"
 msgstr "Täglich: %d"
 
-#: includes/admin/class-dashboard-widget.php:110
+#. translators: %d: active weekly subscriber count.
+#: includes/admin/class-dashboard-widget.php:121
 #, php-format
 msgid "Weekly: %d"
 msgstr "Wöchentlich: %d"
 
-#: includes/admin/class-dashboard-widget.php:111
+#. translators: %d: active monthly subscriber count.
+#: includes/admin/class-dashboard-widget.php:123
 #, php-format
 msgid "Monthly: %d"
 msgstr "Monatlich: %d"
 
-#: includes/admin/class-dashboard-widget.php:114
+#: includes/admin/class-dashboard-widget.php:127
 msgid "Mail usage"
 msgstr "E-Mail-Nutzung"
 
-#: includes/admin/class-dashboard-widget.php:116
+#. translators: %d: total digest mails sent.
+#: includes/admin/class-dashboard-widget.php:131
 #, php-format
 msgid "Digest mails sent (all time): %d"
 msgstr "Gesendete Digest-E-Mails (insgesamt): %d"
 
-#: includes/admin/class-dashboard-widget.php:117
+#. translators: %d: total digest mails that failed.
+#: includes/admin/class-dashboard-widget.php:133
 #, php-format
 msgid "Digest mails failed (all time): %d"
 msgstr "Fehler beim Versand von Digest-E-Mails (insgesamt): %d"
 
-#: includes/admin/class-dashboard-widget.php:118
+#. translators: %d: digest mails sent in the last 7 days.
+#: includes/admin/class-dashboard-widget.php:135
 #, php-format
 msgid "Digest mails sent (last 7 days): %d"
 msgstr "Versendete Digest-E-Mails (letzte 7 Tage): %d"
 
-#: includes/admin/class-dashboard-widget.php:119
+#. translators: %d: number of unique subscribers who received digests.
+#: includes/admin/class-dashboard-widget.php:137
 #, php-format
 msgid "Unique subscribers reached: %d"
 msgstr "Erreichte Unique-Abonnenten: %d"
 
-#: includes/admin/class-dashboard-widget.php:120
+#. translators: %s: last digest send datetime or status label.
+#: includes/admin/class-dashboard-widget.php:139
 #, php-format
 msgid "Last digest send: %s"
 msgstr "Letzter Versand des Newsletters: %s"
 
-#: includes/admin/class-dashboard-widget.php:123
+#: includes/admin/class-dashboard-widget.php:143
 #: includes/admin/class-settings-page.php:1117
 msgid "Mail transport"
 msgstr "E-Mail-Transport"
 
-#: includes/admin/class-dashboard-widget.php:125
+#. translators: %s: mail transport name.
+#: includes/admin/class-dashboard-widget.php:147
 #, php-format
 msgid "Transport: %s"
 msgstr "Verkehr: %s"
 
-#: includes/admin/class-dashboard-widget.php:126
+#. translators: %s: yes/no whether transport applies globally.
+#: includes/admin/class-dashboard-widget.php:149
 #, php-format
 msgid "Apply globally: %s"
 msgstr "Global anwenden: %s"
 
-#: includes/admin/class-dashboard-widget.php:130
+#: includes/admin/class-dashboard-widget.php:154
 msgid "Open Subscribers"
 msgstr "Abonnenten"
 
-#: includes/admin/class-dashboard-widget.php:132
+#: includes/admin/class-dashboard-widget.php:156
 msgid "Open Settings"
 msgstr "Einstellungen öffnen"
 
-#: includes/admin/class-dashboard-widget.php:178
+#: includes/admin/class-dashboard-widget.php:202
 #: includes/admin/class-settings-page.php:1121
 msgid "Custom SMTP"
 msgstr "Benutzerdefiniertes SMTP"
 
-#: includes/admin/class-dashboard-widget.php:179
+#: includes/admin/class-dashboard-widget.php:203
 msgid "Gmail preset"
 msgstr "Gmail-Voreinstellung"
 
-#: includes/admin/class-dashboard-widget.php:180
+#: includes/admin/class-dashboard-widget.php:204
 msgid "WordPress default"
 msgstr "WordPress-Standardschutz"
 
-#: includes/admin/class-dashboard-widget.php:196
+#: includes/admin/class-dashboard-widget.php:220
 msgid "Trend vs previous 7 days: stable"
 msgstr "Entwicklung im Vergleich zu den letzten 7 Tagen: stabil"
 
-#: includes/admin/class-dashboard-widget.php:199
+#: includes/admin/class-dashboard-widget.php:223
 msgid "up"
 msgstr "nach oben"
 
-#: includes/admin/class-dashboard-widget.php:199
+#: includes/admin/class-dashboard-widget.php:223
 msgid "down"
 msgstr "runter"
 
 #. translators: 1: direction label, 2: absolute change count.
-#: includes/admin/class-dashboard-widget.php:205
+#: includes/admin/class-dashboard-widget.php:229
 #, php-format
 msgid "Trend vs previous 7 days: %1$s by %2$d"
 msgstr "Trend im Vergleich zu den letzten 7 Tagen: %1$s um %2$d"
 
 #. translators: 1: direction label, 2: absolute change count, 3: percentage change.
-#: includes/admin/class-dashboard-widget.php:213
+#: includes/admin/class-dashboard-widget.php:237
 #, php-format
 msgid "Trend vs previous 7 days: %1$s by %2$d (%3$s%%)"
 msgstr "Trend im Vergleich zu den letzten 7 Tagen: %1$s um %2$d (%3$s%%)"
