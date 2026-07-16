@@ -95,35 +95,59 @@ final class Dashboard_Widget {
 		<div class="wstp-dashboard-widget">
 			<p><strong><?php esc_html_e( 'Subscribers', 'we-subscribe-to-posts' ); ?></strong></p>
 			<ul style="margin-top:0;">
-				<li><?php echo esc_html( sprintf( __( 'Total: %d', 'we-subscribe-to-posts' ), (int) ( $subscriber_stats['total'] ?? 0 ) ) ); ?></li>
-				<li><?php echo esc_html( sprintf( __( 'Active: %d', 'we-subscribe-to-posts' ), (int) ( $by_status['active'] ?? 0 ) ) ); ?></li>
-				<li><?php echo esc_html( sprintf( __( 'Pending: %d', 'we-subscribe-to-posts' ), (int) ( $by_status['pending'] ?? 0 ) ) ); ?></li>
-				<li><?php echo esc_html( sprintf( __( 'Unsubscribed: %d', 'we-subscribe-to-posts' ), (int) ( $by_status['unsubscribed'] ?? 0 ) ) ); ?></li>
-				<li><?php echo esc_html( sprintf( __( 'Suppressed: %d', 'we-subscribe-to-posts' ), (int) ( $by_status['suppressed'] ?? 0 ) ) ); ?></li>
-				<li><?php echo esc_html( sprintf( __( 'Signups (last 7 days): %d', 'we-subscribe-to-posts' ), (int) ( $signup_trend['recent_count'] ?? 0 ) ) ); ?></li>
+				<?php
+				/* translators: %d: total subscriber count. */
+				echo '<li>' . esc_html( sprintf( __( 'Total: %d', 'we-subscribe-to-posts' ), (int) ( $subscriber_stats['total'] ?? 0 ) ) ) . '</li>';
+				/* translators: %d: active subscriber count. */
+				echo '<li>' . esc_html( sprintf( __( 'Active: %d', 'we-subscribe-to-posts' ), (int) ( $by_status['active'] ?? 0 ) ) ) . '</li>';
+				/* translators: %d: pending subscriber count. */
+				echo '<li>' . esc_html( sprintf( __( 'Pending: %d', 'we-subscribe-to-posts' ), (int) ( $by_status['pending'] ?? 0 ) ) ) . '</li>';
+				/* translators: %d: unsubscribed subscriber count. */
+				echo '<li>' . esc_html( sprintf( __( 'Unsubscribed: %d', 'we-subscribe-to-posts' ), (int) ( $by_status['unsubscribed'] ?? 0 ) ) ) . '</li>';
+				/* translators: %d: suppressed subscriber count. */
+				echo '<li>' . esc_html( sprintf( __( 'Suppressed: %d', 'we-subscribe-to-posts' ), (int) ( $by_status['suppressed'] ?? 0 ) ) ) . '</li>';
+				/* translators: %d: signup count in the last 7 days. */
+				echo '<li>' . esc_html( sprintf( __( 'Signups (last 7 days): %d', 'we-subscribe-to-posts' ), (int) ( $signup_trend['recent_count'] ?? 0 ) ) ) . '</li>';
+				?>
 				<li><?php echo esc_html( $signup_trend_label ); ?></li>
 			</ul>
 
 			<p><strong><?php esc_html_e( 'Active by frequency', 'we-subscribe-to-posts' ); ?></strong></p>
 			<ul style="margin-top:0;">
-				<li><?php echo esc_html( sprintf( __( 'Daily: %d', 'we-subscribe-to-posts' ), (int) ( $by_frequency['daily'] ?? 0 ) ) ); ?></li>
-				<li><?php echo esc_html( sprintf( __( 'Weekly: %d', 'we-subscribe-to-posts' ), (int) ( $by_frequency['weekly'] ?? 0 ) ) ); ?></li>
-				<li><?php echo esc_html( sprintf( __( 'Monthly: %d', 'we-subscribe-to-posts' ), (int) ( $by_frequency['monthly'] ?? 0 ) ) ); ?></li>
+				<?php
+				/* translators: %d: active daily subscriber count. */
+				echo '<li>' . esc_html( sprintf( __( 'Daily: %d', 'we-subscribe-to-posts' ), (int) ( $by_frequency['daily'] ?? 0 ) ) ) . '</li>';
+				/* translators: %d: active weekly subscriber count. */
+				echo '<li>' . esc_html( sprintf( __( 'Weekly: %d', 'we-subscribe-to-posts' ), (int) ( $by_frequency['weekly'] ?? 0 ) ) ) . '</li>';
+				/* translators: %d: active monthly subscriber count. */
+				echo '<li>' . esc_html( sprintf( __( 'Monthly: %d', 'we-subscribe-to-posts' ), (int) ( $by_frequency['monthly'] ?? 0 ) ) ) . '</li>';
+				?>
 			</ul>
 
 			<p><strong><?php esc_html_e( 'Mail usage', 'we-subscribe-to-posts' ); ?></strong></p>
 			<ul style="margin-top:0;">
-				<li><?php echo esc_html( sprintf( __( 'Digest mails sent (all time): %d', 'we-subscribe-to-posts' ), (int) ( $mail_stats['sent_total'] ?? 0 ) ) ); ?></li>
-				<li><?php echo esc_html( sprintf( __( 'Digest mails failed (all time): %d', 'we-subscribe-to-posts' ), (int) ( $mail_stats['failed_total'] ?? 0 ) ) ); ?></li>
-				<li><?php echo esc_html( sprintf( __( 'Digest mails sent (last 7 days): %d', 'we-subscribe-to-posts' ), (int) ( $mail_stats['sent_last_7_days'] ?? 0 ) ) ); ?></li>
-				<li><?php echo esc_html( sprintf( __( 'Unique subscribers reached: %d', 'we-subscribe-to-posts' ), (int) ( $mail_stats['distinct_sent_subscribers'] ?? 0 ) ) ); ?></li>
-				<li><?php echo esc_html( sprintf( __( 'Last digest send: %s', 'we-subscribe-to-posts' ), $last_sent_label ) ); ?></li>
+				<?php
+				/* translators: %d: total digest mails sent. */
+				echo '<li>' . esc_html( sprintf( __( 'Digest mails sent (all time): %d', 'we-subscribe-to-posts' ), (int) ( $mail_stats['sent_total'] ?? 0 ) ) ) . '</li>';
+				/* translators: %d: total digest mails that failed. */
+				echo '<li>' . esc_html( sprintf( __( 'Digest mails failed (all time): %d', 'we-subscribe-to-posts' ), (int) ( $mail_stats['failed_total'] ?? 0 ) ) ) . '</li>';
+				/* translators: %d: digest mails sent in the last 7 days. */
+				echo '<li>' . esc_html( sprintf( __( 'Digest mails sent (last 7 days): %d', 'we-subscribe-to-posts' ), (int) ( $mail_stats['sent_last_7_days'] ?? 0 ) ) ) . '</li>';
+				/* translators: %d: number of unique subscribers who received digests. */
+				echo '<li>' . esc_html( sprintf( __( 'Unique subscribers reached: %d', 'we-subscribe-to-posts' ), (int) ( $mail_stats['distinct_sent_subscribers'] ?? 0 ) ) ) . '</li>';
+				/* translators: %s: last digest send datetime or status label. */
+				echo '<li>' . esc_html( sprintf( __( 'Last digest send: %s', 'we-subscribe-to-posts' ), $last_sent_label ) ) . '</li>';
+				?>
 			</ul>
 
 			<p><strong><?php esc_html_e( 'Mail transport', 'we-subscribe-to-posts' ); ?></strong></p>
 			<ul style="margin-top:0;">
-				<li><?php echo esc_html( sprintf( __( 'Transport: %s', 'we-subscribe-to-posts' ), $transport_label ) ); ?></li>
-				<li><?php echo esc_html( sprintf( __( 'Apply globally: %s', 'we-subscribe-to-posts' ), $apply_globally ) ); ?></li>
+				<?php
+				/* translators: %s: mail transport name. */
+				echo '<li>' . esc_html( sprintf( __( 'Transport: %s', 'we-subscribe-to-posts' ), $transport_label ) ) . '</li>';
+				/* translators: %s: yes/no whether transport applies globally. */
+				echo '<li>' . esc_html( sprintf( __( 'Apply globally: %s', 'we-subscribe-to-posts' ), $apply_globally ) ) . '</li>';
+				?>
 			</ul>
 
 			<p style="margin-bottom:0;">
