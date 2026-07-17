@@ -151,7 +151,6 @@ final class Mjml_Template_Renderer {
 		$tokens = array(
 			'{{wstp:greeting_name}}'           => esc_html( $greeting_name ),
 			'{{wstp:greeting}}'                => esc_html( $greeting ),
-			'{{wstp:posts_intro}}'             => esc_html( __( 'Here are the latest published posts:', 'we-subscribe-to-posts' ) ),
 			'{{wstp:unsubscribe_url}}'           => esc_url( isset( $context['unsubscribe_url'] ) ? (string) $context['unsubscribe_url'] : home_url( '/' ) ),
 			'{{wstp:unsubscribe_label}}'       => esc_html( __( 'Unsubscribe instantly', 'we-subscribe-to-posts' ) ),
 			'{{wstp:read_more_label}}'         => esc_html( __( 'Read more', 'we-subscribe-to-posts' ) ),
@@ -200,6 +199,9 @@ final class Mjml_Template_Renderer {
 		$url     = isset( $post['permalink'] ) ? (string) $post['permalink'] : '';
 		$image   = isset( $post['featured_image_url'] ) ? trim( (string) $post['featured_image_url'] ) : '';
 		$post_id = isset( $post['id'] ) ? (int) $post['id'] : 0;
+		$date    = isset( $post['date'] ) ? (string) $post['date'] : '';
+		$author  = isset( $post['author'] ) ? (string) $post['author'] : '';
+		$excerpt_source = isset( $post['excerpt_source'] ) ? (string) $post['excerpt_source'] : $excerpt;
 
 		if ( '' === $image ) {
 			$image_id = isset( $post['featured_image_id'] ) ? (int) $post['featured_image_id'] : 0;
@@ -244,15 +246,26 @@ final class Mjml_Template_Renderer {
 
 		$tokens = array(
 			'{{wstp:post_title}}'      => esc_html( $title ),
-			'{{wstp:post_excerpt}}'    => esc_html( $excerpt ),
+			'{{wstp:post_excerpt}}'    => esc_html( wp_trim_words( $excerpt_source, 42 ) ),
 			'{{wstp:post_url}}'        => esc_url( $url ),
 			'{{wstp:post_image_url}}'  => esc_url( $image ),
 			'{{wstp:post_image}}'      => $this->build_post_image_tag( $image, $title ),
 			'{{wstp:post_image_side}}' => $this->build_post_image_side_tag( $image, $title ),
+			'{{wstp:post_date}}'       => esc_html( $date ),
+			'{{wstp:post_author}}'     => esc_html( $author ),
 			'{{wstp:read_more_label}}' => esc_html( __( 'Read more', 'we-subscribe-to-posts' ) ),
 		);
 
 		$html = strtr( $template, $tokens );
+
+		$html = (string) preg_replace_callback(
+			'/\{\{\s*wstp:post_excerpt:(\d+)\s*\}\}/',
+			static function ( array $matches ) use ( $excerpt_source ): string {
+				$words = max( 5, min( 100, (int) $matches[1] ) );
+				return esc_html( wp_trim_words( $excerpt_source, $words ) );
+			},
+			$html
+		);
 
 		if ( '' === $image ) {
 			// Drop leftover img tags that resolved to an empty src (legacy templates / mj-image tokens).

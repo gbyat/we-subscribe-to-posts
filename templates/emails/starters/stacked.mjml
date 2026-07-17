@@ -18,7 +18,6 @@
     <mj-section background-color="{{wstp:color_content_bg}}" padding="28px 24px 12px">
       <mj-column padding="0">
         <mj-text font-size="22px" font-weight="bold" color="{{wstp:color_text}}" padding="0 0 8px">{{wstp:greeting}}</mj-text>
-        <mj-text color="{{wstp:color_muted}}" padding="0">{{wstp:posts_intro}}</mj-text>
       </mj-column>
     </mj-section>
 

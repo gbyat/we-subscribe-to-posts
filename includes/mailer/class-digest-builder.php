@@ -315,7 +315,12 @@ final class Digest_Builder {
 				$featured_image_url = set_url_scheme( $url );
 			}
 		}
-		$excerpt = has_excerpt( $post ) ? get_the_excerpt( $post ) : wp_trim_words( wp_strip_all_tags( (string) $post->post_content ), 42 );
+		$excerpt_source = has_excerpt( $post )
+			? (string) get_the_excerpt( $post )
+			: wp_strip_all_tags( (string) $post->post_content );
+		$excerpt_source = wp_specialchars_decode( $excerpt_source, ENT_QUOTES );
+		$excerpt_source = html_entity_decode( $excerpt_source, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+		$excerpt        = wp_trim_words( $excerpt_source, 42 );
 
 		return array(
 			'id'                 => (int) $post->ID,
@@ -324,6 +329,9 @@ final class Digest_Builder {
 			'featured_image_id'  => $featured_image_id,
 			'featured_image_url' => $featured_image_url,
 			'excerpt'            => $excerpt,
+			'excerpt_source'     => $excerpt_source,
+			'date'               => get_the_date( '', $post ),
+			'author'             => get_the_author_meta( 'display_name', (int) $post->post_author ),
 		);
 	}
 }

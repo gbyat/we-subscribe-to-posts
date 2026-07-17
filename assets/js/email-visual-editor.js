@@ -65,6 +65,7 @@
 	var LOOP_ALLOWED = [
 		'wstp/post-title',
 		'wstp/post-excerpt',
+		'wstp/post-meta',
 		'wstp/post-image',
 		'wstp/post-image-side',
 		'wstp/post-read-more',
@@ -85,6 +86,16 @@
 		paddingX: { type: 'number', default: 0 },
 		borderRadius: { type: 'number', default: 4 },
 	};
+
+	var EXCERPT_ATTRS = Object.assign( {}, FIELD_ATTRS, {
+		wordCount: { type: 'number', default: 42 },
+	} );
+
+	var META_ATTRS = Object.assign( {}, FIELD_ATTRS, {
+		showDate: { type: 'boolean', default: true },
+		showAuthor: { type: 'boolean', default: true },
+		separator: { type: 'string', default: ' · ' },
+	} );
 
 	var EMAIL_FONTS = [
 		{ label: 'Arial', value: 'Arial, Helvetica, sans-serif' },
@@ -938,24 +949,8 @@
 		);
 	}
 
-	function defaultIntroInnerTemplate() {
-		return [
-			[
-				'core/paragraph',
-				{
-					content:
-						i18n.defaultPostsIntro || 'Here are the latest published posts:',
-					paddingTop: 0,
-					paddingBottom: 0,
-					paddingX: 0,
-				},
-			],
-		];
-	}
-
 	function IntroEdit( props ) {
 		var attrs = props.attributes;
-		var clientId = props.clientId;
 		var sample = config.samplePost || {};
 		var greetName = sample.name || 'Alex';
 		var greetingPreview = ( i18n.greetingSample || 'Hi %s,' ).replace( '%s', greetName );
@@ -963,35 +958,6 @@
 			className: 'wstp-email-block wstp-email-block--intro',
 			style: previewPad( attrs ),
 		} );
-
-		var innerCount = 0;
-		if ( useSelect ) {
-			innerCount = useSelect(
-				function ( select ) {
-					return select( 'core/block-editor' ).getBlockCount( clientId );
-				},
-				[ clientId ]
-			);
-		}
-
-		var replaceInnerBlocks = null;
-		if ( useDispatch ) {
-			replaceInnerBlocks = useDispatch( 'core/block-editor' ).replaceInnerBlocks;
-		}
-
-		useEffect(
-			function () {
-				if ( ! replaceInnerBlocks || innerCount > 0 ) {
-					return;
-				}
-				var template = defaultIntroInnerTemplate();
-				var blocks = template.map( function ( item ) {
-					return createBlock( item[ 0 ], item[ 1 ] || {} );
-				} );
-				replaceInnerBlocks( clientId, blocks, false );
-			},
-			[ clientId, innerCount ]
-		);
 
 		return el(
 			Fragment,
@@ -1004,7 +970,7 @@
 					'p',
 					{ className: 'description', style: { marginTop: 0, padding: '0 16px 12px' } },
 					i18n.introHelp ||
-						'The greeting is personalized at send time. Edit the text below for your intro or a special announcement.'
+						'The greeting is personalized at send time. Add paragraph or heading blocks below for an optional intro or announcement.'
 				)
 			),
 			el(
@@ -1039,7 +1005,6 @@
 						{ className: 'wstp-email-intro-inners' },
 						el( InnerBlocks, {
 							allowedBlocks: INTRO_INNER_ALLOWED,
-							template: defaultIntroInnerTemplate(),
 							templateLock: false,
 							renderAppender: InnerBlocks.ButtonBlockAppender,
 						} )
@@ -1136,7 +1101,28 @@
 		);
 	}
 
+	/**
+	 * Trim text to a word count for excerpt preview (matches wp_trim_words).
+	 *
+	 * @param {string} text Source text.
+	 * @param {number} count Max words.
+	 * @return {string}
+	 */
+	function trimWords( text, count ) {
+		var source = String( text || '' ).replace( /\s+/g, ' ' ).trim();
+		if ( ! source ) {
+			return '';
+		}
+		var max = Math.max( 1, Math.min( 200, parseInt( count, 10 ) || 42 ) );
+		var words = source.split( ' ' );
+		if ( words.length <= max ) {
+			return source;
+		}
+		return words.slice( 0, max ).join( ' ' ) + '…';
+	}
+
 	function PostTitleEdit( props ) {
+		var sample = config.samplePost || {};
 		return el(
 			FieldCard,
 			{
@@ -1146,22 +1132,132 @@
 				defaultFontSize: 20,
 				fallbackColor: storeToColor( 'accent-three' ),
 				className: 'is-title',
+				extraInspector: el(
+					PanelBody,
+					{ title: i18n.postField || 'Post field', initialOpen: true },
+					el(
+						'p',
+						{ className: 'description', style: { marginTop: 0 } },
+						i18n.postTitleHelp || 'Shows each post title (linked). Style with color, size, and spacing.'
+					)
+				),
 			},
-			el( 'strong', null, ( config.samplePost && config.samplePost.title ) || i18n.sampleTitle || 'Sample post title' )
+			el( 'strong', null, sample.title || i18n.sampleTitle || 'Sample post title' ),
+			el(
+				'span',
+				{ className: 'wstp-email-placeholder-hint', style: { display: 'block', fontSize: '11px', marginTop: '4px' } },
+				i18n.postTitle || 'Post title'
+			)
 		);
 	}
 
 	function PostExcerptEdit( props ) {
+		var attrs = props.attributes;
+		var setAttributes = props.setAttributes;
+		var sample = config.samplePost || {};
+		var source =
+			sample.excerptSource || sample.excerpt || i18n.sampleExcerpt || 'Short excerpt of the post…';
+		var words = typeof attrs.wordCount === 'number' ? attrs.wordCount : 42;
+		var preview = trimWords( source, words );
+
 		return el(
 			FieldCard,
 			{
-				attributes: props.attributes,
-				setAttributes: props.setAttributes,
+				attributes: attrs,
+				setAttributes: setAttributes,
 				defaultTextToken: 'accent',
 				defaultFontSize: 15,
 				fallbackColor: storeToColor( 'accent' ),
+				className: 'is-excerpt',
+				extraInspector: el(
+					PanelBody,
+					{ title: i18n.postExcerpt || 'Post excerpt', initialOpen: true },
+					el( RangeControl, {
+						label: i18n.wordCount || 'Word count',
+						help:
+							i18n.wordCountHelp ||
+							'Maximum words per post. Uses the post excerpt when set, otherwise the content.',
+						value: words,
+						min: 5,
+						max: 100,
+						step: 1,
+						onChange: function ( value ) {
+							setAttributes( { wordCount: value } );
+						},
+					} )
+				),
 			},
-			( config.samplePost && config.samplePost.excerpt ) || i18n.sampleExcerpt || 'Short excerpt of the post…'
+			preview,
+			el(
+				'span',
+				{ className: 'wstp-email-placeholder-hint', style: { display: 'block', fontSize: '11px', marginTop: '4px' } },
+				( i18n.wordCountLabel || '%d words' ).replace( '%d', String( words ) )
+			)
+		);
+	}
+
+	function PostMetaEdit( props ) {
+		var attrs = props.attributes;
+		var setAttributes = props.setAttributes;
+		var sample = config.samplePost || {};
+		var showDate = attrs.showDate !== false;
+		var showAuthor = attrs.showAuthor !== false;
+		var separator = typeof attrs.separator === 'string' ? attrs.separator : ' · ';
+		var parts = [];
+		if ( showDate ) {
+			parts.push( sample.date || i18n.sampleDate || 'March 15, 2026' );
+		}
+		if ( showAuthor ) {
+			parts.push( sample.author || sample.name || i18n.sampleAuthor || 'Alex' );
+		}
+		var preview =
+			parts.length > 0
+				? parts.join( separator )
+				: i18n.postMetaEmpty || 'Enable date and/or author in the sidebar.';
+
+		return el(
+			FieldCard,
+			{
+				attributes: attrs,
+				setAttributes: setAttributes,
+				defaultTextToken: 'accent',
+				defaultFontSize: 13,
+				fallbackColor: storeToColor( 'accent' ),
+				className: 'is-meta',
+				extraInspector: el(
+					PanelBody,
+					{ title: i18n.postMeta || 'Post meta', initialOpen: true },
+					el( ToggleControl, {
+						label: i18n.showDate || 'Show date',
+						checked: showDate,
+						onChange: function ( value ) {
+							setAttributes( { showDate: !! value } );
+						},
+					} ),
+					el( ToggleControl, {
+						label: i18n.showAuthor || 'Show author',
+						checked: showAuthor,
+						onChange: function ( value ) {
+							setAttributes( { showAuthor: !! value } );
+						},
+					} ),
+					showDate && showAuthor
+						? el( TextControl, {
+								label: i18n.metaSeparator || 'Separator',
+								value: separator,
+								onChange: function ( value ) {
+									setAttributes( { separator: value } );
+								},
+						  } )
+						: null
+				),
+			},
+			preview,
+			el(
+				'span',
+				{ className: 'wstp-email-placeholder-hint', style: { display: 'block', fontSize: '11px', marginTop: '4px' } },
+				i18n.postMeta || 'Post meta'
+			)
 		);
 	}
 
@@ -2041,9 +2137,23 @@
 			icon: 'text',
 			category: 'widgets',
 			parent: [ 'wstp/posts-loop', 'core/column' ],
-			attributes: FIELD_ATTRS,
+			attributes: EXCERPT_ATTRS,
 			supports: emailSupports,
 			edit: PostExcerptEdit,
+			save: function () {
+				return null;
+			},
+		} );
+
+		registerBlockType( 'wstp/post-meta', {
+			apiVersion: 3,
+			title: i18n.postMeta || 'Post meta',
+			icon: 'calendar-alt',
+			category: 'widgets',
+			parent: [ 'wstp/posts-loop', 'core/column' ],
+			attributes: META_ATTRS,
+			supports: emailSupports,
+			edit: PostMetaEdit,
 			save: function () {
 				return null;
 			},

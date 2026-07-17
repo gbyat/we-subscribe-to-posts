@@ -313,12 +313,7 @@ final class Block_To_Mjml {
 			)
 		);
 		$header = '<!-- wp:wstp/email-header ' . $header_attrs . ' -->' . $heading . $slogan_block . '<!-- /wp:wstp/email-header -->';
-		$intro_para = '<!-- wp:paragraph -->'
-			. '<p>' . esc_html__( 'Here are the latest published posts:', 'we-subscribe-to-posts' ) . '</p>'
-			. '<!-- /wp:paragraph -->';
-		$intro  = '<!-- wp:wstp/intro {"paddingTop":28,"paddingBottom":12,"paddingX":24,"backgroundColor":"base-two","textColor":"accent-three","mutedColor":"accent"} -->'
-			. $intro_para
-			. '<!-- /wp:wstp/intro -->';
+		$intro  = '<!-- wp:wstp/intro {"paddingTop":28,"paddingBottom":12,"paddingX":24,"backgroundColor":"base-two","textColor":"accent-three","mutedColor":"accent"} /-->';
 		$notice = '<!-- wp:wstp/truncation-notice {"paddingTop":8,"paddingBottom":8,"paddingX":24,"backgroundColor":"base-two"} /-->';
 		$footer = '<!-- wp:wstp/email-footer {"paddingTop":16,"paddingBottom":28,"paddingX":24,"backgroundColor":"base-two"} /-->';
 
@@ -335,7 +330,9 @@ final class Block_To_Mjml {
 <!-- wp:column {"width":"66%"} -->
 <div class="wp-block-column" style="flex-basis:66%"><!-- wp:wstp/post-title {"textColor":"accent-three","fontSize":20} /-->
 
-<!-- wp:wstp/post-excerpt {"textColor":"accent"} /-->
+<!-- wp:wstp/post-meta {"textColor":"accent","fontSize":13,"paddingBottom":6} /-->
+
+<!-- wp:wstp/post-excerpt {"textColor":"accent","wordCount":42} /-->
 
 <!-- wp:wstp/post-read-more {"style":"button","backgroundColor":"accent-two","textColor":"#ffffff"} /--></div>
 <!-- /wp:column --></div>
@@ -351,7 +348,9 @@ BLOCKS;
 <!-- wp:wstp/posts-loop {"paddingTop":0,"paddingBottom":0,"paddingX":0,"backgroundColor":"base-two"} -->
 <!-- wp:wstp/post-title {"textColor":"accent-three","fontSize":20} /-->
 
-<!-- wp:wstp/post-excerpt {"textColor":"accent"} /-->
+<!-- wp:wstp/post-meta {"textColor":"accent","fontSize":13,"paddingBottom":6} /-->
+
+<!-- wp:wstp/post-excerpt {"textColor":"accent","wordCount":42} /-->
 
 <!-- wp:wstp/post-read-more {"style":"link","textColor":"accent-two"} /-->
 
@@ -369,7 +368,9 @@ BLOCKS;
 
 <!-- wp:wstp/post-title {"textColor":"accent-three","fontSize":20} /-->
 
-<!-- wp:wstp/post-excerpt {"textColor":"accent"} /-->
+<!-- wp:wstp/post-meta {"textColor":"accent","fontSize":13,"paddingBottom":6} /-->
+
+<!-- wp:wstp/post-excerpt {"textColor":"accent","wordCount":42} /-->
 
 <!-- wp:wstp/post-read-more {"style":"button","backgroundColor":"accent-two","textColor":"#ffffff"} /-->
 
@@ -606,16 +607,11 @@ HEAD;
 			case 'wstp/intro':
 				$bg      = self::resolve_color( $attrs['backgroundColor'], 'content_bg' );
 				$heading = self::resolve_color( $attrs['textColor'], 'text' );
-				$muted   = self::resolve_color( $attrs['mutedColor'] !== '' ? $attrs['mutedColor'] : 'muted', 'muted' );
 				$p       = self::format_padding( (int) $attrs['paddingTop'], (int) $attrs['paddingBottom'], (int) $attrs['paddingX'] );
 				$align   = self::align_attr( $attrs['align'] );
 				$border  = self::border_attrs_mjml( $attrs );
 				$inners  = isset( $block['innerBlocks'] ) && is_array( $block['innerBlocks'] ) ? $block['innerBlocks'] : array();
 				$intro   = self::map_header_inners( $inners, $align );
-				// Legacy templates with no editable intro body keep the translated token.
-				if ( '' === trim( $intro ) ) {
-					$intro = '        <mj-text color="' . $muted . '" padding="0" align="' . $align . '">{{wstp:posts_intro}}</mj-text>' . "\n";
-				}
 				return '    <mj-section background-color="' . $bg . '" padding="' . $p . '"' . $border . '>' . "\n"
 					. '      <mj-column padding="0">' . "\n"
 					. '        <mj-text font-size="22px" font-weight="bold" color="' . $heading . '" padding="0 0 8px" align="' . $align . '">{{wstp:greeting}}</mj-text>' . "\n"
@@ -910,7 +906,28 @@ HEAD;
 			case 'wstp/post-excerpt':
 				$color = self::resolve_color( $attrs['textColor'], 'muted' );
 				$size  = max( 10, min( 36, (int) ( $attrs['fontSize'] ?: 15 ) ) );
-				return '        <mj-text color="' . $color . '" font-size="' . $size . 'px" padding="' . $pad . '" align="' . $align . '">{{wstp:post_excerpt}}</mj-text>' . "\n";
+				$words = isset( $block['attrs']['wordCount'] ) ? (int) $block['attrs']['wordCount'] : 42;
+				$words = max( 5, min( 100, $words ) );
+				return '        <mj-text color="' . $color . '" font-size="' . $size . 'px" padding="' . $pad . '" align="' . $align . '">{{wstp:post_excerpt:' . $words . '}}</mj-text>' . "\n";
+
+			case 'wstp/post-meta':
+				$color      = self::resolve_color( $attrs['textColor'], 'muted' );
+				$size       = max( 10, min( 24, (int) ( $attrs['fontSize'] ?: 13 ) ) );
+				$show_date  = ! isset( $block['attrs']['showDate'] ) || ! empty( $block['attrs']['showDate'] );
+				$show_author = ! isset( $block['attrs']['showAuthor'] ) || ! empty( $block['attrs']['showAuthor'] );
+				$separator  = isset( $block['attrs']['separator'] ) ? (string) $block['attrs']['separator'] : ' · ';
+				$parts      = array();
+				if ( $show_date ) {
+					$parts[] = '{{wstp:post_date}}';
+				}
+				if ( $show_author ) {
+					$parts[] = '{{wstp:post_author}}';
+				}
+				if ( empty( $parts ) ) {
+					return '';
+				}
+				$meta_html = implode( esc_html( $separator ), $parts );
+				return '        <mj-text color="' . $color . '" font-size="' . $size . 'px" padding="' . $pad . '" align="' . $align . '">' . $meta_html . '</mj-text>' . "\n";
 
 			case 'wstp/post-image':
 				return self::map_post_image_field( $block, false, $column_pct );

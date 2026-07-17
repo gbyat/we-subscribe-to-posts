@@ -24,7 +24,6 @@ defined( 'ABSPATH' ) || exit;
 		);
 		?>
 	</p>
-	<p><?php esc_html_e( 'Here are the latest published posts:', 'we-subscribe-to-posts' ); ?></p>
 
 	<?php foreach ( $posts as $post_item ) : ?>
 		<div style="margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid #e5e5e5;">

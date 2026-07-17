@@ -245,16 +245,28 @@ final class Mjml_Template {
 						'contentGapHelp'  => __( 'Gap between heading and paragraph lines inside the header.', 'we-subscribe-to-posts' ),
 						'footerHelp'      => __( 'Content comes from the Branding tab.', 'we-subscribe-to-posts' ),
 						'intro'           => __( 'Greeting & intro', 'we-subscribe-to-posts' ),
-						'introHelp'       => __( 'The greeting is personalized at send time. Edit the text below for your intro or a special announcement.', 'we-subscribe-to-posts' ),
+						'introHelp'       => __( 'The greeting is personalized at send time. Add paragraph or heading blocks below for an optional intro or announcement.', 'we-subscribe-to-posts' ),
 						'greetingLabel'   => __( 'Greeting (personalized)', 'we-subscribe-to-posts' ),
 						/* translators: %s: sample subscriber name in the visual editor. */
 						'greetingSample'  => __( 'Hi %s,', 'we-subscribe-to-posts' ),
-						'defaultPostsIntro' => __( 'Here are the latest published posts:', 'we-subscribe-to-posts' ),
 						'postsLoop'       => __( 'Posts loop', 'we-subscribe-to-posts' ),
 						'truncation'      => __( 'Truncation notice', 'we-subscribe-to-posts' ),
 						'truncationHelp'  => __( 'Appears only when the digest post limit hides extra posts. Omitted from the email when unused; spacing applies only then.', 'we-subscribe-to-posts' ),
 						'postTitle'       => __( 'Post title', 'we-subscribe-to-posts' ),
+						'postTitleHelp'   => __( 'Shows each post title (linked). Style with color, size, and spacing.', 'we-subscribe-to-posts' ),
 						'postExcerpt'     => __( 'Post excerpt', 'we-subscribe-to-posts' ),
+						'postMeta'        => __( 'Post meta', 'we-subscribe-to-posts' ),
+						'postMetaEmpty'   => __( 'Enable date and/or author in the sidebar.', 'we-subscribe-to-posts' ),
+						'postField'       => __( 'Post field', 'we-subscribe-to-posts' ),
+						'wordCount'       => __( 'Word count', 'we-subscribe-to-posts' ),
+						'wordCountHelp'   => __( 'Maximum words per post. Uses the post excerpt when set, otherwise the content.', 'we-subscribe-to-posts' ),
+						/* translators: %d: word count. */
+						'wordCountLabel'  => __( '%d words', 'we-subscribe-to-posts' ),
+						'showDate'        => __( 'Show date', 'we-subscribe-to-posts' ),
+						'showAuthor'      => __( 'Show author', 'we-subscribe-to-posts' ),
+						'metaSeparator'   => __( 'Separator', 'we-subscribe-to-posts' ),
+						'sampleDate'      => __( 'March 15, 2026', 'we-subscribe-to-posts' ),
+						'sampleAuthor'    => __( 'Alex', 'we-subscribe-to-posts' ),
 						'postImage'       => __( 'Post image', 'we-subscribe-to-posts' ),
 						'postImageSide'   => __( 'Post image (side)', 'we-subscribe-to-posts' ),
 						'imageSettings'   => __( 'Image', 'we-subscribe-to-posts' ),
@@ -456,6 +468,7 @@ final class Mjml_Template {
 			'wstp/posts-loop',
 			'wstp/post-title',
 			'wstp/post-excerpt',
+			'wstp/post-meta',
 			'wstp/post-image',
 			'wstp/post-image-side',
 			'wstp/post-read-more',
@@ -591,10 +604,6 @@ final class Mjml_Template {
 				'description' => __( 'Subscriber name only', 'we-subscribe-to-posts' ),
 			),
 			array(
-				'token'       => '{{wstp:posts_intro}}',
-				'description' => __( 'Legacy intro line (MJML starters / empty Visual intro). Prefer editing intro text in the Visual tab.', 'we-subscribe-to-posts' ),
-			),
-			array(
 				'token'       => '{{wstp:posts_loop}} ... {{/wstp:posts_loop}}',
 				'description' => __( 'Repeat the block inside for each post in the digest', 'we-subscribe-to-posts' ),
 			),
@@ -604,7 +613,15 @@ final class Mjml_Template {
 			),
 			array(
 				'token'       => '{{wstp:post_excerpt}}',
-				'description' => __( 'Post excerpt (inside loop)', 'we-subscribe-to-posts' ),
+				'description' => __( 'Post excerpt (inside loop; visual editor sets word count)', 'we-subscribe-to-posts' ),
+			),
+			array(
+				'token'       => '{{wstp:post_date}}',
+				'description' => __( 'Post date (inside loop)', 'we-subscribe-to-posts' ),
+			),
+			array(
+				'token'       => '{{wstp:post_author}}',
+				'description' => __( 'Post author (inside loop)', 'we-subscribe-to-posts' ),
 			),
 			array(
 				'token'       => '{{wstp:post_url}}',
@@ -1184,9 +1201,14 @@ final class Mjml_Template {
 		$post  = isset( $posts[0] ) && is_array( $posts[0] ) ? $posts[0] : array();
 
 		$title = isset( $post['title'] ) ? (string) $post['title'] : __( 'Sample post title', 'we-subscribe-to-posts' );
-		$excerpt = isset( $post['excerpt'] ) ? (string) $post['excerpt'] : __( 'Short excerpt of the post…', 'we-subscribe-to-posts' );
-		$excerpt = wp_specialchars_decode( $excerpt, ENT_QUOTES );
-		$excerpt = html_entity_decode( $excerpt, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+		$excerpt_source = isset( $post['excerpt_source'] )
+			? (string) $post['excerpt_source']
+			: ( isset( $post['excerpt'] ) ? (string) $post['excerpt'] : __( 'Short excerpt of the post…', 'we-subscribe-to-posts' ) );
+		$excerpt_source = wp_specialchars_decode( $excerpt_source, ENT_QUOTES );
+		$excerpt_source = html_entity_decode( $excerpt_source, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+		$excerpt        = isset( $post['excerpt'] ) ? (string) $post['excerpt'] : wp_trim_words( $excerpt_source, 42 );
+		$excerpt        = wp_specialchars_decode( $excerpt, ENT_QUOTES );
+		$excerpt        = html_entity_decode( $excerpt, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
 
 		$image = isset( $post['featured_image_url'] ) ? trim( (string) $post['featured_image_url'] ) : '';
 		if ( '' === $image ) {
@@ -1194,10 +1216,17 @@ final class Mjml_Template {
 		}
 
 		return array(
-			'title'   => $title,
-			'excerpt' => $excerpt,
-			'image'   => $image,
-			'name'    => wp_get_current_user()->display_name
+			'title'          => $title,
+			'excerpt'        => $excerpt,
+			'excerptSource'  => $excerpt_source,
+			'image'          => $image,
+			'date'           => isset( $post['date'] ) ? (string) $post['date'] : wp_date( get_option( 'date_format' ) ),
+			'author'         => isset( $post['author'] ) ? (string) $post['author'] : (
+				wp_get_current_user()->display_name
+					? wp_get_current_user()->display_name
+					: __( 'Alex', 'we-subscribe-to-posts' )
+			),
+			'name'           => wp_get_current_user()->display_name
 				? wp_get_current_user()->display_name
 				: __( 'Alex', 'we-subscribe-to-posts' ),
 		);
@@ -1278,6 +1307,9 @@ final class Mjml_Template {
 				'permalink'          => home_url( '/' ),
 				'featured_image_url' => self::preview_placeholder_image_url(),
 				'excerpt'            => __( 'Short excerpt of the post…', 'we-subscribe-to-posts' ),
+				'excerpt_source'     => __( 'Short excerpt of the post…', 'we-subscribe-to-posts' ),
+				'date'               => wp_date( get_option( 'date_format' ) ),
+				'author'             => __( 'Alex', 'we-subscribe-to-posts' ),
 			);
 		}
 
@@ -1291,10 +1323,13 @@ final class Mjml_Template {
 	 * @return array<string,mixed>
 	 */
 	private function map_preview_post( \WP_Post $post ): array {
-		$image   = self::resolve_preview_featured_image_url( $post );
-		$excerpt = has_excerpt( $post ) ? get_the_excerpt( $post ) : wp_trim_words( wp_strip_all_tags( (string) $post->post_content ), 42 );
-		$excerpt = wp_specialchars_decode( (string) $excerpt, ENT_QUOTES );
-		$excerpt = html_entity_decode( $excerpt, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+		$image          = self::resolve_preview_featured_image_url( $post );
+		$excerpt_source = has_excerpt( $post )
+			? (string) get_the_excerpt( $post )
+			: wp_strip_all_tags( (string) $post->post_content );
+		$excerpt_source = wp_specialchars_decode( $excerpt_source, ENT_QUOTES );
+		$excerpt_source = html_entity_decode( $excerpt_source, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+		$excerpt        = wp_trim_words( $excerpt_source, 42 );
 
 		return array(
 			'id'                 => (int) $post->ID,
@@ -1303,6 +1338,9 @@ final class Mjml_Template {
 			'featured_image_id'  => (int) get_post_thumbnail_id( $post ),
 			'featured_image_url' => $image,
 			'excerpt'            => $excerpt,
+			'excerpt_source'     => $excerpt_source,
+			'date'               => get_the_date( '', $post ),
+			'author'             => get_the_author_meta( 'display_name', (int) $post->post_author ),
 		);
 	}
 
