@@ -44,12 +44,15 @@ final class Unsubscribe_Service {
 	 * @return void
 	 */
 	public function maybe_unsubscribe(): void {
+		// Signed unsubscribe token in the email link (not a WP nonce).
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
 		$action = isset( $_GET['wstp_action'] ) ? sanitize_key( wp_unslash( $_GET['wstp_action'] ) ) : '';
 		if ( 'unsubscribe' !== $action ) {
 			return;
 		}
 
 		$token = isset( $_GET['wstp_token'] ) ? sanitize_text_field( wp_unslash( $_GET['wstp_token'] ) ) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 		if ( '' === $token ) {
 			$this->redirect_with_status( 'invalid_token' );
 		}

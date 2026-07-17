@@ -17,34 +17,34 @@
  * @package WeSubscribeToPosts
  */
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
-if (! defined('WSTP_VERSION')) {
+if ( ! defined( 'WSTP_VERSION' ) ) {
 	define( 'WSTP_VERSION', '1.3.1' );
 }
 
-if (! defined('WSTP_FILE')) {
-	define('WSTP_FILE', __FILE__);
+if ( ! defined( 'WSTP_FILE' ) ) {
+	define( 'WSTP_FILE', __FILE__ );
 }
 
-if (! defined('WSTP_PATH')) {
-	define('WSTP_PATH', plugin_dir_path(__FILE__));
+if ( ! defined( 'WSTP_PATH' ) ) {
+	define( 'WSTP_PATH', plugin_dir_path( __FILE__ ) );
 }
 
-if (! defined('WSTP_URL')) {
-	define('WSTP_URL', plugin_dir_url(__FILE__));
+if ( ! defined( 'WSTP_URL' ) ) {
+	define( 'WSTP_URL', plugin_dir_url( __FILE__ ) );
 }
 
-if (! defined('WSTP_GITHUB_REPO')) {
-	define('WSTP_GITHUB_REPO', 'gbyat/we-subscribe-to-posts');
+if ( ! defined( 'WSTP_GITHUB_REPO' ) ) {
+	define( 'WSTP_GITHUB_REPO', 'gbyat/we-subscribe-to-posts' );
 }
 
 require_once WSTP_PATH . 'includes/core/class-autoloader.php';
 
 \WSTP\Core\Autoloader::register();
 
-register_activation_hook(__FILE__, array('\WSTP\Plugin', 'activate'));
-register_deactivation_hook(__FILE__, array('\WSTP\Plugin', 'deactivate'));
+register_activation_hook( __FILE__, array( '\WSTP\Plugin', 'activate' ) );
+register_deactivation_hook( __FILE__, array( '\WSTP\Plugin', 'deactivate' ) );
 
 add_action(
 	'plugins_loaded',

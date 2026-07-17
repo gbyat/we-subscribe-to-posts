@@ -12,37 +12,37 @@
 defined( 'ABSPATH' ) || exit;
 
 $messages = array(
-	'optin_sent'       => __( 'Please check your inbox and confirm your subscription.', 'we-subscribe-to-posts' ),
-	'confirmed'        => __( 'Subscription confirmed. You are now subscribed.', 'we-subscribe-to-posts' ),
-	'unsubscribed'     => __( 'You have been unsubscribed successfully.', 'we-subscribe-to-posts' ),
-	'invalid_nonce'    => __( 'Security check failed. Please try again.', 'we-subscribe-to-posts' ),
-	'invalid_email'    => __( 'Please enter a valid email address.', 'we-subscribe-to-posts' ),
-	'invalid_name'     => __( 'Please enter a valid name without links or suspicious patterns.', 'we-subscribe-to-posts' ),
-	'invalid_frequency'=> __( 'Please select a valid delivery frequency.', 'we-subscribe-to-posts' ),
-	'missing_consent'  => __( 'Please accept the privacy section before subscribing.', 'we-subscribe-to-posts' ),
-	'bot_detected'     => __( 'Submission could not be processed. Please try again.', 'we-subscribe-to-posts' ),
-	'rate_limited'     => __( 'Too many subscribe attempts in a short time. Please wait a moment and try again.', 'we-subscribe-to-posts' ),
-	'send_error'       => __( 'We could not send the confirmation email right now. Please try again later.', 'we-subscribe-to-posts' ),
-	'invalid_token'    => __( 'This confirmation or unsubscribe link is invalid or expired.', 'we-subscribe-to-posts' ),
-	'already_subscribed' => __( 'This email is already subscribed with the selected frequency.', 'we-subscribe-to-posts' ),
-	'optin_already_sent' => __( 'A confirmation email was already sent for this address. Please check your inbox.', 'we-subscribe-to-posts' ),
-	'optin_resent' => __( 'We sent a fresh confirmation email. Please check your inbox.', 'we-subscribe-to-posts' ),
+	'optin_sent'          => __( 'Please check your inbox and confirm your subscription.', 'we-subscribe-to-posts' ),
+	'confirmed'           => __( 'Subscription confirmed. You are now subscribed.', 'we-subscribe-to-posts' ),
+	'unsubscribed'        => __( 'You have been unsubscribed successfully.', 'we-subscribe-to-posts' ),
+	'invalid_nonce'       => __( 'Security check failed. Please try again.', 'we-subscribe-to-posts' ),
+	'invalid_email'       => __( 'Please enter a valid email address.', 'we-subscribe-to-posts' ),
+	'invalid_name'        => __( 'Please enter a valid name without links or suspicious patterns.', 'we-subscribe-to-posts' ),
+	'invalid_frequency'   => __( 'Please select a valid delivery frequency.', 'we-subscribe-to-posts' ),
+	'missing_consent'     => __( 'Please accept the privacy section before subscribing.', 'we-subscribe-to-posts' ),
+	'bot_detected'        => __( 'Submission could not be processed. Please try again.', 'we-subscribe-to-posts' ),
+	'rate_limited'        => __( 'Too many subscribe attempts in a short time. Please wait a moment and try again.', 'we-subscribe-to-posts' ),
+	'send_error'          => __( 'We could not send the confirmation email right now. Please try again later.', 'we-subscribe-to-posts' ),
+	'invalid_token'       => __( 'This confirmation or unsubscribe link is invalid or expired.', 'we-subscribe-to-posts' ),
+	'already_subscribed'  => __( 'This email is already subscribed with the selected frequency.', 'we-subscribe-to-posts' ),
+	'optin_already_sent'  => __( 'A confirmation email was already sent for this address. Please check your inbox.', 'we-subscribe-to-posts' ),
+	'optin_resent'        => __( 'We sent a fresh confirmation email. Please check your inbox.', 'we-subscribe-to-posts' ),
 	'optin_recently_sent' => __( 'A confirmation email was sent recently. Please wait a few minutes before requesting another one.', 'we-subscribe-to-posts' ),
-	'suppressed' => __( 'This email is blocked from subscriptions and cannot be added again.', 'we-subscribe-to-posts' ),
+	'suppressed'          => __( 'This email is blocked from subscriptions and cannot be added again.', 'we-subscribe-to-posts' ),
 );
 
-$is_compact       = isset( $is_compact ) ? (bool) $is_compact : false;
-$default_frequency = isset( $default_frequency ) ? (string) $default_frequency : 'daily';
-$button_label      = isset( $button_label ) ? (string) $button_label : __( 'Subscribe', 'we-subscribe-to-posts' );
+$is_compact              = isset( $is_compact ) ? (bool) $is_compact : false;
+$default_frequency       = isset( $default_frequency ) ? (string) $default_frequency : 'daily';
+$button_label            = isset( $button_label ) ? (string) $button_label : __( 'Subscribe', 'we-subscribe-to-posts' );
 $button_use_custom_style = isset( $button_use_custom_style ) ? (bool) $button_use_custom_style : false;
-$button_bg_color   = isset( $button_bg_color ) ? (string) $button_bg_color : '#1d4ed8';
-$button_text_color = isset( $button_text_color ) ? (string) $button_text_color : '#ffffff';
-$button_radius     = isset( $button_radius ) ? (int) $button_radius : 6;
-$form_rendered_at  = isset( $form_rendered_at ) ? (int) $form_rendered_at : time();
-$form_timing_sig   = isset( $form_timing_sig ) ? (string) $form_timing_sig : '';
-$status_notice_style    = isset( $status_notice_style ) ? (string) $status_notice_style : 'toast';
-$status_notice_position = isset( $status_notice_position ) ? (string) $status_notice_position : 'bottom-right';
-$status_notice_seconds  = isset( $status_notice_seconds ) ? (int) $status_notice_seconds : 8;
+$button_bg_color         = isset( $button_bg_color ) ? (string) $button_bg_color : '#1d4ed8';
+$button_text_color       = isset( $button_text_color ) ? (string) $button_text_color : '#ffffff';
+$button_radius           = isset( $button_radius ) ? (int) $button_radius : 6;
+$form_rendered_at        = isset( $form_rendered_at ) ? (int) $form_rendered_at : time();
+$form_timing_sig         = isset( $form_timing_sig ) ? (string) $form_timing_sig : '';
+$status_notice_style     = isset( $status_notice_style ) ? (string) $status_notice_style : 'toast';
+$status_notice_position  = isset( $status_notice_position ) ? (string) $status_notice_position : 'bottom-right';
+$status_notice_seconds   = isset( $status_notice_seconds ) ? (int) $status_notice_seconds : 8;
 if ( ! in_array( $status_notice_style, array( 'toast', 'overlay', 'inline' ), true ) ) {
 	$status_notice_style = 'toast';
 }
@@ -53,7 +53,7 @@ if ( $status_notice_seconds < 0 ) {
 	$status_notice_seconds = 0;
 }
 
-$button_style  = '';
+$button_style = '';
 if ( $button_use_custom_style ) {
 	$button_declarations = array(
 		'display:inline-block',
@@ -75,9 +75,9 @@ if ( $button_use_custom_style ) {
 	$button_style = implode( '; ', $button_declarations ) . ';';
 }
 $rest_subscribe_url = rest_url( 'wstp/v1/subscribe' );
-$rest_nonce_url = rest_url( 'wstp/v1/subscribe-nonce' );
-$overlay_statuses = array( 'optin_sent', 'optin_resent', 'confirmed', 'unsubscribed' );
-$can_float_notice = isset( $messages[ $status ] ) && in_array( $status, $overlay_statuses, true ) && 'inline' !== $status_notice_style;
+$rest_nonce_url     = rest_url( 'wstp/v1/subscribe-nonce' );
+$overlay_statuses   = array( 'optin_sent', 'optin_resent', 'confirmed', 'unsubscribed' );
+$can_float_notice   = isset( $messages[ $status ] ) && in_array( $status, $overlay_statuses, true ) && 'inline' !== $status_notice_style;
 $toast_position_css = 'right:16px; bottom:16px;';
 if ( 'bottom-left' === $status_notice_position ) {
 	$toast_position_css = 'left:16px; bottom:16px;';

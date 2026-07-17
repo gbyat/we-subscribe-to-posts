@@ -64,15 +64,15 @@ final class Subscription_Form {
 			'wstp/subscription-form',
 			array(
 				'attributes'      => array(
-					'compact'           => array(
+					'compact'                 => array(
 						'type'    => 'boolean',
 						'default' => false,
 					),
-					'default_frequency' => array(
+					'default_frequency'       => array(
 						'type'    => 'string',
 						'default' => 'daily',
 					),
-					'button_label'      => array(
+					'button_label'            => array(
 						'type'    => 'string',
 						'default' => __( 'Subscribe', 'we-subscribe-to-posts' ),
 					),
@@ -80,15 +80,15 @@ final class Subscription_Form {
 						'type'    => 'boolean',
 						'default' => false,
 					),
-					'button_bg_color'   => array(
+					'button_bg_color'         => array(
 						'type'    => 'string',
 						'default' => '',
 					),
-					'button_text_color' => array(
+					'button_text_color'       => array(
 						'type'    => 'string',
 						'default' => '',
 					),
-					'button_radius'     => array(
+					'button_radius'           => array(
 						'type'    => 'number',
 						'default' => 0,
 					),
@@ -135,13 +135,13 @@ final class Subscription_Form {
 
 		$atts = shortcode_atts(
 			array(
-				'compact'           => false,
-				'default_frequency' => 'daily',
-				'button_label'      => __( 'Subscribe', 'we-subscribe-to-posts' ),
+				'compact'                 => false,
+				'default_frequency'       => 'daily',
+				'button_label'            => __( 'Subscribe', 'we-subscribe-to-posts' ),
 				'button_use_custom_style' => false,
-				'button_bg_color'   => '',
-				'button_text_color' => '',
-				'button_radius'     => 0,
+				'button_bg_color'         => '',
+				'button_text_color'       => '',
+				'button_radius'           => 0,
 			),
 			$atts,
 			'wstp_subscription_form'
@@ -153,11 +153,11 @@ final class Subscription_Form {
 			$default_frequency = 'daily';
 		}
 
-		$button_label      = sanitize_text_field( (string) $atts['button_label'] );
+		$button_label            = sanitize_text_field( (string) $atts['button_label'] );
 		$button_use_custom_style = filter_var( $atts['button_use_custom_style'], FILTER_VALIDATE_BOOLEAN );
-		$button_bg_color   = $this->resolve_color_value( (string) $atts['button_bg_color'] );
-		$button_text_color = $this->resolve_color_value( (string) $atts['button_text_color'] );
-		$button_radius     = (int) $atts['button_radius'];
+		$button_bg_color         = $this->resolve_color_value( (string) $atts['button_bg_color'] );
+		$button_text_color       = $this->resolve_color_value( (string) $atts['button_text_color'] );
+		$button_radius           = (int) $atts['button_radius'];
 		if ( $button_radius < 0 ) {
 			$button_radius = 0;
 		}
@@ -179,7 +179,7 @@ final class Subscription_Form {
 		if ( ! is_array( $settings ) ) {
 			$settings = array();
 		}
-		$privacy_text = isset( $settings['privacy_notice'] ) && is_string( $settings['privacy_notice'] )
+		$privacy_text        = isset( $settings['privacy_notice'] ) && is_string( $settings['privacy_notice'] )
 			? $settings['privacy_notice']
 			: __( 'I agree that my email address is used only for post update notifications.', 'we-subscribe-to-posts' );
 		$status_notice_style = isset( $settings['status_notice_style'] ) && is_string( $settings['status_notice_style'] ) ? sanitize_key( $settings['status_notice_style'] ) : 'toast';
@@ -197,7 +197,8 @@ final class Subscription_Form {
 		if ( $status_notice_seconds > 60 ) {
 			$status_notice_seconds = 60;
 		}
-		$status       = isset( $_GET['wstp_status'] ) ? sanitize_key( wp_unslash( $_GET['wstp_status'] ) ) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public status flash from redirect query arg.
+		$status           = isset( $_GET['wstp_status'] ) ? sanitize_key( wp_unslash( $_GET['wstp_status'] ) ) : '';
 		$form_rendered_at = time();
 		$form_timing_sig  = $this->create_form_timing_signature( $form_rendered_at );
 
@@ -226,12 +227,12 @@ final class Subscription_Form {
 	 */
 	private function normalize_block_attributes( array $atts ): array {
 		$map = array(
-			'defaultFrequency' => 'default_frequency',
-			'buttonLabel'      => 'button_label',
+			'defaultFrequency'     => 'default_frequency',
+			'buttonLabel'          => 'button_label',
 			'buttonUseCustomStyle' => 'button_use_custom_style',
-			'buttonBgColor'    => 'button_bg_color',
-			'buttonTextColor'  => 'button_text_color',
-			'buttonRadius'     => 'button_radius',
+			'buttonBgColor'        => 'button_bg_color',
+			'buttonTextColor'      => 'button_text_color',
+			'buttonRadius'         => 'button_radius',
 		);
 
 		foreach ( $map as $source => $target ) {
@@ -358,11 +359,11 @@ final class Subscription_Form {
 			);
 		}
 
-		$email     = isset( $params['wstp_email'] ) ? sanitize_email( (string) $params['wstp_email'] ) : '';
-		$name      = isset( $params['wstp_name'] ) ? sanitize_text_field( (string) $params['wstp_name'] ) : '';
-		$frequency = isset( $params['wstp_frequency'] ) ? sanitize_key( (string) $params['wstp_frequency'] ) : '';
-		$consent   = isset( $params['wstp_consent'] ) ? sanitize_text_field( (string) $params['wstp_consent'] ) : '';
-		$honeypot  = isset( $params['wstp_website'] ) ? sanitize_text_field( (string) $params['wstp_website'] ) : '';
+		$email       = isset( $params['wstp_email'] ) ? sanitize_email( (string) $params['wstp_email'] ) : '';
+		$name        = isset( $params['wstp_name'] ) ? sanitize_text_field( (string) $params['wstp_name'] ) : '';
+		$frequency   = isset( $params['wstp_frequency'] ) ? sanitize_key( (string) $params['wstp_frequency'] ) : '';
+		$consent     = isset( $params['wstp_consent'] ) ? sanitize_text_field( (string) $params['wstp_consent'] ) : '';
+		$honeypot    = isset( $params['wstp_website'] ) ? sanitize_text_field( (string) $params['wstp_website'] ) : '';
 		$rendered_at = isset( $params['wstp_rendered_at'] ) ? (int) $params['wstp_rendered_at'] : 0;
 		$timing_sig  = isset( $params['wstp_timing_sig'] ) ? sanitize_text_field( (string) $params['wstp_timing_sig'] ) : '';
 
@@ -397,11 +398,11 @@ final class Subscription_Form {
 			$this->redirect_with_status( 'invalid_nonce' );
 		}
 
-		$email     = isset( $_POST['wstp_email'] ) ? sanitize_email( wp_unslash( $_POST['wstp_email'] ) ) : '';
-		$name      = isset( $_POST['wstp_name'] ) ? sanitize_text_field( wp_unslash( $_POST['wstp_name'] ) ) : '';
-		$frequency = isset( $_POST['wstp_frequency'] ) ? sanitize_key( wp_unslash( $_POST['wstp_frequency'] ) ) : '';
-		$consent   = isset( $_POST['wstp_consent'] ) ? sanitize_text_field( wp_unslash( $_POST['wstp_consent'] ) ) : '';
-		$honeypot  = isset( $_POST['wstp_website'] ) ? sanitize_text_field( wp_unslash( $_POST['wstp_website'] ) ) : '';
+		$email       = isset( $_POST['wstp_email'] ) ? sanitize_email( wp_unslash( $_POST['wstp_email'] ) ) : '';
+		$name        = isset( $_POST['wstp_name'] ) ? sanitize_text_field( wp_unslash( $_POST['wstp_name'] ) ) : '';
+		$frequency   = isset( $_POST['wstp_frequency'] ) ? sanitize_key( wp_unslash( $_POST['wstp_frequency'] ) ) : '';
+		$consent     = isset( $_POST['wstp_consent'] ) ? sanitize_text_field( wp_unslash( $_POST['wstp_consent'] ) ) : '';
+		$honeypot    = isset( $_POST['wstp_website'] ) ? sanitize_text_field( wp_unslash( $_POST['wstp_website'] ) ) : '';
 		$rendered_at = isset( $_POST['wstp_rendered_at'] ) ? (int) $_POST['wstp_rendered_at'] : 0;
 		$timing_sig  = isset( $_POST['wstp_timing_sig'] ) ? sanitize_text_field( wp_unslash( $_POST['wstp_timing_sig'] ) ) : '';
 
@@ -482,7 +483,7 @@ final class Subscription_Form {
 				return 'suppressed';
 			}
 		}
-		$result       = $this->double_optin_service->create_pending_and_send( $email, $name, $frequency, $consent_text );
+		$result = $this->double_optin_service->create_pending_and_send( $email, $name, $frequency, $consent_text );
 
 		if ( is_wp_error( $result ) ) {
 			return 'send_error';
@@ -521,6 +522,7 @@ final class Subscription_Form {
 			return;
 		}
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Public status flash from redirect query arg.
 		$status = isset( $_GET['wstp_status'] ) ? sanitize_key( wp_unslash( $_GET['wstp_status'] ) ) : '';
 		if ( '' === $status ) {
 			return;
@@ -628,23 +630,23 @@ final class Subscription_Form {
 	 */
 	private function get_status_messages(): array {
 		return array(
-			'optin_sent'         => __( 'Please check your inbox and confirm your subscription.', 'we-subscribe-to-posts' ),
-			'optin_resent'       => __( 'We sent a fresh confirmation email. Please check your inbox.', 'we-subscribe-to-posts' ),
+			'optin_sent'          => __( 'Please check your inbox and confirm your subscription.', 'we-subscribe-to-posts' ),
+			'optin_resent'        => __( 'We sent a fresh confirmation email. Please check your inbox.', 'we-subscribe-to-posts' ),
 			'optin_recently_sent' => __( 'A confirmation email was sent recently. Please wait a few minutes before requesting another one.', 'we-subscribe-to-posts' ),
-			'confirmed'          => __( 'Subscription confirmed. You are now subscribed.', 'we-subscribe-to-posts' ),
-			'unsubscribed'       => __( 'You have been unsubscribed successfully.', 'we-subscribe-to-posts' ),
-			'invalid_nonce'      => __( 'Security check failed. Please try again.', 'we-subscribe-to-posts' ),
-			'invalid_email'      => __( 'Please enter a valid email address.', 'we-subscribe-to-posts' ),
-			'invalid_name'       => __( 'Please enter a valid name without links or suspicious patterns.', 'we-subscribe-to-posts' ),
-			'invalid_frequency'  => __( 'Please select a valid delivery frequency.', 'we-subscribe-to-posts' ),
-			'missing_consent'    => __( 'Please accept the privacy section before subscribing.', 'we-subscribe-to-posts' ),
-			'bot_detected'       => __( 'Submission could not be processed. Please try again.', 'we-subscribe-to-posts' ),
-			'rate_limited'       => __( 'Too many subscribe attempts in a short time. Please wait a moment and try again.', 'we-subscribe-to-posts' ),
-			'send_error'         => __( 'We could not send the confirmation email right now. Please try again later.', 'we-subscribe-to-posts' ),
-			'invalid_token'      => __( 'This confirmation or unsubscribe link is invalid or expired.', 'we-subscribe-to-posts' ),
-			'already_subscribed' => __( 'This email is already subscribed with the selected frequency.', 'we-subscribe-to-posts' ),
-			'optin_already_sent' => __( 'A confirmation email was already sent for this address. Please check your inbox.', 'we-subscribe-to-posts' ),
-			'suppressed'         => __( 'This email is blocked from subscriptions and cannot be added again.', 'we-subscribe-to-posts' ),
+			'confirmed'           => __( 'Subscription confirmed. You are now subscribed.', 'we-subscribe-to-posts' ),
+			'unsubscribed'        => __( 'You have been unsubscribed successfully.', 'we-subscribe-to-posts' ),
+			'invalid_nonce'       => __( 'Security check failed. Please try again.', 'we-subscribe-to-posts' ),
+			'invalid_email'       => __( 'Please enter a valid email address.', 'we-subscribe-to-posts' ),
+			'invalid_name'        => __( 'Please enter a valid name without links or suspicious patterns.', 'we-subscribe-to-posts' ),
+			'invalid_frequency'   => __( 'Please select a valid delivery frequency.', 'we-subscribe-to-posts' ),
+			'missing_consent'     => __( 'Please accept the privacy section before subscribing.', 'we-subscribe-to-posts' ),
+			'bot_detected'        => __( 'Submission could not be processed. Please try again.', 'we-subscribe-to-posts' ),
+			'rate_limited'        => __( 'Too many subscribe attempts in a short time. Please wait a moment and try again.', 'we-subscribe-to-posts' ),
+			'send_error'          => __( 'We could not send the confirmation email right now. Please try again later.', 'we-subscribe-to-posts' ),
+			'invalid_token'       => __( 'This confirmation or unsubscribe link is invalid or expired.', 'we-subscribe-to-posts' ),
+			'already_subscribed'  => __( 'This email is already subscribed with the selected frequency.', 'we-subscribe-to-posts' ),
+			'optin_already_sent'  => __( 'A confirmation email was already sent for this address. Please check your inbox.', 'we-subscribe-to-posts' ),
+			'suppressed'          => __( 'This email is blocked from subscriptions and cannot be added again.', 'we-subscribe-to-posts' ),
 		);
 	}
 
@@ -728,7 +730,7 @@ final class Subscription_Form {
 			return true;
 		}
 
-		$ip = $this->get_request_ip();
+		$ip     = $this->get_request_ip();
 		$ip_key = '';
 		if ( '' !== $ip ) {
 			$ip_key     = $this->build_rate_limit_key( 'ip', $ip );

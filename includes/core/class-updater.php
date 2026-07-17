@@ -286,13 +286,13 @@ class Updater {
 			$version = ltrim( (string) $this->github_response->tag_name, 'v' );
 		}
 
-		$download_link = $this->resolve_release_asset_url();
-		$changelog     = $this->build_changelog_html();
-		$description   = (string) ( $this->plugin['Description'] ?? '' );
+		$download_link  = $this->resolve_release_asset_url();
+		$changelog      = $this->build_changelog_html();
+		$description    = (string) ( $this->plugin['Description'] ?? '' );
 		$upgrade_notice = $this->extract_upgrade_notice( $this->get_release_body() );
 
 		$sections = array(
-			'description' => $description !== '' ? wpautop( esc_html( $description ) ) : '',
+			'description' => '' !== $description ? wpautop( esc_html( $description ) ) : '',
 			'changelog'   => $changelog,
 		);
 		if ( '' !== $upgrade_notice ) {
@@ -651,6 +651,7 @@ class Updater {
 			wp_delete_file( $temp_file );
 			return false;
 		}
+		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- ZipArchive public API.
 		if ( $zip->numFiles > 10000 ) {
 			$zip->close();
 			wp_delete_file( $temp_file );
@@ -658,6 +659,7 @@ class Updater {
 		}
 
 		$plugin_file = null;
+		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- ZipArchive public API.
 		for ( $i = 0; $i < $zip->numFiles; $i++ ) {
 			$name = $zip->getNameIndex( $i );
 			if ( is_string( $name ) && preg_match( '#^we-subscribe-to-posts/we-subscribe-to-posts\.php$#', $name ) ) {

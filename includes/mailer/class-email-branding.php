@@ -43,14 +43,14 @@ final class Email_Branding {
 			$stored = array();
 		}
 
-		$settings = wp_parse_args( $stored, self::get_defaults() );
-		$settings = self::migrate_legacy_settings( $settings );
+		$settings                   = wp_parse_args( $stored, self::get_defaults() );
+		$settings                   = self::migrate_legacy_settings( $settings );
 		$settings['palette_colors'] = self::merge_theme_into_palette(
 			isset( $settings['palette_colors'] ) && is_array( $settings['palette_colors'] )
 				? $settings['palette_colors']
 				: array()
 		);
-		$settings = self::sync_logo_fields( $settings );
+		$settings                   = self::sync_logo_fields( $settings );
 
 		return $settings;
 	}
@@ -98,7 +98,7 @@ final class Email_Branding {
 
 		$settings['palette_colors'] = array();
 		foreach ( self::PALETTE_SLUGS as $slug ) {
-			$fallback = (string) ( $defaults['palette_colors'][ $slug ] ?? self::fallback_palette_colors()[ $slug ] );
+			$fallback                            = (string) ( $defaults['palette_colors'][ $slug ] ?? self::fallback_palette_colors()[ $slug ] );
 			$settings['palette_colors'][ $slug ] = self::sanitize_color( $custom_colors[ $slug ] ?? $fallback, $fallback );
 		}
 
@@ -493,12 +493,12 @@ final class Email_Branding {
 		}
 
 		$legacy_map = array(
-			'base'           => 'color_body_bg',
-			'base-two'       => 'color_content_bg',
-			'accent-three'   => 'color_text',
-			'accent-two'     => 'color_muted',
-			'accent'         => 'color_accent',
-			'base-three'     => 'color_text',
+			'base'         => 'color_body_bg',
+			'base-two'     => 'color_content_bg',
+			'accent-three' => 'color_text',
+			'accent-two'   => 'color_muted',
+			'accent'       => 'color_accent',
+			'base-three'   => 'color_text',
 		);
 
 		foreach ( $legacy_map as $slug => $legacy_key ) {
@@ -521,8 +521,8 @@ final class Email_Branding {
 	private static function collect_theme_palette_entries(): array {
 		$entries = array();
 
-		$append_entries = static function ( array $list ) use ( &$entries ): void {
-			foreach ( $list as $entry ) {
+		$append_entries = static function ( array $palette_entries ) use ( &$entries ): void {
+			foreach ( $palette_entries as $entry ) {
 				if ( ! is_array( $entry ) || empty( $entry['color'] ) ) {
 					continue;
 				}
@@ -572,6 +572,8 @@ final class Email_Branding {
 				continue;
 			}
 
+			// Local theme.json on disk (not a remote URL).
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 			$decoded = json_decode( (string) file_get_contents( $path ), true );
 			if ( ! is_array( $decoded ) ) {
 				continue;

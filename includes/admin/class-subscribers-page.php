@@ -166,11 +166,15 @@ final class Subscribers_Page {
 			return;
 		}
 
+		// List filters are read-only GET args (capability checked above).
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
 		$status    = isset( $_GET['status'] ) ? sanitize_key( wp_unslash( $_GET['status'] ) ) : '';
 		$frequency = isset( $_GET['frequency'] ) ? sanitize_key( wp_unslash( $_GET['frequency'] ) ) : '';
 		$search    = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : '';
 		$page      = isset( $_GET['paged'] ) ? max( 1, (int) $_GET['paged'] ) : 1;
-		$per_page  = 25;
+		$notice    = isset( $_GET['wstp_notice'] ) ? sanitize_key( wp_unslash( $_GET['wstp_notice'] ) ) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+		$per_page = 25;
 
 		$data = $this->subscriber_repository->get_admin_list(
 			array(
@@ -187,7 +191,6 @@ final class Subscribers_Page {
 		$total_pages    = (int) ceil( $total / $per_page );
 		$subscriber_ids = array_map( static fn( array $row ): int => (int) $row['id'], $rows );
 		$delivery_stats = $this->event_log_repository->get_stats_for_subscribers( $subscriber_ids );
-		$notice         = isset( $_GET['wstp_notice'] ) ? sanitize_key( wp_unslash( $_GET['wstp_notice'] ) ) : '';
 		?>
 		<div class="wrap wstp-subscribers-screen">
 			<h1><?php esc_html_e( 'Subscribers', 'we-subscribe-to-posts' ); ?></h1>
@@ -544,6 +547,7 @@ final class Subscribers_Page {
 		header( 'Content-Type: text/csv; charset=UTF-8' );
 		header( 'Content-Disposition: attachment; filename="wstp-subscribers.csv"' );
 
+		// phpcs:disable WordPress.WP.AlternativeFunctions.file_system_operations_fopen,WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Streaming CSV to php://output.
 		$output = fopen( 'php://output', 'w' );
 		if ( false === $output ) {
 			exit;
@@ -582,6 +586,7 @@ final class Subscribers_Page {
 		}
 
 		fclose( $output );
+		// phpcs:enable WordPress.WP.AlternativeFunctions.file_system_operations_fopen,WordPress.WP.AlternativeFunctions.file_system_operations_fclose
 		exit;
 	}
 
@@ -773,16 +778,16 @@ final class Subscribers_Page {
 		$parsed = json_decode( $raw, true );
 		if ( is_array( $parsed ) ) {
 			return array(
-				'text'        => isset( $parsed['text'] ) && is_string( $parsed['text'] ) ? $parsed['text'] : '',
-				'consented_at'=> isset( $parsed['consented_at'] ) && is_string( $parsed['consented_at'] ) ? $parsed['consented_at'] : '',
-				'ip'          => isset( $parsed['ip'] ) && is_string( $parsed['ip'] ) ? $parsed['ip'] : '',
+				'text'         => isset( $parsed['text'] ) && is_string( $parsed['text'] ) ? $parsed['text'] : '',
+				'consented_at' => isset( $parsed['consented_at'] ) && is_string( $parsed['consented_at'] ) ? $parsed['consented_at'] : '',
+				'ip'           => isset( $parsed['ip'] ) && is_string( $parsed['ip'] ) ? $parsed['ip'] : '',
 			);
 		}
 
 		return array(
-			'text'        => $raw,
-			'consented_at'=> '',
-			'ip'          => '',
+			'text'         => $raw,
+			'consented_at' => '',
+			'ip'           => '',
 		);
 	}
 }

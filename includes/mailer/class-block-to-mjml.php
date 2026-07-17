@@ -91,8 +91,8 @@ final class Block_To_Mjml {
 		}
 
 		$changed = false;
-		$walk    = static function ( array &$list ) use ( &$walk, &$changed ): void {
-			foreach ( $list as &$block ) {
+		$walk    = static function ( array &$nodes ) use ( &$walk, &$changed ): void {
+			foreach ( $nodes as &$block ) {
 				if ( ! is_array( $block ) ) {
 					continue;
 				}
@@ -140,8 +140,8 @@ final class Block_To_Mjml {
 							$inner_html = esc_html( $text );
 						}
 
-						$heading_html         = '<h2 class="wp-block-heading has-text-align-center">' . $inner_html . '</h2>';
-						$block['attrs']       = array_merge(
+						$heading_html          = '<h2 class="wp-block-heading has-text-align-center">' . $inner_html . '</h2>';
+						$block['attrs']        = array_merge(
 							$attrs,
 							array(
 								'content'     => '',
@@ -149,7 +149,7 @@ final class Block_To_Mjml {
 								'align'       => 'center',
 							)
 						);
-						$block['innerBlocks'] = array(
+						$block['innerBlocks']  = array(
 							array(
 								'blockName'    => 'core/heading',
 								'attrs'        => array(
@@ -176,7 +176,7 @@ final class Block_To_Mjml {
 
 					// Default text header: name (linked) + optional slogan.
 					$identity = Email_Branding::resolve_header_identity( $branding );
-					$title    = $identity['title'] !== '' ? $identity['title'] : 'Your brand';
+					$title    = '' !== $identity['title'] ? $identity['title'] : 'Your brand';
 					$tagline  = $identity['tagline'];
 					$link     = (string) ( $branding['header_logo_link_url'] ?? '' );
 					if ( '' === $link ) {
@@ -263,10 +263,10 @@ final class Block_To_Mjml {
 	public static function default_blocks_for_layout( string $layout ): string {
 		$layout = in_array( $layout, array( 'stacked', 'image-left', 'minimal' ), true ) ? $layout : 'stacked';
 
-		$identity = Email_Branding::resolve_header_identity();
-		$brand    = '' !== $identity['title'] ? $identity['title'] : 'Your brand';
-		$slogan   = $identity['tagline'];
-		$home     = home_url( '/' );
+		$identity      = Email_Branding::resolve_header_identity();
+		$brand         = '' !== $identity['title'] ? $identity['title'] : 'Your brand';
+		$slogan        = $identity['tagline'];
+		$home          = home_url( '/' );
 		$heading_inner = '<a href="' . esc_url( $home ) . '">' . esc_html( $brand ) . '</a>';
 		// Keep core block comments minimal — only attrs that match core save() HTML.
 		// Email spacing lives on our padding* attrs (do not affect save markup).
@@ -289,7 +289,7 @@ final class Block_To_Mjml {
 
 		$slogan_block = '';
 		if ( '' !== $slogan ) {
-			$para_attrs = wp_json_encode(
+			$para_attrs   = wp_json_encode(
 				array(
 					'align'         => 'center',
 					'paddingTop'    => 0,
@@ -312,10 +312,10 @@ final class Block_To_Mjml {
 				'align'           => 'center',
 			)
 		);
-		$header = '<!-- wp:wstp/email-header ' . $header_attrs . ' -->' . $heading . $slogan_block . '<!-- /wp:wstp/email-header -->';
-		$intro  = '<!-- wp:wstp/intro {"paddingTop":28,"paddingBottom":12,"paddingX":24,"backgroundColor":"base-two","textColor":"accent-three","mutedColor":"accent"} /-->';
-		$notice = '<!-- wp:wstp/truncation-notice {"paddingTop":8,"paddingBottom":8,"paddingX":24,"backgroundColor":"base-two"} /-->';
-		$footer = '<!-- wp:wstp/email-footer {"paddingTop":16,"paddingBottom":28,"paddingX":24,"backgroundColor":"base-two"} /-->';
+		$header       = '<!-- wp:wstp/email-header ' . $header_attrs . ' -->' . $heading . $slogan_block . '<!-- /wp:wstp/email-header -->';
+		$intro        = '<!-- wp:wstp/intro {"paddingTop":28,"paddingBottom":12,"paddingX":24,"backgroundColor":"base-two","textColor":"accent-three","mutedColor":"accent"} /-->';
+		$notice       = '<!-- wp:wstp/truncation-notice {"paddingTop":8,"paddingBottom":8,"paddingX":24,"backgroundColor":"base-two"} /-->';
+		$footer       = '<!-- wp:wstp/email-footer {"paddingTop":16,"paddingBottom":28,"paddingX":24,"backgroundColor":"base-two"} /-->';
 
 		if ( 'image-left' === $layout ) {
 			$loop = <<<'BLOCKS'
@@ -464,9 +464,9 @@ HEAD;
 	 * @return array{layout:string,needs_image_side_mobile:bool}
 	 */
 	private static function detect_style_hints( array $blocks ): array {
-		$layout     = 'stacked';
-		$has_side   = self::tree_has_block( $blocks, 'wstp/post-image-side' );
-		$has_image  = $has_side || self::tree_has_block( $blocks, 'wstp/post-image' );
+		$layout    = 'stacked';
+		$has_side  = self::tree_has_block( $blocks, 'wstp/post-image-side' );
+		$has_image = $has_side || self::tree_has_block( $blocks, 'wstp/post-image' );
 
 		foreach ( $blocks as $block ) {
 			if ( ! is_array( $block ) || 'wstp/posts-loop' !== ( $block['blockName'] ?? '' ) ) {
@@ -504,7 +504,7 @@ HEAD;
 			if ( ! is_array( $block ) ) {
 				continue;
 			}
-			if ( $name === ( $block['blockName'] ?? '' ) ) {
+			if ( ( $block['blockName'] ?? '' ) === $name ) {
 				return true;
 			}
 			if ( ! empty( $block['innerBlocks'] ) && is_array( $block['innerBlocks'] ) && self::tree_has_block( $block['innerBlocks'], $name ) ) {
@@ -611,7 +611,7 @@ HEAD;
 				$align   = self::align_attr( $attrs['align'] );
 				$border  = self::border_attrs_mjml( $attrs );
 				$inners  = isset( $block['innerBlocks'] ) && is_array( $block['innerBlocks'] ) ? $block['innerBlocks'] : array();
-				$intro   = self::map_header_inners( $inners, $align );
+				$intro   = self::map_header_inners( $inners );
 				return '    <mj-section background-color="' . $bg . '" padding="' . $p . '"' . $border . '>' . "\n"
 					. '      <mj-column padding="0">' . "\n"
 					. '        <mj-text font-size="22px" font-weight="bold" color="' . $heading . '" padding="0 0 8px" align="' . $align . '">{{wstp:greeting}}</mj-text>' . "\n"
@@ -628,9 +628,9 @@ HEAD;
 					return '';
 				}
 				$bg    = self::resolve_color( $attrs['backgroundColor'], 'content_bg' );
-				$color = self::resolve_color( $attrs['textColor'] !== '' ? $attrs['textColor'] : 'muted', 'muted' );
+				$color = self::resolve_color( '' !== $attrs['textColor'] ? $attrs['textColor'] : 'muted', 'muted' );
 				$html  = self::style_anchors_in_html( $html, $color, false );
-				$size  = max( 10, min( 48, (int) ( $attrs['fontSize'] ?: 15 ) ) );
+				$size  = max( 10, min( 48, (int) ( $attrs['fontSize'] ? $attrs['fontSize'] : 15 ) ) );
 				$font  = self::font_family_attr( (string) ( $attrs['fontFamily'] ?? '' ) );
 				$p     = self::format_padding( (int) $attrs['paddingTop'], (int) $attrs['paddingBottom'], (int) $attrs['paddingX'] );
 				$align = self::align_attr( $attrs['align'] );
@@ -646,9 +646,9 @@ HEAD;
 					return '';
 				}
 				$bg    = self::resolve_color( $attrs['backgroundColor'], 'content_bg' );
-				$color = self::resolve_color( $attrs['textColor'] !== '' ? $attrs['textColor'] : 'text', 'text' );
+				$color = self::resolve_color( '' !== $attrs['textColor'] ? $attrs['textColor'] : 'text', 'text' );
 				$html  = self::style_anchors_in_html( $html, $color, false );
-				$size  = max( 12, min( 48, (int) ( $attrs['fontSize'] ?: 20 ) ) );
+				$size  = max( 12, min( 48, (int) ( $attrs['fontSize'] ? $attrs['fontSize'] : 20 ) ) );
 				$font  = self::font_family_attr( (string) ( $attrs['fontFamily'] ?? '' ) );
 				$p     = self::format_padding( (int) $attrs['paddingTop'], (int) $attrs['paddingBottom'], (int) $attrs['paddingX'] );
 				$align = self::align_attr( $attrs['align'] );
@@ -725,11 +725,11 @@ HEAD;
 				return;
 			}
 			// Respect explicit 0 — do not substitute defaults with ?: (0 is falsy).
-			$top    = $is_first_section ? (int) ( $loop['paddingTop'] ?? 0 ) : 0;
-			$bottom = 0;
-			$x      = (int) ( $loop['paddingX'] ?? 0 );
-			$p      = self::format_padding( $top, $bottom, $x );
-			$out   .= self::open_section( $bg, $p, $loop )
+			$top              = $is_first_section ? (int) ( $loop['paddingTop'] ?? 0 ) : 0;
+			$bottom           = 0;
+			$x                = (int) ( $loop['paddingX'] ?? 0 );
+			$p                = self::format_padding( $top, $bottom, $x );
+			$out             .= self::open_section( $bg, $p, $loop )
 				. '      <mj-column padding="0">' . "\n"
 				. $buffer
 				. '      </mj-column>' . "\n"
@@ -778,15 +778,15 @@ HEAD;
 	 * @return string
 	 */
 	private static function map_post_image_field( array $block, bool $side, float $column_pct = 100.0 ): string {
-		$attrs  = self::style_attrs( $block );
-		$a      = isset( $block['attrs'] ) && is_array( $block['attrs'] ) ? $block['attrs'] : array();
-		$width  = isset( $a['widthPercent'] ) ? max( 20, min( 100, (int) $a['widthPercent'] ) ) : 100;
-		$radius = isset( $a['borderRadius'] ) ? max( 0, min( 24, (int) $a['borderRadius'] ) ) : 4;
-		$top    = max( 0, (int) ( $attrs['paddingTop'] ?? 0 ) );
-		$bottom = max( 0, (int) ( $attrs['paddingBottom'] ?? 0 ) );
-		$x      = max( 0, (int) ( $attrs['paddingX'] ?? 0 ) );
-		$pad    = self::format_padding( $top, $bottom, $x );
-		$css    = $side ? 'wstp-post-image-side' : 'wstp-post-image';
+		$attrs      = self::style_attrs( $block );
+		$a          = isset( $block['attrs'] ) && is_array( $block['attrs'] ) ? $block['attrs'] : array();
+		$width      = isset( $a['widthPercent'] ) ? max( 20, min( 100, (int) $a['widthPercent'] ) ) : 100;
+		$radius     = isset( $a['borderRadius'] ) ? max( 0, min( 24, (int) $a['borderRadius'] ) ) : 4;
+		$top        = max( 0, (int) ( $attrs['paddingTop'] ?? 0 ) );
+		$bottom     = max( 0, (int) ( $attrs['paddingBottom'] ?? 0 ) );
+		$x          = max( 0, (int) ( $attrs['paddingX'] ?? 0 ) );
+		$pad        = self::format_padding( $top, $bottom, $x );
+		$css        = $side ? 'wstp-post-image-side' : 'wstp-post-image';
 		$col_pct    = max( 1.0, min( 100.0, $column_pct ) );
 		$col_px     = (int) round( self::EMAIL_CONTENT_WIDTH * ( $col_pct / 100 ) );
 		$img_px     = max( 40, (int) round( $col_px * ( $width / 100 ) ) );
@@ -828,14 +828,14 @@ HEAD;
 	 * @return string
 	 */
 	private static function map_separator_block( array $block, string $loop_bg = '' ): string {
-		$attrs = self::style_attrs( $block );
-		$bg    = '' !== $loop_bg ? $loop_bg : self::resolve_color( $attrs['backgroundColor'], 'content_bg' );
-		$line  = self::separator_border_color( $block );
-		$top   = max( 0, (int) $attrs['paddingTop'] );
+		$attrs  = self::style_attrs( $block );
+		$bg     = '' !== $loop_bg ? $loop_bg : self::resolve_color( $attrs['backgroundColor'], 'content_bg' );
+		$line   = self::separator_border_color( $block );
+		$top    = max( 0, (int) $attrs['paddingTop'] );
 		$bottom = max( 0, (int) $attrs['paddingBottom'] );
-		$x     = max( 0, (int) $attrs['paddingX'] );
-		$pad   = self::format_padding( $top, $bottom, $x );
-		$style = self::separator_visual_style( $block );
+		$x      = max( 0, (int) $attrs['paddingX'] );
+		$pad    = self::format_padding( $top, $bottom, $x );
+		$style  = self::separator_visual_style( $block );
 
 		if ( 'dots' === $style ) {
 			return '    <mj-section background-color="' . esc_attr( $bg ) . '" padding="0">' . "\n"
@@ -898,25 +898,25 @@ HEAD;
 		switch ( $name ) {
 			case 'wstp/post-title':
 				$color = self::resolve_color( $attrs['textColor'], 'text' );
-				$size  = max( 12, min( 48, (int) ( $attrs['fontSize'] ?: 20 ) ) );
+				$size  = max( 12, min( 48, (int) ( $attrs['fontSize'] ? $attrs['fontSize'] : 20 ) ) );
 				return '        <mj-text font-size="' . $size . 'px" font-weight="bold" color="' . $color . '" padding="' . $pad . '" align="' . $align . '">' . "\n"
 					. '          <a href="{{wstp:post_url}}" style="color:' . $color . ';text-decoration:none;">{{wstp:post_title}}</a>' . "\n"
 					. '        </mj-text>' . "\n";
 
 			case 'wstp/post-excerpt':
 				$color = self::resolve_color( $attrs['textColor'], 'muted' );
-				$size  = max( 10, min( 36, (int) ( $attrs['fontSize'] ?: 15 ) ) );
+				$size  = max( 10, min( 36, (int) ( $attrs['fontSize'] ? $attrs['fontSize'] : 15 ) ) );
 				$words = isset( $block['attrs']['wordCount'] ) ? (int) $block['attrs']['wordCount'] : 42;
 				$words = max( 5, min( 100, $words ) );
 				return '        <mj-text color="' . $color . '" font-size="' . $size . 'px" padding="' . $pad . '" align="' . $align . '">{{wstp:post_excerpt:' . $words . '}}</mj-text>' . "\n";
 
 			case 'wstp/post-meta':
-				$color      = self::resolve_color( $attrs['textColor'], 'muted' );
-				$size       = max( 10, min( 24, (int) ( $attrs['fontSize'] ?: 13 ) ) );
-				$show_date  = ! isset( $block['attrs']['showDate'] ) || ! empty( $block['attrs']['showDate'] );
+				$color       = self::resolve_color( $attrs['textColor'], 'muted' );
+				$size        = max( 10, min( 24, (int) ( $attrs['fontSize'] ? $attrs['fontSize'] : 13 ) ) );
+				$show_date   = ! isset( $block['attrs']['showDate'] ) || ! empty( $block['attrs']['showDate'] );
 				$show_author = ! isset( $block['attrs']['showAuthor'] ) || ! empty( $block['attrs']['showAuthor'] );
-				$separator  = isset( $block['attrs']['separator'] ) ? (string) $block['attrs']['separator'] : ' · ';
-				$parts      = array();
+				$separator   = isset( $block['attrs']['separator'] ) ? (string) $block['attrs']['separator'] : ' · ';
+				$parts       = array();
 				if ( $show_date ) {
 					$parts[] = '{{wstp:post_date}}';
 				}
@@ -939,7 +939,7 @@ HEAD;
 				$style = isset( $block['attrs']['style'] ) ? (string) $block['attrs']['style'] : 'button';
 				if ( 'link' === $style ) {
 					$color = self::resolve_color( $attrs['textColor'], 'link' );
-					$size  = max( 10, min( 24, (int) ( $attrs['fontSize'] ?: 14 ) ) );
+					$size  = max( 10, min( 24, (int) ( $attrs['fontSize'] ? $attrs['fontSize'] : 14 ) ) );
 					return '        <mj-text color="' . $color . '" font-size="' . $size . 'px" padding="' . $pad . '" align="' . $align . '">' . "\n"
 						. '          <a href="{{wstp:post_url}}" style="color:' . $color . ';text-decoration:underline;">{{wstp:read_more_label}}</a>' . "\n"
 						. '        </mj-text>' . "\n";
@@ -950,7 +950,7 @@ HEAD;
 				if ( in_array( strtolower( $text_v ), array( '#fff', '#ffffff', 'ffffff', 'fff' ), true ) ) {
 					$color = '#ffffff';
 				}
-				$radius = max( 0, min( 24, (int) ( $attrs['borderRadius'] ?: 4 ) ) );
+				$radius = max( 0, min( 24, (int) ( $attrs['borderRadius'] ? $attrs['borderRadius'] : 4 ) ) );
 				return '        <mj-button href="{{wstp:post_url}}" background-color="' . $bg . '" color="' . $color . '" border-radius="' . $radius . 'px" align="' . $align . '" padding="' . $pad . '">{{wstp:read_more_label}}</mj-button>' . "\n";
 
 			case 'core/paragraph':
@@ -958,8 +958,8 @@ HEAD;
 				if ( '' === $html ) {
 					return '';
 				}
-				$color = self::resolve_color( $attrs['textColor'] !== '' ? $attrs['textColor'] : 'muted', 'muted' );
-				$size  = max( 10, min( 36, (int) ( $attrs['fontSize'] ?: 15 ) ) );
+				$color = self::resolve_color( '' !== $attrs['textColor'] ? $attrs['textColor'] : 'muted', 'muted' );
+				$size  = max( 10, min( 36, (int) ( $attrs['fontSize'] ? $attrs['fontSize'] : 15 ) ) );
 				$font  = self::font_family_attr( (string) ( $attrs['fontFamily'] ?? '' ) );
 				return '        <mj-text font-family="' . esc_attr( $font ) . '" color="' . $color . '" font-size="' . $size . 'px" padding="' . $pad . '" align="' . $align . '">' . $html . '</mj-text>' . "\n";
 
@@ -968,8 +968,8 @@ HEAD;
 				if ( '' === $html ) {
 					return '';
 				}
-				$color = self::resolve_color( $attrs['textColor'] !== '' ? $attrs['textColor'] : 'text', 'text' );
-				$size  = max( 12, min( 48, (int) ( $attrs['fontSize'] ?: 18 ) ) );
+				$color = self::resolve_color( '' !== $attrs['textColor'] ? $attrs['textColor'] : 'text', 'text' );
+				$size  = max( 12, min( 48, (int) ( $attrs['fontSize'] ? $attrs['fontSize'] : 18 ) ) );
 				$font  = self::font_family_attr( (string) ( $attrs['fontFamily'] ?? '' ) );
 				return '        <mj-text font-family="' . esc_attr( $font ) . '" font-size="' . $size . 'px" font-weight="bold" color="' . $color . '" padding="' . $pad . '" align="' . $align . '">' . $html . '</mj-text>' . "\n";
 
@@ -1096,8 +1096,8 @@ MJML;
 	 * @return string
 	 */
 	private static function map_email_header( array $block, array $attrs ): string {
-		$attrs   = self::ensure_branding_section_pad( $attrs, 'header' );
-		$raw     = isset( $block['attrs'] ) && is_array( $block['attrs'] ) ? $block['attrs'] : array();
+		$attrs    = self::ensure_branding_section_pad( $attrs, 'header' );
+		$raw      = isset( $block['attrs'] ) && is_array( $block['attrs'] ) ? $block['attrs'] : array();
 		$logo_url = isset( $raw['logoUrl'] ) ? trim( (string) $raw['logoUrl'] ) : '';
 		$logo_id  = isset( $raw['logoId'] ) ? absint( $raw['logoId'] ) : 0;
 		if ( $logo_id > 0 ) {
@@ -1133,7 +1133,7 @@ MJML;
 		}
 
 		$inners = isset( $block['innerBlocks'] ) && is_array( $block['innerBlocks'] ) ? $block['innerBlocks'] : array();
-		$body   = self::map_header_inners( $inners, $align );
+		$body   = self::map_header_inners( $inners );
 		if ( '' !== $body ) {
 			return self::open_section( $bg, $p, $attrs )
 				. '      <mj-column padding="0">' . "\n"
@@ -1172,9 +1172,9 @@ MJML;
 			'h3' => 18,
 			'p'  => 15,
 		);
-		$size   = max( 10, min( 48, (int) ( ( $raw['fontSize'] ?? 0 ) ?: $defaults[ $tag ] ) ) );
-		$weight = 'p' === $tag ? '400' : '700';
-		$html   = Email_Branding::style_header_html_for_email( $content, $font, $color, $link, $align, false, 4 );
+		$size     = max( 10, min( 48, (int) ( ( $raw['fontSize'] ?? 0 ) ? ( $raw['fontSize'] ?? 0 ) : $defaults[ $tag ] ) ) );
+		$weight   = 'p' === $tag ? '400' : '700';
+		$html     = Email_Branding::style_header_html_for_email( $content, $font, $color, $link, $align, false, 4 );
 		return self::open_section( $bg, $p, $attrs )
 			. '      <mj-column padding="0">' . "\n"
 			. '        <mj-text font-family="' . esc_attr( $font ) . '" font-size="' . $size . 'px" font-weight="' . $weight . '" color="' . $color . '" padding="0" align="' . $align . '">' . $html . '</mj-text>' . "\n"
@@ -1186,10 +1186,9 @@ MJML;
 	 * Map heading/paragraph/button children inside the header section (no nested sections).
 	 *
 	 * @param array<int,array<string,mixed>> $blocks Inner blocks.
-	 * @param string                         $fallback_align Header align fallback.
 	 * @return string
 	 */
-	private static function map_header_inners( array $blocks, string $fallback_align = 'center' ): string {
+	private static function map_header_inners( array $blocks ): string {
 		$out = '';
 		foreach ( $blocks as $child ) {
 			if ( ! is_array( $child ) || empty( $child['blockName'] ) ) {
@@ -1199,9 +1198,9 @@ MJML;
 			$attrs = self::style_attrs( $child );
 			// style_attrs already prefers textAlign; do not fall back to header center when
 			// the block is intentionally left (empty / default Gutenberg alignment).
-			$align = self::align_attr( (string) ( $attrs['align'] ?: 'left' ) );
+			$align = self::align_attr( (string) ( $attrs['align'] ? $attrs['align'] : 'left' ) );
 			// Use the block's own Gap after — never invent 8px between header children.
-			$gap   = max( 0, (int) ( $attrs['paddingBottom'] ?? 0 ) );
+			$gap = max( 0, (int) ( $attrs['paddingBottom'] ?? 0 ) );
 
 			if ( 'core/heading' === $name || 'core/paragraph' === $name ) {
 				$html = self::block_inner_rich_html( $child );
@@ -1210,17 +1209,17 @@ MJML;
 				}
 				$is_heading = 'core/heading' === $name;
 				$color      = self::resolve_color(
-					$attrs['textColor'] !== '' ? $attrs['textColor'] : ( $is_heading ? 'accent-three' : 'accent' ),
+					'' !== $attrs['textColor'] ? $attrs['textColor'] : ( $is_heading ? 'accent-three' : 'accent' ),
 					$is_heading ? 'text' : 'muted'
 				);
-				$html   = self::style_anchors_in_html( $html, $color, false );
-				$size   = max( 10, min( 48, (int) ( $attrs['fontSize'] ?: ( $is_heading ? 22 : 15 ) ) ) );
-				$font   = self::font_family_attr( (string) ( $attrs['fontFamily'] ?? '' ) );
-				$weight = $is_heading ? ' font-weight="bold"' : '';
-				$top    = max( 0, (int) ( $attrs['paddingTop'] ?? 0 ) );
-				$x      = max( 0, (int) ( $attrs['paddingX'] ?? 0 ) );
-				$pad    = self::format_padding( $top, $gap, $x );
-				$out   .= '        <mj-text font-family="' . esc_attr( $font ) . '"' . $weight . ' font-size="' . $size . 'px" color="' . $color . '" padding="' . $pad . '" align="' . $align . '">' . $html . '</mj-text>' . "\n";
+				$html       = self::style_anchors_in_html( $html, $color, false );
+				$size       = max( 10, min( 48, (int) ( $attrs['fontSize'] ? $attrs['fontSize'] : ( $is_heading ? 22 : 15 ) ) ) );
+				$font       = self::font_family_attr( (string) ( $attrs['fontFamily'] ?? '' ) );
+				$weight     = $is_heading ? ' font-weight="bold"' : '';
+				$top        = max( 0, (int) ( $attrs['paddingTop'] ?? 0 ) );
+				$x          = max( 0, (int) ( $attrs['paddingX'] ?? 0 ) );
+				$pad        = self::format_padding( $top, $gap, $x );
+				$out       .= '        <mj-text font-family="' . esc_attr( $font ) . '"' . $weight . ' font-size="' . $size . 'px" color="' . $color . '" padding="' . $pad . '" align="' . $align . '">' . $html . '</mj-text>' . "\n";
 				continue;
 			}
 
@@ -1284,7 +1283,7 @@ MJML;
 				$btn_fg = self::resolve_color( $raw_fg, 'content_bg' );
 			}
 		}
-		$btn_align = self::align_attr( (string) ( $attrs['align'] ?: $align ) );
+		$btn_align = self::align_attr( (string) ( $attrs['align'] ? $attrs['align'] : $align ) );
 		$pad       = '0 0 ' . max( 0, $gap ) . 'px';
 		return '        <mj-button href="' . $url . '" background-color="' . $btn_bg . '" color="' . $btn_fg . '" align="' . $btn_align . '" padding="' . $pad . '">' . $label . '</mj-button>' . "\n";
 	}
@@ -1527,7 +1526,7 @@ MJML;
 			"'Times New Roman', Times, serif",
 			"'Courier New', Courier, monospace",
 		);
-		$family = trim( $family );
+		$family  = trim( $family );
 		if ( in_array( $family, $allowed, true ) ) {
 			return $family;
 		}
@@ -1654,9 +1653,9 @@ MJML;
 		}
 
 		foreach ( $columns as $index => $column ) {
-			$col_pct  = isset( $percents[ $index ] ) ? (float) $percents[ $index ] : ( 100.0 / $count );
-			$width    = self::format_column_width_attr( $col_pct );
-			$col_a    = isset( $column['attrs'] ) && is_array( $column['attrs'] ) ? $column['attrs'] : array();
+			$col_pct   = isset( $percents[ $index ] ) ? (float) $percents[ $index ] : ( 100.0 / $count );
+			$width     = self::format_column_width_attr( $col_pct );
+			$col_a     = isset( $column['attrs'] ) && is_array( $column['attrs'] ) ? $column['attrs'] : array();
 			$col_attrs = self::style_attrs( $column );
 			$col_top   = (int) $col_attrs['paddingTop'];
 			$col_bot   = (int) $col_attrs['paddingBottom'];
@@ -1667,14 +1666,14 @@ MJML;
 				|| ( array_key_exists( 'paddingX', $col_a ) && $col_x > 0 );
 			$pad_col = $has_pad ? self::format_padding( $col_top, $col_bot, $col_x ) : '0';
 
-			$css   = '';
-			$inner = isset( $column['innerBlocks'] ) && is_array( $column['innerBlocks'] ) ? $column['innerBlocks'] : array();
+			$css            = '';
+			$inner          = isset( $column['innerBlocks'] ) && is_array( $column['innerBlocks'] ) ? $column['innerBlocks'] : array();
 			$has_side_image = $in_loop && self::tree_has_block( $inner, 'wstp/post-image-side' );
 			$has_full_image = $in_loop && self::tree_has_block( $inner, 'wstp/post-image' );
 			if ( $has_side_image ) {
 				$css = ' css-class="wstp-post-image-col"';
 			}
-			$mjml .= '      <mj-column' . $css . ' width="' . esc_attr( $width ) . '%" vertical-align="top" padding="' . $pad_col . '">' . "\n";
+			$mjml    .= '      <mj-column' . $css . ' width="' . esc_attr( $width ) . '%" vertical-align="top" padding="' . $pad_col . '">' . "\n";
 			$col_body = $in_loop ? self::map_loop_column_inners( $inner, $col_pct ) : self::map_column_inners( $inner );
 			// Recover when the image block is present in the tree but was not mapped (e.g. unexpected nesting).
 			if ( $in_loop && '' === trim( $col_body ) && ( $has_side_image || $has_full_image ) ) {

@@ -157,16 +157,16 @@ final class Admin_Notification_Service {
 				$pending
 			)
 		) . '</p>';
-		$body      .= '<table cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;">';
-		$body      .= '<thead><tr>';
-		$body      .= '<th style="padding:6px 8px;border:1px solid #ddd;text-align:left;">' . esc_html__( 'Status', 'we-subscribe-to-posts' ) . '</th>';
-		$body      .= '<th style="padding:6px 8px;border:1px solid #ddd;text-align:left;">' . esc_html__( 'Email', 'we-subscribe-to-posts' ) . '</th>';
-		$body      .= '<th style="padding:6px 8px;border:1px solid #ddd;text-align:left;">' . esc_html__( 'Name', 'we-subscribe-to-posts' ) . '</th>';
-		$body      .= '<th style="padding:6px 8px;border:1px solid #ddd;text-align:left;">' . esc_html__( 'Frequency', 'we-subscribe-to-posts' ) . '</th>';
-		$body      .= '<th style="padding:6px 8px;border:1px solid #ddd;text-align:left;">' . esc_html__( 'Time', 'we-subscribe-to-posts' ) . '</th>';
-		$body      .= '</tr></thead><tbody>' . $rows . '</tbody></table>';
-		$body      .= '<p><a href="' . esc_url( $admin_link ) . '">' . esc_html__( 'Open Subscribers screen', 'we-subscribe-to-posts' ) . '</a></p>';
-		$body      .= '</body></html>';
+		$body .= '<table cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;">';
+		$body .= '<thead><tr>';
+		$body .= '<th style="padding:6px 8px;border:1px solid #ddd;text-align:left;">' . esc_html__( 'Status', 'we-subscribe-to-posts' ) . '</th>';
+		$body .= '<th style="padding:6px 8px;border:1px solid #ddd;text-align:left;">' . esc_html__( 'Email', 'we-subscribe-to-posts' ) . '</th>';
+		$body .= '<th style="padding:6px 8px;border:1px solid #ddd;text-align:left;">' . esc_html__( 'Name', 'we-subscribe-to-posts' ) . '</th>';
+		$body .= '<th style="padding:6px 8px;border:1px solid #ddd;text-align:left;">' . esc_html__( 'Frequency', 'we-subscribe-to-posts' ) . '</th>';
+		$body .= '<th style="padding:6px 8px;border:1px solid #ddd;text-align:left;">' . esc_html__( 'Time', 'we-subscribe-to-posts' ) . '</th>';
+		$body .= '</tr></thead><tbody>' . $rows . '</tbody></table>';
+		$body .= '<p><a href="' . esc_url( $admin_link ) . '">' . esc_html__( 'Open Subscribers screen', 'we-subscribe-to-posts' ) . '</a></p>';
+		$body .= '</body></html>';
 
 		$sent = $this->mailer->send_admin_notification( $settings['recipient'], $subject, $body );
 		if ( $sent ) {
@@ -305,4 +305,3 @@ final class Admin_Notification_Service {
 		return isset( $settings['enabled'] ) && 'yes' === $settings['enabled'];
 	}
 }
-

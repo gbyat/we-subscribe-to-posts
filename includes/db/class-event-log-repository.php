@@ -86,13 +86,14 @@ final class Event_Log_Repository {
 			WHERE subscriber_id IN ({$placeholders})
 			GROUP BY subscriber_id
 		";
-		$query        = $this->wpdb->prepare( $sql, $subscriber_ids );
-		$rows         = $this->wpdb->get_results( $query, 'ARRAY_A' );
+		$query        = $this->wpdb->prepare( $sql, $subscriber_ids ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query values are prepared here.
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query values are prepared immediately above.
+		$rows = $this->wpdb->get_results( $query, 'ARRAY_A' );
 
 		$stats = array();
 		if ( is_array( $rows ) ) {
 			foreach ( $rows as $row ) {
-				$subscriber_id = (int) $row['subscriber_id'];
+				$subscriber_id           = (int) $row['subscriber_id'];
 				$stats[ $subscriber_id ] = array(
 					'sent_count'   => (int) $row['sent_count'],
 					'failed_count' => (int) $row['failed_count'],
@@ -102,7 +103,7 @@ final class Event_Log_Repository {
 			}
 		}
 
-		$last_sql = "
+		$last_sql   = "
 			SELECT l.subscriber_id, l.result
 			FROM {$this->table} l
 			INNER JOIN (
@@ -113,8 +114,9 @@ final class Event_Log_Repository {
 			) last_row
 				ON l.id = last_row.max_id
 		";
-		$last_query = $this->wpdb->prepare( $last_sql, array_merge( $subscriber_ids, $subscriber_ids ) );
-		$last_rows  = $this->wpdb->get_results( $last_query, 'ARRAY_A' );
+		$last_query = $this->wpdb->prepare( $last_sql, array_merge( $subscriber_ids, $subscriber_ids ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query values are prepared here.
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query values are prepared immediately above.
+		$last_rows = $this->wpdb->get_results( $last_query, 'ARRAY_A' );
 
 		if ( is_array( $last_rows ) ) {
 			foreach ( $last_rows as $row ) {
@@ -136,7 +138,7 @@ final class Event_Log_Repository {
 	 * @return string
 	 */
 	public function get_last_success_sent_at( int $subscriber_id, string $frequency ): string {
-		$sql = "
+		$sql   = "
 			SELECT sent_at
 			FROM {$this->table}
 			WHERE subscriber_id = %d
@@ -145,7 +147,8 @@ final class Event_Log_Repository {
 			ORDER BY id DESC
 			LIMIT 1
 		";
-		$query = $this->wpdb->prepare( $sql, $subscriber_id, $frequency );
+		$query = $this->wpdb->prepare( $sql, $subscriber_id, $frequency ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query values are prepared here.
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query values are prepared immediately above.
 		$value = $this->wpdb->get_var( $query );
 
 		return is_string( $value ) ? $value : '';
@@ -159,7 +162,7 @@ final class Event_Log_Repository {
 	 * @return array<int>
 	 */
 	public function get_last_success_post_ids( int $subscriber_id, string $frequency ): array {
-		$sql = "
+		$sql   = "
 			SELECT post_ids_json
 			FROM {$this->table}
 			WHERE subscriber_id = %d
@@ -168,7 +171,8 @@ final class Event_Log_Repository {
 			ORDER BY id DESC
 			LIMIT 1
 		";
-		$query = $this->wpdb->prepare( $sql, $subscriber_id, $frequency );
+		$query = $this->wpdb->prepare( $sql, $subscriber_id, $frequency ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query values are prepared here.
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query values are prepared immediately above.
 		$value = $this->wpdb->get_var( $query );
 
 		if ( ! is_string( $value ) || '' === $value ) {
@@ -205,8 +209,9 @@ final class Event_Log_Repository {
 				MAX(sent_at) AS last_sent_at
 			FROM {$this->table}
 		";
-		$query     = $this->wpdb->prepare( $sql, $now_mysql, $now_mysql );
-		$row       = $this->wpdb->get_row( $query, 'ARRAY_A' );
+		$query     = $this->wpdb->prepare( $sql, $now_mysql, $now_mysql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query values are prepared here.
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query values are prepared immediately above.
+		$row = $this->wpdb->get_row( $query, 'ARRAY_A' );
 
 		$summary = array(
 			'sent_total'                => 0,
@@ -216,9 +221,18 @@ final class Event_Log_Repository {
 			'distinct_sent_subscribers' => 0,
 			'last_sent_at'              => '',
 			'by_frequency'              => array(
-				'daily'   => array( 'sent' => 0, 'failed' => 0 ),
-				'weekly'  => array( 'sent' => 0, 'failed' => 0 ),
-				'monthly' => array( 'sent' => 0, 'failed' => 0 ),
+				'daily'   => array(
+					'sent'   => 0,
+					'failed' => 0,
+				),
+				'weekly'  => array(
+					'sent'   => 0,
+					'failed' => 0,
+				),
+				'monthly' => array(
+					'sent'   => 0,
+					'failed' => 0,
+				),
 			),
 		);
 
@@ -231,7 +245,7 @@ final class Event_Log_Repository {
 			$summary['last_sent_at']              = isset( $row['last_sent_at'] ) ? (string) $row['last_sent_at'] : '';
 		}
 
-		$freq_sql  = "
+		$freq_sql = "
 			SELECT
 				frequency,
 				SUM(CASE WHEN result = 'sent' THEN 1 ELSE 0 END) AS sent_count,
@@ -239,6 +253,7 @@ final class Event_Log_Repository {
 			FROM {$this->table}
 			GROUP BY frequency
 		";
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query has no variable values; table name is a trusted plugin table property.
 		$freq_rows = $this->wpdb->get_results( $freq_sql, 'ARRAY_A' );
 		if ( is_array( $freq_rows ) ) {
 			foreach ( $freq_rows as $freq_row ) {

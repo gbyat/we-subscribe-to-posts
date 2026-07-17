@@ -48,7 +48,7 @@ final class Digest_Builder {
 	 * @return array<string,mixed>
 	 */
 	public function build_payload( array $subscriber, string $frequency, bool $is_preview = false ): array {
-		$posts = $this->collect_posts( $subscriber, $frequency, $is_preview );
+		$posts           = $this->collect_posts( $subscriber, $frequency, $is_preview );
 		$available_total = $this->last_collection_total > 0 ? $this->last_collection_total : count( $posts );
 		$truncated_count = max( 0, $available_total - count( $posts ) );
 
@@ -136,7 +136,7 @@ final class Digest_Builder {
 			default => '-1 day',
 		};
 
-		$base_timestamp = current_time( 'timestamp' );
+		$base_timestamp = time();
 		$day_start_ts   = strtotime( wp_date( 'Y-m-d 00:00:00', $base_timestamp ) );
 		if ( false === $day_start_ts ) {
 			$day_start_ts = $base_timestamp;
@@ -212,7 +212,7 @@ final class Digest_Builder {
 			'monthly' => 'max_posts_monthly',
 			default => 'max_posts_daily',
 		};
-		$value    = isset( $settings[ $key ] ) ? (int) $settings[ $key ] : 0;
+		$value = isset( $settings[ $key ] ) ? (int) $settings[ $key ] : 0;
 
 		if ( $value < 0 ) {
 			return 0;
@@ -283,12 +283,12 @@ final class Digest_Builder {
 		return wp_parse_args(
 			$stored,
 			array(
-				'subject_daily'   => __( 'Your latest post updates - {site_name}', 'we-subscribe-to-posts' ),
-				'subject_weekly'  => __( 'Your weekly post updates - {site_name}', 'we-subscribe-to-posts' ),
-				'subject_monthly' => __( 'Your monthly post updates - {site_name}', 'we-subscribe-to-posts' ),
-				'subject_preview' => __( '[Preview] Latest post updates - {site_name}', 'we-subscribe-to-posts' ),
-				'max_posts_daily' => 0,
-				'max_posts_weekly' => 0,
+				'subject_daily'     => __( 'Your latest post updates - {site_name}', 'we-subscribe-to-posts' ),
+				'subject_weekly'    => __( 'Your weekly post updates - {site_name}', 'we-subscribe-to-posts' ),
+				'subject_monthly'   => __( 'Your monthly post updates - {site_name}', 'we-subscribe-to-posts' ),
+				'subject_preview'   => __( '[Preview] Latest post updates - {site_name}', 'we-subscribe-to-posts' ),
+				'max_posts_daily'   => 0,
+				'max_posts_weekly'  => 0,
 				'max_posts_monthly' => 0,
 			)
 		);

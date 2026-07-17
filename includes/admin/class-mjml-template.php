@@ -220,116 +220,116 @@ final class Mjml_Template {
 				),
 				'samplePost'    => $this->get_visual_editor_sample_post(),
 				'i18n'          => array(
-						'emailCanvas'     => __( 'Email canvas', 'we-subscribe-to-posts' ),
-						'emailCanvasHelp' => __( 'Outer email background and container for all sections.', 'we-subscribe-to-posts' ),
-						'outerBackground' => __( 'Outer background', 'we-subscribe-to-posts' ),
-						'header'          => __( 'Email header', 'we-subscribe-to-posts' ),
-						'footer'          => __( 'Email footer (from Branding)', 'we-subscribe-to-posts' ),
-						'headerHelp'      => __( 'Add a heading, text, or button — each with its own colors. Or use a logo instead.', 'we-subscribe-to-posts' ),
-						'headerPlaceholder' => __( 'Your brand', 'we-subscribe-to-posts' ),
-						'headerLogo'      => __( 'Logo (optional)', 'we-subscribe-to-posts' ),
-						'headerLogoHelp'  => __( 'Leave empty to add a heading, text, or button in the header — each with its own colors.', 'we-subscribe-to-posts' ),
-						'selectLogo'      => __( 'Select logo', 'we-subscribe-to-posts' ),
-						'replaceLogo'     => __( 'Replace logo', 'we-subscribe-to-posts' ),
-						'removeLogo'      => __( 'Remove logo', 'we-subscribe-to-posts' ),
-						'logoLink'        => __( 'Logo link URL', 'we-subscribe-to-posts' ),
-						'logoWidth'       => __( 'Logo max width (px)', 'we-subscribe-to-posts' ),
-						'logoAlt'         => __( 'Logo alt text', 'we-subscribe-to-posts' ),
-						'contentLink'     => __( 'Link URL', 'we-subscribe-to-posts' ),
-						'contentLinkHelp' => __( 'Makes the whole header text clickable. Or select text and use the link control in the toolbar.', 'we-subscribe-to-posts' ),
-						'contentLinkPrompt' => __( 'Link URL for the header text:', 'we-subscribe-to-posts' ),
-						'linkedTo'        => __( 'Links to:', 'we-subscribe-to-posts' ),
-						'underlineLinks'  => __( 'Underline links', 'we-subscribe-to-posts' ),
-						'underlineLinksHelp' => __( 'Off by default so linked brand text stays clean.', 'we-subscribe-to-posts' ),
-						'contentGap'      => __( 'Space between lines (px)', 'we-subscribe-to-posts' ),
-						'contentGapHelp'  => __( 'Gap between heading and paragraph lines inside the header.', 'we-subscribe-to-posts' ),
-						'footerHelp'      => __( 'Content comes from the Branding tab.', 'we-subscribe-to-posts' ),
-						'intro'           => __( 'Greeting & intro', 'we-subscribe-to-posts' ),
-						'introHelp'       => __( 'The greeting is personalized at send time. Add paragraph or heading blocks below for an optional intro or announcement.', 'we-subscribe-to-posts' ),
-						'greetingLabel'   => __( 'Greeting (personalized)', 'we-subscribe-to-posts' ),
-						/* translators: %s: sample subscriber name in the visual editor. */
-						'greetingSample'  => __( 'Hi %s,', 'we-subscribe-to-posts' ),
-						'postsLoop'       => __( 'Posts loop', 'we-subscribe-to-posts' ),
-						'truncation'      => __( 'Truncation notice', 'we-subscribe-to-posts' ),
-						'truncationHelp'  => __( 'Appears only when the digest post limit hides extra posts. Omitted from the email when unused; spacing applies only then.', 'we-subscribe-to-posts' ),
-						'postTitle'       => __( 'Post title', 'we-subscribe-to-posts' ),
-						'postTitleHelp'   => __( 'Shows each post title (linked). Style with color, size, and spacing.', 'we-subscribe-to-posts' ),
-						'postExcerpt'     => __( 'Post excerpt', 'we-subscribe-to-posts' ),
-						'postMeta'        => __( 'Post meta', 'we-subscribe-to-posts' ),
-						'postMetaEmpty'   => __( 'Enable date and/or author in the sidebar.', 'we-subscribe-to-posts' ),
-						'postField'       => __( 'Post field', 'we-subscribe-to-posts' ),
-						'wordCount'       => __( 'Word count', 'we-subscribe-to-posts' ),
-						'wordCountHelp'   => __( 'Maximum words per post. Uses the post excerpt when set, otherwise the content.', 'we-subscribe-to-posts' ),
-						/* translators: %d: word count. */
-						'wordCountLabel'  => __( '%d words', 'we-subscribe-to-posts' ),
-						'showDate'        => __( 'Show date', 'we-subscribe-to-posts' ),
-						'showAuthor'      => __( 'Show author', 'we-subscribe-to-posts' ),
-						'metaSeparator'   => __( 'Separator', 'we-subscribe-to-posts' ),
-						'sampleDate'      => __( 'March 15, 2026', 'we-subscribe-to-posts' ),
-						'sampleAuthor'    => __( 'Alex', 'we-subscribe-to-posts' ),
-						'postImage'       => __( 'Post image', 'we-subscribe-to-posts' ),
-						'postImageSide'   => __( 'Post image (side)', 'we-subscribe-to-posts' ),
-						'imageSettings'   => __( 'Image', 'we-subscribe-to-posts' ),
-						'postReadMore'    => __( 'Read more', 'we-subscribe-to-posts' ),
-						'spacing'         => __( 'Spacing', 'we-subscribe-to-posts' ),
-						'colors'          => __( 'Colors', 'we-subscribe-to-posts' ),
-						'separatorColor'  => __( 'Line color', 'we-subscribe-to-posts' ),
-						'separatorSpacingHelp' => __( 'Add top padding so the line does not sit against the button above.', 'we-subscribe-to-posts' ),
-						'borders'         => __( 'Borders', 'we-subscribe-to-posts' ),
-						'borderTop'       => __( 'Top (px)', 'we-subscribe-to-posts' ),
-						'borderRight'     => __( 'Right (px)', 'we-subscribe-to-posts' ),
-						'borderBottom'    => __( 'Bottom (px)', 'we-subscribe-to-posts' ),
-						'borderLeft'      => __( 'Left (px)', 'we-subscribe-to-posts' ),
-						'borderColor'     => __( 'Border color', 'we-subscribe-to-posts' ),
-						'typography'      => __( 'Typography', 'we-subscribe-to-posts' ),
-						'background'      => __( 'Background', 'we-subscribe-to-posts' ),
-						'textColor'       => __( 'Text', 'we-subscribe-to-posts' ),
-						'mutedColor'      => __( 'Secondary text', 'we-subscribe-to-posts' ),
-						'linkColor'       => __( 'Links', 'we-subscribe-to-posts' ),
-						'fontSize'        => __( 'Font size (px)', 'we-subscribe-to-posts' ),
-						'fontFamily'      => __( 'Font', 'we-subscribe-to-posts' ),
-						'emailFontHelp'   => __( 'Email-safe font stack (Outlook and most clients).', 'we-subscribe-to-posts' ),
-						'align'           => __( 'Align', 'we-subscribe-to-posts' ),
-						'alignLeft'       => __( 'Left', 'we-subscribe-to-posts' ),
-						'alignCenter'     => __( 'Center', 'we-subscribe-to-posts' ),
-						'alignRight'      => __( 'Right', 'we-subscribe-to-posts' ),
-						'widthPercent'    => __( 'Width (% of column)', 'we-subscribe-to-posts' ),
-						'widthPercentHelp'=> __( 'Percent of the column. Compiled to pixels for Outlook (column % × this % × 600px). On mobile the column stacks to full width.', 'we-subscribe-to-posts' ),
-						'columnWidth'     => __( 'Column width (%)', 'we-subscribe-to-posts' ),
-						'columnWidthHelp' => __( 'Share of the email width (600px). Example: 34% ≈ 204px in Outlook. Prefer this over dragging — drag can store pixel widths.', 'we-subscribe-to-posts' ),
-						'listView'        => __( 'List view', 'we-subscribe-to-posts' ),
-						'listViewUnavailable' => __( 'List view is not available in this WordPress version.', 'we-subscribe-to-posts' ),
-						'gapAfter'        => __( 'Gap after (px)', 'we-subscribe-to-posts' ),
-						'gapAfterHelp'    => __( 'Space below this field in the email. Shown in the editor canvas as you change it.', 'we-subscribe-to-posts' ),
-						'borderRadius'    => __( 'Border radius (px)', 'we-subscribe-to-posts' ),
-						'paddingTop'      => __( 'Padding top (px)', 'we-subscribe-to-posts' ),
-						'paddingBottom'   => __( 'Padding bottom (px)', 'we-subscribe-to-posts' ),
-						'paddingX'        => __( 'Padding left/right (px)', 'we-subscribe-to-posts' ),
-						'columnSpacing'   => __( 'Column spacing', 'we-subscribe-to-posts' ),
-						'columnGap'       => __( 'Gap between columns (px)', 'we-subscribe-to-posts' ),
-						'columnGapHelp'   => __( 'Horizontal when columns sit side by side; vertical when stacked on mobile.', 'we-subscribe-to-posts' ),
-						'buttonStyle'     => __( 'Button style', 'we-subscribe-to-posts' ),
-						'readMoreStyle'   => __( 'Style', 'we-subscribe-to-posts' ),
-						'styleButton'     => __( 'Button', 'we-subscribe-to-posts' ),
-						'styleLink'       => __( 'Link', 'we-subscribe-to-posts' ),
-						'addBlock'        => __( 'Add block', 'we-subscribe-to-posts' ),
-						'bodyPlaceholder' => __( 'Add email content…', 'we-subscribe-to-posts' ),
-						'editorHint'      => __( 'In the Header, add a heading, text, or button. Open the Styles tab (circle icon) for colors and spacing on each block.', 'we-subscribe-to-posts' ),
-						'customParagraph' => __( 'Custom text', 'we-subscribe-to-posts' ),
-						'customHeading'   => __( 'Custom heading', 'we-subscribe-to-posts' ),
-						'customTextHelp'  => __( 'Your own static copy in the digest (links, bold, and italic are supported).', 'we-subscribe-to-posts' ),
-						'blockSettings'   => __( 'Block', 'we-subscribe-to-posts' ),
-						'sampleTitle'     => __( 'Sample post title', 'we-subscribe-to-posts' ),
-						'sampleExcerpt'   => __( 'Short excerpt of the post…', 'we-subscribe-to-posts' ),
-						'readMore'        => __( 'Read more', 'we-subscribe-to-posts' ),
-						'mapFailed'       => __( 'Could not convert blocks to MJML.', 'we-subscribe-to-posts' ),
-						'compileFail'     => __( 'MJML compilation failed.', 'we-subscribe-to-posts' ),
-						'saveAsPrompt'    => __( 'Name for this layout:', 'we-subscribe-to-posts' ),
-						'saveAsDefault'   => __( 'My layout', 'we-subscribe-to-posts' ),
-						'saveAsEmpty'     => __( 'Please enter a layout name.', 'we-subscribe-to-posts' ),
-					),
-				)
-			);
+					'emailCanvas'          => __( 'Email canvas', 'we-subscribe-to-posts' ),
+					'emailCanvasHelp'      => __( 'Outer email background and container for all sections.', 'we-subscribe-to-posts' ),
+					'outerBackground'      => __( 'Outer background', 'we-subscribe-to-posts' ),
+					'header'               => __( 'Email header', 'we-subscribe-to-posts' ),
+					'footer'               => __( 'Email footer (from Branding)', 'we-subscribe-to-posts' ),
+					'headerHelp'           => __( 'Add a heading, text, or button — each with its own colors. Or use a logo instead.', 'we-subscribe-to-posts' ),
+					'headerPlaceholder'    => __( 'Your brand', 'we-subscribe-to-posts' ),
+					'headerLogo'           => __( 'Logo (optional)', 'we-subscribe-to-posts' ),
+					'headerLogoHelp'       => __( 'Leave empty to add a heading, text, or button in the header — each with its own colors.', 'we-subscribe-to-posts' ),
+					'selectLogo'           => __( 'Select logo', 'we-subscribe-to-posts' ),
+					'replaceLogo'          => __( 'Replace logo', 'we-subscribe-to-posts' ),
+					'removeLogo'           => __( 'Remove logo', 'we-subscribe-to-posts' ),
+					'logoLink'             => __( 'Logo link URL', 'we-subscribe-to-posts' ),
+					'logoWidth'            => __( 'Logo max width (px)', 'we-subscribe-to-posts' ),
+					'logoAlt'              => __( 'Logo alt text', 'we-subscribe-to-posts' ),
+					'contentLink'          => __( 'Link URL', 'we-subscribe-to-posts' ),
+					'contentLinkHelp'      => __( 'Makes the whole header text clickable. Or select text and use the link control in the toolbar.', 'we-subscribe-to-posts' ),
+					'contentLinkPrompt'    => __( 'Link URL for the header text:', 'we-subscribe-to-posts' ),
+					'linkedTo'             => __( 'Links to:', 'we-subscribe-to-posts' ),
+					'underlineLinks'       => __( 'Underline links', 'we-subscribe-to-posts' ),
+					'underlineLinksHelp'   => __( 'Off by default so linked brand text stays clean.', 'we-subscribe-to-posts' ),
+					'contentGap'           => __( 'Space between lines (px)', 'we-subscribe-to-posts' ),
+					'contentGapHelp'       => __( 'Gap between heading and paragraph lines inside the header.', 'we-subscribe-to-posts' ),
+					'footerHelp'           => __( 'Content comes from the Branding tab.', 'we-subscribe-to-posts' ),
+					'intro'                => __( 'Greeting & intro', 'we-subscribe-to-posts' ),
+					'introHelp'            => __( 'The greeting is personalized at send time. Add paragraph or heading blocks below for an optional intro or announcement.', 'we-subscribe-to-posts' ),
+					'greetingLabel'        => __( 'Greeting (personalized)', 'we-subscribe-to-posts' ),
+					/* translators: %s: sample subscriber name in the visual editor. */
+					'greetingSample'       => __( 'Hi %s,', 'we-subscribe-to-posts' ),
+					'postsLoop'            => __( 'Posts loop', 'we-subscribe-to-posts' ),
+					'truncation'           => __( 'Truncation notice', 'we-subscribe-to-posts' ),
+					'truncationHelp'       => __( 'Appears only when the digest post limit hides extra posts. Omitted from the email when unused; spacing applies only then.', 'we-subscribe-to-posts' ),
+					'postTitle'            => __( 'Post title', 'we-subscribe-to-posts' ),
+					'postTitleHelp'        => __( 'Shows each post title (linked). Style with color, size, and spacing.', 'we-subscribe-to-posts' ),
+					'postExcerpt'          => __( 'Post excerpt', 'we-subscribe-to-posts' ),
+					'postMeta'             => __( 'Post meta', 'we-subscribe-to-posts' ),
+					'postMetaEmpty'        => __( 'Enable date and/or author in the sidebar.', 'we-subscribe-to-posts' ),
+					'postField'            => __( 'Post field', 'we-subscribe-to-posts' ),
+					'wordCount'            => __( 'Word count', 'we-subscribe-to-posts' ),
+					'wordCountHelp'        => __( 'Maximum words per post. Uses the post excerpt when set, otherwise the content.', 'we-subscribe-to-posts' ),
+					/* translators: %d: word count. */
+					'wordCountLabel'       => __( '%d words', 'we-subscribe-to-posts' ),
+					'showDate'             => __( 'Show date', 'we-subscribe-to-posts' ),
+					'showAuthor'           => __( 'Show author', 'we-subscribe-to-posts' ),
+					'metaSeparator'        => __( 'Separator', 'we-subscribe-to-posts' ),
+					'sampleDate'           => __( 'March 15, 2026', 'we-subscribe-to-posts' ),
+					'sampleAuthor'         => __( 'Alex', 'we-subscribe-to-posts' ),
+					'postImage'            => __( 'Post image', 'we-subscribe-to-posts' ),
+					'postImageSide'        => __( 'Post image (side)', 'we-subscribe-to-posts' ),
+					'imageSettings'        => __( 'Image', 'we-subscribe-to-posts' ),
+					'postReadMore'         => __( 'Read more', 'we-subscribe-to-posts' ),
+					'spacing'              => __( 'Spacing', 'we-subscribe-to-posts' ),
+					'colors'               => __( 'Colors', 'we-subscribe-to-posts' ),
+					'separatorColor'       => __( 'Line color', 'we-subscribe-to-posts' ),
+					'separatorSpacingHelp' => __( 'Add top padding so the line does not sit against the button above.', 'we-subscribe-to-posts' ),
+					'borders'              => __( 'Borders', 'we-subscribe-to-posts' ),
+					'borderTop'            => __( 'Top (px)', 'we-subscribe-to-posts' ),
+					'borderRight'          => __( 'Right (px)', 'we-subscribe-to-posts' ),
+					'borderBottom'         => __( 'Bottom (px)', 'we-subscribe-to-posts' ),
+					'borderLeft'           => __( 'Left (px)', 'we-subscribe-to-posts' ),
+					'borderColor'          => __( 'Border color', 'we-subscribe-to-posts' ),
+					'typography'           => __( 'Typography', 'we-subscribe-to-posts' ),
+					'background'           => __( 'Background', 'we-subscribe-to-posts' ),
+					'textColor'            => __( 'Text', 'we-subscribe-to-posts' ),
+					'mutedColor'           => __( 'Secondary text', 'we-subscribe-to-posts' ),
+					'linkColor'            => __( 'Links', 'we-subscribe-to-posts' ),
+					'fontSize'             => __( 'Font size (px)', 'we-subscribe-to-posts' ),
+					'fontFamily'           => __( 'Font', 'we-subscribe-to-posts' ),
+					'emailFontHelp'        => __( 'Email-safe font stack (Outlook and most clients).', 'we-subscribe-to-posts' ),
+					'align'                => __( 'Align', 'we-subscribe-to-posts' ),
+					'alignLeft'            => __( 'Left', 'we-subscribe-to-posts' ),
+					'alignCenter'          => __( 'Center', 'we-subscribe-to-posts' ),
+					'alignRight'           => __( 'Right', 'we-subscribe-to-posts' ),
+					'widthPercent'         => __( 'Width (% of column)', 'we-subscribe-to-posts' ),
+					'widthPercentHelp'     => __( 'Percent of the column. Compiled to pixels for Outlook (column % × this % × 600px). On mobile the column stacks to full width.', 'we-subscribe-to-posts' ),
+					'columnWidth'          => __( 'Column width (%)', 'we-subscribe-to-posts' ),
+					'columnWidthHelp'      => __( 'Share of the email width (600px). Example: 34% ≈ 204px in Outlook. Prefer this over dragging — drag can store pixel widths.', 'we-subscribe-to-posts' ),
+					'listView'             => __( 'List view', 'we-subscribe-to-posts' ),
+					'listViewUnavailable'  => __( 'List view is not available in this WordPress version.', 'we-subscribe-to-posts' ),
+					'gapAfter'             => __( 'Gap after (px)', 'we-subscribe-to-posts' ),
+					'gapAfterHelp'         => __( 'Space below this field in the email. Shown in the editor canvas as you change it.', 'we-subscribe-to-posts' ),
+					'borderRadius'         => __( 'Border radius (px)', 'we-subscribe-to-posts' ),
+					'paddingTop'           => __( 'Padding top (px)', 'we-subscribe-to-posts' ),
+					'paddingBottom'        => __( 'Padding bottom (px)', 'we-subscribe-to-posts' ),
+					'paddingX'             => __( 'Padding left/right (px)', 'we-subscribe-to-posts' ),
+					'columnSpacing'        => __( 'Column spacing', 'we-subscribe-to-posts' ),
+					'columnGap'            => __( 'Gap between columns (px)', 'we-subscribe-to-posts' ),
+					'columnGapHelp'        => __( 'Horizontal when columns sit side by side; vertical when stacked on mobile.', 'we-subscribe-to-posts' ),
+					'buttonStyle'          => __( 'Button style', 'we-subscribe-to-posts' ),
+					'readMoreStyle'        => __( 'Style', 'we-subscribe-to-posts' ),
+					'styleButton'          => __( 'Button', 'we-subscribe-to-posts' ),
+					'styleLink'            => __( 'Link', 'we-subscribe-to-posts' ),
+					'addBlock'             => __( 'Add block', 'we-subscribe-to-posts' ),
+					'bodyPlaceholder'      => __( 'Add email content…', 'we-subscribe-to-posts' ),
+					'editorHint'           => __( 'In the Header, add a heading, text, or button. Open the Styles tab (circle icon) for colors and spacing on each block.', 'we-subscribe-to-posts' ),
+					'customParagraph'      => __( 'Custom text', 'we-subscribe-to-posts' ),
+					'customHeading'        => __( 'Custom heading', 'we-subscribe-to-posts' ),
+					'customTextHelp'       => __( 'Your own static copy in the digest (links, bold, and italic are supported).', 'we-subscribe-to-posts' ),
+					'blockSettings'        => __( 'Block', 'we-subscribe-to-posts' ),
+					'sampleTitle'          => __( 'Sample post title', 'we-subscribe-to-posts' ),
+					'sampleExcerpt'        => __( 'Short excerpt of the post…', 'we-subscribe-to-posts' ),
+					'readMore'             => __( 'Read more', 'we-subscribe-to-posts' ),
+					'mapFailed'            => __( 'Could not convert blocks to MJML.', 'we-subscribe-to-posts' ),
+					'compileFail'          => __( 'MJML compilation failed.', 'we-subscribe-to-posts' ),
+					'saveAsPrompt'         => __( 'Name for this layout:', 'we-subscribe-to-posts' ),
+					'saveAsDefault'        => __( 'My layout', 'we-subscribe-to-posts' ),
+					'saveAsEmpty'          => __( 'Please enter a layout name.', 'we-subscribe-to-posts' ),
+				),
+			)
+		);
 	}
 
 	/**
@@ -528,7 +528,7 @@ final class Mjml_Template {
 	 */
 	public static function get_starters(): array {
 		return array(
-			'stacked' => array(
+			'stacked'    => array(
 				'id'          => 'stacked',
 				'label'       => __( 'Stacked', 'we-subscribe-to-posts' ),
 				'description' => __( 'Featured image above title and excerpt.', 'we-subscribe-to-posts' ),
@@ -538,7 +538,7 @@ final class Mjml_Template {
 				'label'       => __( 'Image left', 'we-subscribe-to-posts' ),
 				'description' => __( 'Two-column layout with image on the left.', 'we-subscribe-to-posts' ),
 			),
-			'minimal' => array(
+			'minimal'    => array(
 				'id'          => 'minimal',
 				'label'       => __( 'Minimal', 'we-subscribe-to-posts' ),
 				'description' => __( 'Text-only digest with a simple serif style.', 'we-subscribe-to-posts' ),
@@ -707,18 +707,21 @@ final class Mjml_Template {
 		self::ensure_branding_option();
 		self::maybe_install_default();
 
-		$template        = self::get_template();
-		$notice          = isset( $_GET['wstp_template_notice'] ) ? sanitize_key( wp_unslash( $_GET['wstp_template_notice'] ) ) : '';
-		$requested_tab   = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : self::get_default_tab();
-		$active_tab      = in_array( $requested_tab, array( 'visual', 'template', 'branding' ), true ) ? $requested_tab : self::get_default_tab();
-		$starters        = self::get_starters();
-		$saved_layouts   = self::get_layout_library();
-		$active_layout   = self::get_active_layout_id();
-		$branding        = Email_Branding::get_settings();
-		$resolved_colors = Email_Branding::get_resolved_colors();
-		$theme_palette   = Email_Branding::get_theme_palette_preview();
-		$template_source = self::get_template_source();
-		$base_url        = add_query_arg( 'page', self::MENU_SLUG, admin_url( 'admin.php' ) );
+		$template = self::get_template();
+		// Read-only admin GET query args for notices/tabs (capability checked above).
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only GET params.
+		$notice = isset( $_GET['wstp_template_notice'] ) ? sanitize_key( wp_unslash( $_GET['wstp_template_notice'] ) ) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only GET params.
+		$requested_tab      = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : self::get_default_tab();
+		$active_tab         = in_array( $requested_tab, array( 'visual', 'template', 'branding' ), true ) ? $requested_tab : self::get_default_tab();
+		$starters           = self::get_starters();
+		$saved_layouts      = self::get_layout_library();
+		$active_layout      = self::get_active_layout_id();
+		$branding           = Email_Branding::get_settings();
+		$resolved_colors    = Email_Branding::get_resolved_colors();
+		$theme_palette      = Email_Branding::get_theme_palette_preview();
+		$template_source    = self::get_template_source();
+		$base_url           = add_query_arg( 'page', self::MENU_SLUG, admin_url( 'admin.php' ) );
 		$active_layout_name = '';
 		if ( '' !== $active_layout ) {
 			foreach ( $saved_layouts as $layout_row ) {
@@ -944,8 +947,10 @@ final class Mjml_Template {
 	public function handle_save(): void {
 		$this->assert_admin_post( 'wstp_save_mjml_template', 'wstp_mjml_template_nonce' );
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
 		$template = isset( $_POST['wstp_mjml_template'] ) ? $this->sanitize_template( wp_unslash( $_POST['wstp_mjml_template'] ) ) : '';
-		$html     = isset( $_POST['wstp_html_template'] ) ? $this->sanitize_template( wp_unslash( $_POST['wstp_html_template'] ) ) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
+		$html = isset( $_POST['wstp_html_template'] ) ? $this->sanitize_template( wp_unslash( $_POST['wstp_html_template'] ) ) : '';
 
 		if ( '' === trim( $html ) ) {
 			$this->redirect_with_notice( 'compile_required' );
@@ -966,9 +971,12 @@ final class Mjml_Template {
 	public function handle_save_visual(): void {
 		$this->assert_admin_post( 'wstp_save_visual_template', 'wstp_visual_template_nonce' );
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
 		$blocks = isset( $_POST['wstp_blocks_template'] ) ? $this->sanitize_template( wp_unslash( $_POST['wstp_blocks_template'] ) ) : '';
-		$mjml   = isset( $_POST['wstp_mjml_template'] ) ? $this->sanitize_template( wp_unslash( $_POST['wstp_mjml_template'] ) ) : '';
-		$html   = isset( $_POST['wstp_html_template'] ) ? $this->sanitize_template( wp_unslash( $_POST['wstp_html_template'] ) ) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
+		$mjml = isset( $_POST['wstp_mjml_template'] ) ? $this->sanitize_template( wp_unslash( $_POST['wstp_mjml_template'] ) ) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
+		$html = isset( $_POST['wstp_html_template'] ) ? $this->sanitize_template( wp_unslash( $_POST['wstp_html_template'] ) ) : '';
 
 		if ( '' === trim( $blocks ) ) {
 			$blocks = Block_To_Mjml::default_blocks_for_layout( self::DEFAULT_STARTER );
@@ -1009,10 +1017,14 @@ final class Mjml_Template {
 	public function handle_save_visual_as(): void {
 		$this->assert_admin_post( 'wstp_save_visual_as', 'wstp_save_visual_as_nonce' );
 
-		$name   = isset( $_POST['wstp_layout_name'] ) ? sanitize_text_field( wp_unslash( $_POST['wstp_layout_name'] ) ) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
+		$name = isset( $_POST['wstp_layout_name'] ) ? sanitize_text_field( wp_unslash( $_POST['wstp_layout_name'] ) ) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
 		$blocks = isset( $_POST['wstp_blocks_template'] ) ? $this->sanitize_template( wp_unslash( $_POST['wstp_blocks_template'] ) ) : '';
-		$mjml   = isset( $_POST['wstp_mjml_template'] ) ? $this->sanitize_template( wp_unslash( $_POST['wstp_mjml_template'] ) ) : '';
-		$html   = isset( $_POST['wstp_html_template'] ) ? $this->sanitize_template( wp_unslash( $_POST['wstp_html_template'] ) ) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
+		$mjml = isset( $_POST['wstp_mjml_template'] ) ? $this->sanitize_template( wp_unslash( $_POST['wstp_mjml_template'] ) ) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
+		$html = isset( $_POST['wstp_html_template'] ) ? $this->sanitize_template( wp_unslash( $_POST['wstp_html_template'] ) ) : '';
 
 		if ( '' === $name ) {
 			$this->redirect_with_notice( 'layout_name_required', 'visual' );
@@ -1051,6 +1063,7 @@ final class Mjml_Template {
 	public function handle_load_saved_layout(): void {
 		$this->assert_admin_post( 'wstp_load_saved_layout', 'wstp_load_saved_layout_nonce' );
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
 		$layout_id = isset( $_POST['wstp_layout_id'] ) ? sanitize_key( wp_unslash( $_POST['wstp_layout_id'] ) ) : '';
 		$layout    = self::get_layout( $layout_id );
 		if ( null === $layout ) {
@@ -1074,6 +1087,7 @@ final class Mjml_Template {
 	public function handle_delete_saved_layout(): void {
 		$this->assert_admin_post( 'wstp_delete_saved_layout', 'wstp_delete_saved_layout_nonce' );
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
 		$layout_id = isset( $_POST['wstp_layout_id'] ) ? sanitize_key( wp_unslash( $_POST['wstp_layout_id'] ) ) : '';
 		if ( '' === $layout_id || ! self::delete_layout( $layout_id ) ) {
 			$this->redirect_with_notice( 'layout_missing', 'visual' );
@@ -1098,6 +1112,7 @@ final class Mjml_Template {
 
 		check_ajax_referer( 'wstp_map_blocks_to_mjml', 'nonce' );
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
 		$blocks = isset( $_POST['blocks'] ) ? $this->sanitize_template( wp_unslash( $_POST['blocks'] ) ) : '';
 		if ( '' === trim( $blocks ) ) {
 			wp_send_json_error( array( 'message' => __( 'No blocks provided.', 'we-subscribe-to-posts' ) ), 400 );
@@ -1115,10 +1130,11 @@ final class Mjml_Template {
 	public function handle_save_branding(): void {
 		$this->assert_admin_post( 'wstp_save_email_branding', 'wstp_email_branding_nonce' );
 
-		$raw = isset( $_POST['wstp_branding'] ) && is_array( $_POST['wstp_branding'] )
-			? wp_unslash( $_POST['wstp_branding'] )
-			: array();
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
+		$branding_data = isset( $_POST['wstp_branding'] ) ? $_POST['wstp_branding'] : array();
+		$raw           = is_array( $branding_data ) ? wp_unslash( $branding_data ) : array();
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
 		if ( ! empty( $_POST['wstp_reload_palette_from_theme'] ) ) {
 			$raw['palette_colors'] = Email_Branding::get_theme_palette_for_storage();
 		}
@@ -1157,6 +1173,7 @@ final class Mjml_Template {
 	public function handle_load_starter(): void {
 		$this->assert_admin_post( 'wstp_load_mjml_starter', 'wstp_mjml_starter_nonce' );
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
 		$starter_id = isset( $_POST['wstp_starter_id'] ) ? self::sanitize_starter_id( wp_unslash( $_POST['wstp_starter_id'] ) ) : '';
 		if ( ! self::install_starter( $starter_id ) ) {
 			$this->redirect_with_notice( 'starter_missing' );
@@ -1173,6 +1190,7 @@ final class Mjml_Template {
 	public function handle_preview(): void {
 		$this->assert_admin_post( 'wstp_preview_mjml_template', 'wstp_mjml_preview_nonce' );
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
 		$html = isset( $_POST['wstp_html_template'] ) ? $this->sanitize_template( wp_unslash( $_POST['wstp_html_template'] ) ) : self::get_html_template();
 		if ( '' === trim( $html ) ) {
 			wp_die(
@@ -1200,7 +1218,7 @@ final class Mjml_Template {
 		$posts = $this->get_preview_posts( 1 );
 		$post  = isset( $posts[0] ) && is_array( $posts[0] ) ? $posts[0] : array();
 
-		$title = isset( $post['title'] ) ? (string) $post['title'] : __( 'Sample post title', 'we-subscribe-to-posts' );
+		$title          = isset( $post['title'] ) ? (string) $post['title'] : __( 'Sample post title', 'we-subscribe-to-posts' );
 		$excerpt_source = isset( $post['excerpt_source'] )
 			? (string) $post['excerpt_source']
 			: ( isset( $post['excerpt'] ) ? (string) $post['excerpt'] : __( 'Short excerpt of the post…', 'we-subscribe-to-posts' ) );
@@ -1216,17 +1234,17 @@ final class Mjml_Template {
 		}
 
 		return array(
-			'title'          => $title,
-			'excerpt'        => $excerpt,
-			'excerptSource'  => $excerpt_source,
-			'image'          => $image,
-			'date'           => isset( $post['date'] ) ? (string) $post['date'] : wp_date( get_option( 'date_format' ) ),
-			'author'         => isset( $post['author'] ) ? (string) $post['author'] : (
+			'title'         => $title,
+			'excerpt'       => $excerpt,
+			'excerptSource' => $excerpt_source,
+			'image'         => $image,
+			'date'          => isset( $post['date'] ) ? (string) $post['date'] : wp_date( get_option( 'date_format' ) ),
+			'author'        => isset( $post['author'] ) ? (string) $post['author'] : (
 				wp_get_current_user()->display_name
 					? wp_get_current_user()->display_name
 					: __( 'Alex', 'we-subscribe-to-posts' )
 			),
-			'name'           => wp_get_current_user()->display_name
+			'name'          => wp_get_current_user()->display_name
 				? wp_get_current_user()->display_name
 				: __( 'Alex', 'we-subscribe-to-posts' ),
 		);
@@ -1531,7 +1549,7 @@ final class Mjml_Template {
 					'html'    => $html,
 					'updated' => time(),
 				);
-				$found = true;
+				$found             = true;
 				break;
 			}
 		}

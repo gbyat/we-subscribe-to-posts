@@ -88,8 +88,8 @@ final class Dashboard_Widget {
 		$last_sent_at     = isset( $mail_stats['last_sent_at'] ) ? (string) $mail_stats['last_sent_at'] : '';
 		$last_sent_label  = '' !== $last_sent_at ? $last_sent_at : __( 'No sends yet', 'we-subscribe-to-posts' );
 
-		$by_status    = isset( $subscriber_stats['by_status'] ) && is_array( $subscriber_stats['by_status'] ) ? $subscriber_stats['by_status'] : array();
-		$by_frequency = isset( $subscriber_stats['by_frequency'] ) && is_array( $subscriber_stats['by_frequency'] ) ? $subscriber_stats['by_frequency'] : array();
+		$by_status          = isset( $subscriber_stats['by_status'] ) && is_array( $subscriber_stats['by_status'] ) ? $subscriber_stats['by_status'] : array();
+		$by_frequency       = isset( $subscriber_stats['by_frequency'] ) && is_array( $subscriber_stats['by_frequency'] ) ? $subscriber_stats['by_frequency'] : array();
 		$signup_trend_label = $this->format_signup_trend_label( $signup_trend );
 		?>
 		<div class="wstp-dashboard-widget">

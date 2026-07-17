@@ -85,12 +85,12 @@ $slot_labels = array(
 	if ( '' === $header_tagline ) {
 		$header_tagline = wp_specialchars_decode( (string) get_bloginfo( 'description' ), ENT_QUOTES );
 	}
-	$logo_url   = \WSTP\Mailer\Email_Branding::resolve_logo_url_for_preview( $branding );
-	$has_logo   = '' !== $logo_url;
-	$logo_id    = (int) ( $branding['header_logo_id'] ?? 0 );
-	$logo_link  = (string) ( $branding['header_logo_link_url'] ?? home_url( '/' ) );
-	$logo_alt   = (string) ( $branding['header_logo_alt'] ?? '' );
-	$logo_width = (int) ( $branding['header_logo_width'] ?? 280 );
+	$logo_url    = \WSTP\Mailer\Email_Branding::resolve_logo_url_for_preview( $branding );
+	$has_logo    = '' !== $logo_url;
+	$logo_id     = (int) ( $branding['header_logo_id'] ?? 0 );
+	$logo_link   = (string) ( $branding['header_logo_link_url'] ?? home_url( '/' ) );
+	$logo_alt    = (string) ( $branding['header_logo_alt'] ?? '' );
+	$logo_width  = (int) ( $branding['header_logo_width'] ?? 280 );
 	$header_html = \WSTP\Mailer\Email_Branding::resolve_header_text_html(
 		array_merge(
 			$branding,

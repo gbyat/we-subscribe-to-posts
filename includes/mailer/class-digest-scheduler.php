@@ -183,11 +183,11 @@ final class Digest_Scheduler {
 			);
 
 			$context = array(
-				'greeting_name'   => $this->resolve_greeting_name( $subscriber ),
-				'posts'           => $payload['posts'],
-				'posts_total'     => isset( $payload['posts_total'] ) ? (int) $payload['posts_total'] : count( $payload['posts'] ),
+				'greeting_name'      => $this->resolve_greeting_name( $subscriber ),
+				'posts'              => $payload['posts'],
+				'posts_total'        => isset( $payload['posts_total'] ) ? (int) $payload['posts_total'] : count( $payload['posts'] ),
 				'posts_truncated_by' => isset( $payload['posts_truncated_by'] ) ? (int) $payload['posts_truncated_by'] : 0,
-				'unsubscribe_url' => $unsubscribe_url,
+				'unsubscribe_url'    => $unsubscribe_url,
 			);
 
 			if ( $delay_us > 0 && $attempted > 0 ) {
@@ -314,7 +314,7 @@ final class Digest_Scheduler {
 			return false;
 		}
 
-		$state      = $this->get_dispatch_state();
+		$state       = $this->get_dispatch_state();
 		$current_key = $this->get_dispatch_period_key( $frequency );
 		if ( '' === $current_key ) {
 			return false;
@@ -358,7 +358,7 @@ final class Digest_Scheduler {
 	 * @return string
 	 */
 	private function get_dispatch_period_key( string $frequency ): string {
-		$now = current_time( 'timestamp' );
+		$now = time();
 		return match ( $frequency ) {
 			'daily'   => wp_date( 'Y-m-d', $now ),
 			'weekly'  => wp_date( 'o-W', $now ),

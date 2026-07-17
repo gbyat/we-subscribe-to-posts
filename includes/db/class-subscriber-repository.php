@@ -92,10 +92,12 @@ final class Subscriber_Repository {
 	 */
 	public function find_by_email( string $email ): ?array {
 		$sql = $this->wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is derived from the trusted WordPress database prefix.
 			"SELECT * FROM {$this->table} WHERE email = %s LIMIT 1",
 			$email
 		);
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query values are prepared immediately above.
 		$record = $this->wpdb->get_row( $sql, 'ARRAY_A' );
 		return is_array( $record ) ? $record : null;
 	}
@@ -108,10 +110,12 @@ final class Subscriber_Repository {
 	 */
 	public function find_by_id( int $subscriber_id ): ?array {
 		$sql = $this->wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is derived from the trusted WordPress database prefix.
 			"SELECT * FROM {$this->table} WHERE id = %d LIMIT 1",
 			$subscriber_id
 		);
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query values are prepared immediately above.
 		$record = $this->wpdb->get_row( $sql, 'ARRAY_A' );
 		return is_array( $record ) ? $record : null;
 	}
@@ -124,10 +128,12 @@ final class Subscriber_Repository {
 	 */
 	public function find_by_optin_hash( string $token_hash ): ?array {
 		$sql = $this->wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is derived from the trusted WordPress database prefix.
 			"SELECT * FROM {$this->table} WHERE optin_token_hash = %s LIMIT 1",
 			$token_hash
 		);
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query values are prepared immediately above.
 		$record = $this->wpdb->get_row( $sql, 'ARRAY_A' );
 		return is_array( $record ) ? $record : null;
 	}
@@ -140,10 +146,12 @@ final class Subscriber_Repository {
 	 */
 	public function find_by_unsubscribe_hash( string $token_hash ): ?array {
 		$sql = $this->wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is derived from the trusted WordPress database prefix.
 			"SELECT * FROM {$this->table} WHERE unsubscribe_token_hash = %s LIMIT 1",
 			$token_hash
 		);
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query values are prepared immediately above.
 		$record = $this->wpdb->get_row( $sql, 'ARRAY_A' );
 		return is_array( $record ) ? $record : null;
 	}
@@ -201,11 +209,13 @@ final class Subscriber_Repository {
 	 */
 	public function get_active_by_frequency( string $frequency ): array {
 		$sql = $this->wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is derived from the trusted WordPress database prefix.
 			"SELECT * FROM {$this->table} WHERE status = %s AND frequency = %s",
 			'active',
 			$frequency
 		);
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query values are prepared immediately above.
 		$rows = $this->wpdb->get_results( $sql, 'ARRAY_A' );
 		return is_array( $rows ) ? $rows : array();
 	}
@@ -380,13 +390,15 @@ final class Subscriber_Repository {
 		$offset    = ( $page - 1 ) * $per_page;
 
 		$count_sql   = "SELECT COUNT(*) FROM {$this->table} WHERE {$where_sql}";
-		$count_query = ! empty( $params ) ? $this->wpdb->prepare( $count_sql, $params ) : $count_sql;
-		$total       = (int) $this->wpdb->get_var( $count_query );
+		$count_query = ! empty( $params ) ? $this->wpdb->prepare( $count_sql, $params ) : $count_sql; // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Values are prepared here; SQL clauses are fixed local fragments.
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Dynamic clauses are fixed local SQL fragments; filter values are prepared above.
+		$total = (int) $this->wpdb->get_var( $count_query );
 
-		$list_sql = "SELECT * FROM {$this->table} WHERE {$where_sql} ORDER BY created_at DESC LIMIT %d OFFSET %d";
+		$list_sql    = "SELECT * FROM {$this->table} WHERE {$where_sql} ORDER BY created_at DESC LIMIT %d OFFSET %d";
 		$list_params = array_merge( $params, array( $per_page, $offset ) );
-		$list_query  = $this->wpdb->prepare( $list_sql, $list_params );
-		$rows        = $this->wpdb->get_results( $list_query, 'ARRAY_A' );
+		$list_query  = $this->wpdb->prepare( $list_sql, $list_params ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Values are prepared here; SQL clauses are fixed local fragments.
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Dynamic clauses are fixed local SQL fragments; filter values are prepared above.
+		$rows = $this->wpdb->get_results( $list_query, 'ARRAY_A' );
 
 		return array(
 			'total'    => $total,
@@ -404,11 +416,13 @@ final class Subscriber_Repository {
 	 */
 	public function delete_pending_older_than( string $cutoff_mysql ): int {
 		$sql = $this->wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is derived from the trusted WordPress database prefix.
 			"DELETE FROM {$this->table} WHERE status = %s AND created_at < %s",
 			'pending',
 			$cutoff_mysql
 		);
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query values are prepared immediately above.
 		$result = $this->wpdb->query( $sql );
 		return false === $result ? 0 : (int) $result;
 	}
@@ -419,12 +433,13 @@ final class Subscriber_Repository {
 	 * @return array<string,mixed>
 	 */
 	public function get_dashboard_counts(): array {
-		$sql  = "SELECT status, frequency, COUNT(*) AS total FROM {$this->table} GROUP BY status, frequency";
+		$sql = "SELECT status, frequency, COUNT(*) AS total FROM {$this->table} GROUP BY status, frequency";
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query has no variable values; table name is a trusted plugin table property.
 		$rows = $this->wpdb->get_results( $sql, 'ARRAY_A' );
 
 		$stats = array(
-			'total'      => 0,
-			'by_status'  => array(
+			'total'        => 0,
+			'by_status'    => array(
 				'active'       => 0,
 				'pending'      => 0,
 				'unsubscribed' => 0,
@@ -485,8 +500,9 @@ final class Subscriber_Repository {
 			FROM {$this->table}
 			WHERE status <> 'suppressed'
 		";
-		$query     = $this->wpdb->prepare( $sql, $now_mysql, $now_mysql, $now_mysql );
-		$row       = $this->wpdb->get_row( $query, 'ARRAY_A' );
+		$query     = $this->wpdb->prepare( $sql, $now_mysql, $now_mysql, $now_mysql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query values are prepared here.
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query values are prepared immediately above.
+		$row = $this->wpdb->get_row( $query, 'ARRAY_A' );
 
 		$recent_count   = is_array( $row ) && isset( $row['recent_count'] ) ? (int) $row['recent_count'] : 0;
 		$previous_count = is_array( $row ) && isset( $row['previous_count'] ) ? (int) $row['previous_count'] : 0;

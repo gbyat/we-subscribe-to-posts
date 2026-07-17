@@ -36,10 +36,10 @@ final class Plugin {
 	public function run(): void {
 		add_action( 'init', array( $this, 'load_textdomain' ) );
 
-		$subscriber_repository = new Subscriber_Repository();
-		$event_repository      = new Event_Log_Repository();
-		$mailer                = new Mailer();
-		$digest_builder        = new Digest_Builder( $event_repository );
+		$subscriber_repository      = new Subscriber_Repository();
+		$event_repository           = new Event_Log_Repository();
+		$mailer                     = new Mailer();
+		$digest_builder             = new Digest_Builder( $event_repository );
 		$admin_notification_service = new Admin_Notification_Service( $mailer );
 
 		$double_optin_service = new Double_Optin_Service( $subscriber_repository, $mailer, $admin_notification_service );
@@ -51,7 +51,7 @@ final class Plugin {
 		$subscribers_page     = new Subscribers_Page( $subscriber_repository, $event_repository );
 		$dashboard_widget     = new Dashboard_Widget( $subscriber_repository, $event_repository );
 		$preview_controller   = new Preview_Controller( $digest_builder, $mailer );
-		$mjml_template      = new Mjml_Template();
+		$mjml_template        = new Mjml_Template();
 		if ( ( is_admin() || wp_doing_cron() ) && class_exists( Updater::class ) ) {
 			new Updater( WSTP_FILE );
 		}

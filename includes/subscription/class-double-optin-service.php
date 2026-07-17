@@ -46,8 +46,8 @@ final class Double_Optin_Service {
 	 * @param Admin_Notification_Service $admin_notification_service Admin notification service.
 	 */
 	public function __construct( Subscriber_Repository $subscriber_repository, Mailer $mailer, Admin_Notification_Service $admin_notification_service ) {
-		$this->subscriber_repository    = $subscriber_repository;
-		$this->mailer                   = $mailer;
+		$this->subscriber_repository      = $subscriber_repository;
+		$this->mailer                     = $mailer;
 		$this->admin_notification_service = $admin_notification_service;
 	}
 
@@ -122,12 +122,15 @@ final class Double_Optin_Service {
 	 * @return void
 	 */
 	public function maybe_confirm(): void {
+		// Signed opt-in token in the email link (not a WP nonce).
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
 		$action = isset( $_GET['wstp_action'] ) ? sanitize_key( wp_unslash( $_GET['wstp_action'] ) ) : '';
 		if ( 'confirm' !== $action ) {
 			return;
 		}
 
 		$token = isset( $_GET['wstp_token'] ) ? sanitize_text_field( wp_unslash( $_GET['wstp_token'] ) ) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 		if ( '' === $token ) {
 			$this->redirect_with_status( 'invalid_token' );
 		}

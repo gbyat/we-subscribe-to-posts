@@ -104,7 +104,7 @@ final class Mjml_Template_Renderer {
 			$greeting_name
 		);
 
-		$colors = Email_Branding::get_resolved_colors();
+		$colors   = Email_Branding::get_resolved_colors();
 		$settings = Email_Branding::get_settings();
 		$palette  = isset( $settings['palette_colors'] ) && is_array( $settings['palette_colors'] )
 			? $settings['palette_colors']
@@ -149,24 +149,24 @@ final class Mjml_Template_Renderer {
 		);
 
 		$tokens = array(
-			'{{wstp:greeting_name}}'           => esc_html( $greeting_name ),
-			'{{wstp:greeting}}'                => esc_html( $greeting ),
-			'{{wstp:unsubscribe_url}}'           => esc_url( isset( $context['unsubscribe_url'] ) ? (string) $context['unsubscribe_url'] : home_url( '/' ) ),
-			'{{wstp:unsubscribe_label}}'       => esc_html( __( 'Unsubscribe instantly', 'we-subscribe-to-posts' ) ),
-			'{{wstp:read_more_label}}'         => esc_html( __( 'Read more', 'we-subscribe-to-posts' ) ),
-			'{{wstp:site_name}}'               => esc_html( wp_specialchars_decode( (string) get_bloginfo( 'name' ), ENT_QUOTES ) ),
-			'{{wstp:color_body_bg}}'           => esc_attr( $colors['body_bg'] ),
-			'{{wstp:color_content_bg}}'        => esc_attr( $colors['content_bg'] ),
-			'{{wstp:color_text}}'              => esc_attr( $colors['text'] ),
-			'{{wstp:color_muted}}'             => esc_attr( $colors['muted'] ),
-			'{{wstp:color_accent}}'            => esc_attr( $colors['accent'] ),
-			'{{wstp:color_link}}'              => esc_attr( $colors['link'] ),
-			'{{wstp:palette_base}}'            => esc_attr( (string) ( $palette['base'] ?? $colors['body_bg'] ) ),
-			'{{wstp:palette_base_two}}'        => esc_attr( (string) ( $palette['base-two'] ?? $colors['content_bg'] ) ),
-			'{{wstp:palette_base_three}}'      => esc_attr( (string) ( $palette['base-three'] ?? $colors['text'] ) ),
-			'{{wstp:palette_accent}}'          => esc_attr( (string) ( $palette['accent'] ?? $colors['muted'] ) ),
-			'{{wstp:palette_accent_two}}'      => esc_attr( (string) ( $palette['accent-two'] ?? $colors['accent'] ) ),
-			'{{wstp:palette_accent_three}}'    => esc_attr( (string) ( $palette['accent-three'] ?? $colors['text'] ) ),
+			'{{wstp:greeting_name}}'        => esc_html( $greeting_name ),
+			'{{wstp:greeting}}'             => esc_html( $greeting ),
+			'{{wstp:unsubscribe_url}}'      => esc_url( isset( $context['unsubscribe_url'] ) ? (string) $context['unsubscribe_url'] : home_url( '/' ) ),
+			'{{wstp:unsubscribe_label}}'    => esc_html( __( 'Unsubscribe instantly', 'we-subscribe-to-posts' ) ),
+			'{{wstp:read_more_label}}'      => esc_html( __( 'Read more', 'we-subscribe-to-posts' ) ),
+			'{{wstp:site_name}}'            => esc_html( wp_specialchars_decode( (string) get_bloginfo( 'name' ), ENT_QUOTES ) ),
+			'{{wstp:color_body_bg}}'        => esc_attr( $colors['body_bg'] ),
+			'{{wstp:color_content_bg}}'     => esc_attr( $colors['content_bg'] ),
+			'{{wstp:color_text}}'           => esc_attr( $colors['text'] ),
+			'{{wstp:color_muted}}'          => esc_attr( $colors['muted'] ),
+			'{{wstp:color_accent}}'         => esc_attr( $colors['accent'] ),
+			'{{wstp:color_link}}'           => esc_attr( $colors['link'] ),
+			'{{wstp:palette_base}}'         => esc_attr( (string) ( $palette['base'] ?? $colors['body_bg'] ) ),
+			'{{wstp:palette_base_two}}'     => esc_attr( (string) ( $palette['base-two'] ?? $colors['content_bg'] ) ),
+			'{{wstp:palette_base_three}}'   => esc_attr( (string) ( $palette['base-three'] ?? $colors['text'] ) ),
+			'{{wstp:palette_accent}}'       => esc_attr( (string) ( $palette['accent'] ?? $colors['muted'] ) ),
+			'{{wstp:palette_accent_two}}'   => esc_attr( (string) ( $palette['accent-two'] ?? $colors['accent'] ) ),
+			'{{wstp:palette_accent_three}}' => esc_attr( (string) ( $palette['accent-three'] ?? $colors['text'] ) ),
 		);
 
 		return strtr( $template, $tokens );
@@ -194,13 +194,13 @@ final class Mjml_Template_Renderer {
 	 * @return string
 	 */
 	private function replace_post_tokens( string $template, array $post ): string {
-		$title   = isset( $post['title'] ) ? (string) $post['title'] : '';
-		$excerpt = isset( $post['excerpt'] ) ? (string) $post['excerpt'] : '';
-		$url     = isset( $post['permalink'] ) ? (string) $post['permalink'] : '';
-		$image   = isset( $post['featured_image_url'] ) ? trim( (string) $post['featured_image_url'] ) : '';
-		$post_id = isset( $post['id'] ) ? (int) $post['id'] : 0;
-		$date    = isset( $post['date'] ) ? (string) $post['date'] : '';
-		$author  = isset( $post['author'] ) ? (string) $post['author'] : '';
+		$title          = isset( $post['title'] ) ? (string) $post['title'] : '';
+		$excerpt        = isset( $post['excerpt'] ) ? (string) $post['excerpt'] : '';
+		$url            = isset( $post['permalink'] ) ? (string) $post['permalink'] : '';
+		$image          = isset( $post['featured_image_url'] ) ? trim( (string) $post['featured_image_url'] ) : '';
+		$post_id        = isset( $post['id'] ) ? (int) $post['id'] : 0;
+		$date           = isset( $post['date'] ) ? (string) $post['date'] : '';
+		$author         = isset( $post['author'] ) ? (string) $post['author'] : '';
 		$excerpt_source = isset( $post['excerpt_source'] ) ? (string) $post['excerpt_source'] : $excerpt;
 
 		if ( '' === $image ) {
@@ -326,7 +326,7 @@ final class Mjml_Template_Renderer {
 			$radius,
 			$margin
 		);
-		$img = '<img' . $class . ' src="' . esc_url( $image_url ) . '" alt="' . esc_attr( $title ) . '" width="' . esc_attr( (string) $px ) . '" style="' . esc_attr( $style ) . '" />';
+		$img   = '<img' . $class . ' src="' . esc_url( $image_url ) . '" alt="' . esc_attr( $title ) . '" width="' . esc_attr( (string) $px ) . '" style="' . esc_attr( $style ) . '" />';
 
 		// MJML places mj-raw inside a column <tbody>; images must be table rows.
 		$align_attr = 'left' === $align ? 'left' : ( 'right' === $align ? 'right' : 'center' );
@@ -470,19 +470,19 @@ final class Mjml_Template_Renderer {
 			: array();
 
 		$legacy = array(
-			'content_bg' => 'content_bg',
-			'body_bg'    => 'body_bg',
-			'text'       => 'text',
-			'muted'      => 'muted',
-			'link'       => 'link',
-			'accent'     => 'accent',
-			'base'       => 'body_bg',
-			'base-two'   => 'content_bg',
-			'base_two'   => 'content_bg',
-			'base-three' => 'text',
-			'base_three' => 'text',
-			'accent-two' => 'accent',
-			'accent_two' => 'accent',
+			'content_bg'   => 'content_bg',
+			'body_bg'      => 'body_bg',
+			'text'         => 'text',
+			'muted'        => 'muted',
+			'link'         => 'link',
+			'accent'       => 'accent',
+			'base'         => 'body_bg',
+			'base-two'     => 'content_bg',
+			'base_two'     => 'content_bg',
+			'base-three'   => 'text',
+			'base_three'   => 'text',
+			'accent-two'   => 'accent',
+			'accent_two'   => 'accent',
 			'accent-three' => 'text',
 			'accent_three' => 'text',
 		);
@@ -533,7 +533,7 @@ final class Mjml_Template_Renderer {
 				$alt = wp_specialchars_decode( (string) get_bloginfo( 'name' ), ENT_QUOTES );
 			}
 
-			$image = '<img src="' . esc_url( $logo_url ) . '" alt="' . esc_attr( $alt ) . '" width="' . esc_attr( (string) $logo_width ) . '" style="display:block;width:100%;max-width:' . esc_attr( (string) $logo_width ) . 'px;height:auto;border:0;margin:0 auto;" />';
+			$image   = '<img src="' . esc_url( $logo_url ) . '" alt="' . esc_attr( $alt ) . '" width="' . esc_attr( (string) $logo_width ) . '" style="display:block;width:100%;max-width:' . esc_attr( (string) $logo_width ) . 'px;height:auto;border:0;margin:0 auto;" />';
 			$content = '<a href="' . esc_url( $link_url ) . '" style="text-decoration:none;">' . $image . '</a>';
 
 			return Email_Branding::wrap_region( $content, 'header' );
@@ -617,7 +617,7 @@ final class Mjml_Template_Renderer {
 		}
 
 		$unsubscribe_url = isset( $context['unsubscribe_url'] ) ? (string) $context['unsubscribe_url'] : home_url( '/' );
-		$lines[] = '<a href="' . esc_url( $unsubscribe_url ) . '" style="color:' . esc_attr( $link ) . ';text-decoration:underline;">' . esc_html( $unsubscribe_label ) . '</a>';
+		$lines[]         = '<a href="' . esc_url( $unsubscribe_url ) . '" style="color:' . esc_attr( $link ) . ';text-decoration:underline;">' . esc_html( $unsubscribe_label ) . '</a>';
 
 		// Catch remaining auto-detected links (address/phone) that clients may still inject.
 		$detector_css = '<style type="text/css">.wstp-email-footer a,.wstp-email-footer a[x-apple-data-detectors],.wstp-email-footer .x-apple-data-detectors{color:' . esc_attr( $link ) . ' !important;text-decoration:underline !important;}</style>';

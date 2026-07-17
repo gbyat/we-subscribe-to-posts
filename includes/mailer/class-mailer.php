@@ -162,6 +162,7 @@ final class Mailer {
 			return;
 		}
 
+		// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- PHPMailer public API.
 		$phpmailer->isSMTP();
 		$phpmailer->Host = $host;
 		$phpmailer->Port = $port;
@@ -185,6 +186,7 @@ final class Mailer {
 		} elseif ( $from_name ) {
 			$phpmailer->FromName = $from_name;
 		}
+		// phpcs:enable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 	}
 
 	/**
@@ -228,7 +230,8 @@ final class Mailer {
 			return '';
 		}
 
-		extract( $context, EXTR_SKIP );
+		$name        = isset( $context['name'] ) ? (string) $context['name'] : '';
+		$confirm_url = isset( $context['confirm_url'] ) ? (string) $context['confirm_url'] : '';
 
 		ob_start();
 		include $template_file;
