@@ -29,7 +29,16 @@ const match = changelogContent.match(sectionPattern);
 
 let notes = `Release v${version}`;
 if (match && match[1]) {
-	notes = match[1].trim().replace(/\n{3,}/g, '\n\n');
+	notes = match[1]
+		.trim()
+		.split(/\r?\n/)
+		.filter((line) => !/^\[[0-9]+\.[0-9]+\.[0-9]+\]:\s+https?:\/\//.test(line.trim()))
+		.join('\n')
+		.replace(/\n{3,}/g, '\n\n')
+		.trim();
+	if (!notes) {
+		notes = `Release v${version}`;
+	}
 }
 
 fs.writeFileSync(outputFile, notes, 'utf8');
