@@ -1,0 +1,645 @@
+/* Gutenberg-like shell for the digest visual editor */
+.wstp-email-visual-root {
+	--wstp-email-width: 600px;
+	--wstp-email-bg: #f0f0f1;
+	--wstp-email-surface: #ffffff;
+	--wstp-email-border: #dcdcde;
+	--wstp-email-accent: #2271b1;
+	--wstp-email-muted: #646970;
+	--wstp-email-text: #1d2327;
+	margin: 12px 0 24px;
+	max-width: 1100px;
+}
+
+.wstp-email-visual-shell {
+	border: 1px solid var(--wstp-email-border);
+	border-radius: 2px;
+	background: var(--wstp-email-surface);
+	overflow: hidden;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.wstp-email-visual-headerbar {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 10px 14px;
+	border-bottom: 1px solid var(--wstp-email-border);
+	background: #f6f7f7;
+}
+
+.wstp-email-visual-headerbar-hint {
+	color: var(--wstp-email-muted);
+	font-size: 12px;
+	line-height: 1.4;
+}
+
+.wstp-email-visual-layout {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 280px;
+	min-height: 480px;
+}
+
+.wstp-email-visual-editor-canvas {
+	background: var(--wstp-email-bg);
+	padding: 28px 16px 40px;
+	min-height: 480px;
+}
+
+.wstp-email-visual-canvas {
+	max-width: var(--wstp-email-width);
+	margin: 0 auto;
+	background: var(--wstp-email-surface);
+	border: 1px solid var(--wstp-email-border);
+	box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.02), 0 8px 24px rgba(0, 0, 0, 0.06);
+	min-height: 360px;
+	padding: 0;
+	position: relative;
+}
+
+.wstp-email-visual-sidebar {
+	border-left: 1px solid var(--wstp-email-border);
+	background: var(--wstp-email-surface);
+	padding: 0;
+	overflow: auto;
+}
+
+.wstp-email-visual-sidebar-title {
+	margin: 0;
+	padding: 12px 16px;
+	font-size: 13px;
+	font-weight: 600;
+	border-bottom: 1px solid var(--wstp-email-border);
+	background: #f6f7f7;
+}
+
+.wstp-email-visual-sidebar .block-editor-block-inspector {
+	padding: 8px 12px 16px;
+}
+
+/*
+ * Hide Advanced: CSS class / HTML anchor already off via supports;
+ * “Apply globally” (push styles to all blocks of this type) is not useful for emails.
+ */
+.wstp-email-visual-sidebar .block-editor-block-inspector__advanced {
+	display: none !important;
+}
+
+/* Sections butt together — spacing only via block padding attrs */
+.wstp-email-visual-root .block-editor-block-list__layout {
+	padding: 0;
+	margin: 0;
+	gap: 0 !important;
+}
+
+.wstp-email-visual-root .block-editor-block-list__block,
+.wstp-email-visual-root .wp-block,
+.wstp-email-visual-canvas .wp-block {
+	margin: 0 !important;
+	max-width: none;
+}
+
+.wstp-email-visual-root .block-editor-block-list__block .block-editor-block-list__block-edit,
+.wstp-email-visual-root .block-editor-block-list__block > div {
+	margin: 0;
+}
+
+.wstp-email-visual-root .block-list-appender {
+	margin: 0;
+}
+
+/* Email section previews — padding comes only from block attributes */
+.wstp-email-block {
+	box-sizing: border-box;
+	width: 100%;
+	padding: 0;
+	color: var(--wstp-email-text);
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	line-height: 1.6;
+	background: var(--wstp-email-surface);
+	border: none;
+	border-bottom: 1px solid #eee;
+}
+
+.wstp-email-block--shell {
+	border-bottom: none;
+	padding: 0;
+	min-height: 280px;
+}
+
+.wstp-email-block--shell > .block-editor-inner-blocks > .block-editor-block-list__layout {
+	padding: 0;
+}
+
+.wstp-email-block--header {
+	border-bottom: 1px solid #e5e7eb;
+	background: #f8fafc;
+}
+
+.wstp-email-block--footer {
+	background: #f8fafc;
+	border-bottom: none;
+}
+
+
+.wstp-email-preview-header {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	padding: 0;
+	background: transparent;
+}
+
+.wstp-email-preview-logo {
+	width: 44px;
+	height: 44px;
+	border-radius: 4px;
+	background: linear-gradient(135deg, #cbd5e1, #94a3b8);
+	flex-shrink: 0;
+}
+
+.wstp-email-preview-logo-img {
+	flex-shrink: 0;
+	max-height: 72px;
+	object-fit: contain;
+	background: transparent;
+}
+
+.wstp-email-preview-header-rich {
+	width: 100%;
+	font-size: 16px;
+	line-height: 1.4;
+	text-align: center;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.wstp-email-preview-header-rich h1,
+.wstp-email-preview-header-rich h2,
+.wstp-email-preview-header-rich h3 {
+	margin: 0 0 var(--wstp-header-gap, 4px);
+	font-family: inherit;
+	line-height: 1.25;
+	font-weight: 700;
+}
+
+.wstp-email-preview-header-rich h1 {
+	font-size: 28px;
+}
+
+.wstp-email-preview-header-rich h2 {
+	font-size: 22px;
+}
+
+.wstp-email-preview-header-rich h3 {
+	font-size: 18px;
+}
+
+.wstp-email-preview-header-rich p {
+	margin: 0 0 var(--wstp-header-gap, 4px);
+	font-size: 15px;
+	font-weight: 400;
+}
+
+.wstp-email-preview-header-rich p:last-child,
+.wstp-email-preview-header-rich h1:last-child,
+.wstp-email-preview-header-rich h2:last-child,
+.wstp-email-preview-header-rich h3:last-child {
+	margin-bottom: 0;
+}
+
+.wstp-email-preview-header-rich a {
+	text-decoration: none;
+}
+
+.wstp-email-preview-header-rich.has-link-underline a {
+	text-decoration: underline;
+}
+
+.wstp-email-preview-header-text {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+
+.wstp-email-preview-header-text strong {
+	font-size: 14px;
+}
+
+.wstp-email-preview-header-text span,
+.wstp-email-preview-footer span {
+	font-size: 12px;
+	color: var(--wstp-email-muted);
+}
+
+.wstp-email-preview-footer {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	padding: 0;
+}
+
+.wstp-email-preview-intro {
+	padding: 0;
+}
+
+.wstp-email-block--footer {
+	background: #f8fafc;
+	border-bottom: none;
+}
+
+.wstp-email-preview-greeting {
+	margin: 0 0 8px;
+	font-size: 22px;
+	line-height: 1.3;
+	font-weight: 700;
+}
+
+.wstp-email-preview-intro-text {
+	margin: 0;
+	color: var(--wstp-email-muted);
+}
+
+.wstp-email-preview-loop-label {
+	font-size: 11px;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	color: var(--wstp-email-muted);
+	margin: 0 0 8px;
+}
+
+.wstp-email-posts-loop-inner {
+	/* Outline instead of border so content width matches sibling sections */
+	outline: 1px dashed #c3c4c7;
+	outline-offset: -1px;
+	border-radius: 2px;
+	padding: 0;
+	background: rgba(255, 255, 255, 0.7);
+	min-height: 48px;
+}
+
+.wstp-email-field-block {
+	padding: 0;
+}
+
+.wstp-email-field-block.is-image,
+.wstp-email-field-block.is-image-side {
+	padding: 0;
+}
+
+.wstp-email-separator-wrap .wp-block-separator {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.wstp-email-block--truncation {
+	font-size: 13px;
+	color: #646970;
+}
+
+.wstp-email-header-inners {
+	width: 100%;
+	/* Baseline left — each heading/paragraph sets its own text-align. */
+	text-align: left;
+}
+
+.wstp-email-intro-inners {
+	width: 100%;
+}
+
+.wstp-email-intro-inners .block-editor-block-list__layout > .wp-block {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.wstp-email-preview-greeting .wstp-email-placeholder-hint {
+	opacity: 0.75;
+}
+
+.wstp-email-header-inners .block-editor-block-list__layout > .wp-block {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.wstp-email-header-inners .block-list-appender {
+	margin: 8px 0 0;
+}
+
+.wstp-email-header-richtext {
+	width: 100%;
+	outline: none;
+}
+
+/* Kill theme/admin heading & paragraph margins that create huge gaps. */
+.wstp-email-header-richtext,
+.wstp-email-header-richtext h1,
+.wstp-email-header-richtext h2,
+.wstp-email-header-richtext h3,
+.wstp-email-header-richtext p,
+.wstp-email-header-richtext .block-editor-rich-text__editable {
+	margin-top: 0 !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+}
+
+.wstp-email-header-richtext h1,
+.wstp-email-header-richtext h2,
+.wstp-email-header-richtext h3,
+.wstp-email-header-richtext p {
+	margin-bottom: var(--wstp-header-gap, 4px) !important;
+	line-height: 1.25;
+	padding: 0;
+}
+
+.wstp-email-header-richtext h1:last-child,
+.wstp-email-header-richtext h2:last-child,
+.wstp-email-header-richtext h3:last-child,
+.wstp-email-header-richtext p:last-child {
+	margin-bottom: 0 !important;
+}
+
+/* Links: no underline unless the block toggle is on (or core/underline format). */
+.wstp-email-header-richtext-wrap.no-link-underline .wstp-email-header-richtext a,
+.wstp-email-header-richtext-wrap.no-link-underline.is-linked .wstp-email-header-richtext {
+	text-decoration: none;
+}
+
+.wstp-email-header-richtext-wrap.has-link-underline .wstp-email-header-richtext a,
+.wstp-email-header-richtext-wrap.has-link-underline.is-linked .wstp-email-header-richtext {
+	text-decoration: underline;
+}
+
+.wstp-email-header-richtext u,
+.wstp-email-header-richtext .underline,
+.wstp-email-header-richtext span[style*="text-decoration: underline"],
+.wstp-email-header-richtext span[style*="text-decoration:underline"] {
+	text-decoration: underline;
+}
+
+.wstp-email-header-link-hint {
+	margin-top: 6px;
+	font-size: 11px;
+	line-height: 1.3;
+	color: #646970;
+	word-break: break-all;
+}
+
+.wstp-email-free-text,
+.wstp-email-free-text .wp-block-heading,
+.wstp-email-free-text .wp-block-paragraph,
+.wstp-email-free-text h1,
+.wstp-email-free-text h2,
+.wstp-email-free-text h3,
+.wstp-email-free-text h4,
+.wstp-email-free-text h5,
+.wstp-email-free-text h6,
+.wstp-email-free-text p,
+.wstp-email-free-text .block-editor-rich-text__editable {
+	font-family: inherit !important;
+	color: inherit;
+}
+
+/* Links use the block text color (not browser default blue). */
+.wstp-email-free-text a,
+.wstp-email-free-text a:link,
+.wstp-email-free-text a:visited,
+.wstp-email-free-text a:hover,
+.wstp-email-free-text a:active,
+.wstp-email-header-inners a,
+.wstp-email-header-inners a:link,
+.wstp-email-header-inners a:visited {
+	color: var(--wstp-block-color, inherit) !important;
+	text-decoration: none;
+}
+
+.wstp-email-free-text a u,
+.wstp-email-free-text span[style*="text-decoration: underline"],
+.wstp-email-free-text span[style*="text-decoration:underline"],
+.wstp-email-header-inners a u,
+.wstp-email-header-inners span[style*="text-decoration: underline"],
+.wstp-email-header-inners span[style*="text-decoration:underline"] {
+	text-decoration: underline;
+}
+
+.wstp-email-free-text.has-text-align-left,
+.wstp-email-free-text.has-text-align-left .block-editor-rich-text__editable {
+	text-align: left !important;
+}
+
+.wstp-email-free-text.has-text-align-center,
+.wstp-email-free-text.has-text-align-center .block-editor-rich-text__editable {
+	text-align: center !important;
+}
+
+.wstp-email-free-text.has-text-align-right,
+.wstp-email-free-text.has-text-align-right .block-editor-rich-text__editable {
+	text-align: right !important;
+}
+
+.wstp-email-free-text .block-editor-rich-text__editable {
+	margin: 0;
+}
+
+.wstp-email-block--truncation strong {
+	display: block;
+	margin-bottom: 4px;
+	color: #1d2327;
+}
+
+
+.wstp-email-preview-post h3 {
+	margin: 0;
+	font-size: 18px;
+	line-height: 1.3;
+}
+
+.wstp-email-preview-post p {
+	margin: 0;
+	color: var(--wstp-email-muted);
+}
+
+.wstp-email-field-block.is-image,
+.wstp-email-field-block.is-image-side {
+	min-width: 0;
+	width: 100%;
+	position: relative;
+	z-index: 0;
+}
+
+/* Columns: Gutenberg wraps each column in .wp-block — flex must target those children. */
+.wstp-email-visual-canvas .wp-block-columns,
+.wstp-email-visual-canvas .wp-block-columns.is-layout-flex {
+	display: flex !important;
+	flex-direction: row !important;
+	flex-wrap: nowrap !important;
+	align-items: flex-start !important;
+	gap: 0 !important;
+	box-sizing: border-box;
+	width: 100%;
+}
+
+.wstp-email-visual-canvas .wp-block-columns > .wp-block,
+.wstp-email-visual-canvas .wp-block-columns > .block-editor-block-list__block {
+	flex: 1 1 0%;
+	min-width: 0 !important;
+	max-width: none !important;
+	width: auto !important;
+	margin: 0 !important;
+	position: relative;
+	z-index: 0;
+}
+
+/* Mirror inner column width onto the Gutenberg block wrapper (flex item). */
+.wstp-email-visual-canvas .wp-block-columns > .wp-block:has(> .wp-block-column[style*="34%"]),
+.wstp-email-visual-canvas .wp-block-columns > .block-editor-block-list__block:has(> .wp-block-column[style*="34%"]) {
+	flex: 0 0 34%;
+	max-width: 34% !important;
+}
+
+.wstp-email-visual-canvas .wp-block-columns > .wp-block:has(> .wp-block-column[style*="66%"]),
+.wstp-email-visual-canvas .wp-block-columns > .block-editor-block-list__block:has(> .wp-block-column[style*="66%"]) {
+	flex: 1 1 66%;
+	max-width: 66% !important;
+}
+
+.wstp-email-visual-canvas .wp-block-column {
+	flex: none;
+	min-width: 0;
+	margin: 0;
+	width: 100% !important;
+	max-width: 100%;
+	/* Native blockGap is disabled — spacing comes from Gap after on fields. */
+	gap: 0 !important;
+	row-gap: 0 !important;
+	column-gap: 0 !important;
+}
+
+.wstp-email-visual-canvas .wp-block-column > .block-editor-block-list__layout,
+.wstp-email-visual-canvas .wp-block-column.is-layout-flow,
+.wstp-email-visual-canvas .wp-block-column.is-layout-constrained {
+	gap: 0 !important;
+	row-gap: 0 !important;
+}
+
+.wstp-email-preview-image {
+	height: 140px;
+	margin: 0;
+	border-radius: 2px;
+	background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+	max-width: 100%;
+}
+
+.wstp-email-preview-image-img,
+.wstp-email-preview-thumb-img {
+	margin: 0;
+	object-fit: cover;
+	background: #e2e8f0;
+	width: 100%;
+	height: auto;
+	display: block;
+	position: relative;
+	z-index: 0;
+}
+
+.wstp-email-preview-image-img {
+	min-height: 100px;
+	max-height: 180px;
+}
+
+.wstp-email-preview-thumb-img {
+	min-height: 100px;
+	max-height: 160px;
+}
+
+.wstp-email-preview-thumb {
+	width: 100%;
+	min-height: 100px;
+	border-radius: 2px;
+	background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+}
+
+.wstp-email-preview-post.is-image-left {
+	display: flex;
+	gap: 0;
+	align-items: flex-start;
+}
+
+.wstp-email-preview-post-body {
+	flex: 1;
+	min-width: 0;
+}
+
+.wstp-email-preview-btn {
+	display: inline-block;
+	padding: 8px 14px;
+	background: var(--wstp-email-accent);
+	color: #fff;
+	border-radius: 4px;
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.wstp-email-preview-link {
+	color: var(--wstp-email-accent);
+	text-decoration: underline;
+	font-size: 14px;
+}
+
+/* Selected / hovered block — outline on Gutenberg wrapper (all block types). */
+.wstp-email-visual-root .block-editor-block-list__block.is-selected {
+	outline: 2px solid var(--wstp-email-accent);
+	outline-offset: -2px;
+	z-index: 2;
+}
+
+.wstp-email-visual-root .block-editor-block-list__block.is-highlighted,
+.wstp-email-visual-root .block-editor-block-list__block.is-hovered:not(.is-selected) {
+	outline: 1px solid rgba(34, 113, 177, 0.55);
+	outline-offset: -1px;
+}
+
+.wstp-email-visual-root .block-editor-block-list__block.is-selected > .wstp-email-block,
+.wstp-email-visual-root .block-editor-block-list__block.is-selected .wstp-email-block,
+.wstp-email-visual-root .block-editor-block-list__block.is-selected .wstp-email-field-block {
+	outline: none;
+}
+
+.wstp-email-visual-breadcrumb {
+	padding: 8px 12px;
+	border-bottom: 1px solid var(--wstp-email-border);
+	background: #f6f7f7;
+	font-size: 12px;
+}
+
+.wstp-email-visual-sidebar-tabs .components-tab-panel__tabs {
+	display: flex;
+	border-bottom: 1px solid var(--wstp-email-border);
+	background: #f6f7f7;
+}
+
+.wstp-email-visual-sidebar-tabs .components-tab-panel__tabs-item {
+	flex: 1;
+	justify-content: center;
+}
+
+.wstp-email-visual-listview {
+	padding: 8px 4px 16px;
+	max-height: calc(100vh - 220px);
+	overflow: auto;
+}
+
+.wstp-email-visual-listview .block-editor-list-view-leaf.is-selected,
+.wstp-email-visual-listview .block-editor-list-view-block-select-button.is-selected {
+	background: rgba(34, 113, 177, 0.1);
+}
+
+@media (max-width: 960px) {
+	.wstp-email-visual-layout {
+		grid-template-columns: 1fr;
+	}
+
+	.wstp-email-visual-sidebar {
+		border-left: none;
+		border-top: 1px solid var(--wstp-email-border);
+	}
+}

@@ -94,15 +94,49 @@
 
   </style>
   <style type="text/css">
-    @media only screen and (max-width: 479px) {
-      .wstp-post-image-col td {
-        padding-right: 0 !important;
-        padding-bottom: 16px !important;
+    @media only screen and (max-width:479px) {
+      table.mj-full-width-mobile {
+        width: 100% !important;
       }
 
-      .wstp-post-image-side {
+      td.mj-full-width-mobile {
+        width: auto !important;
+      }
+    }
+
+  </style>
+  <style type="text/css">
+    @media only screen and (max-width: 479px) {
+      .wstp-post-image-col {
         width: 100% !important;
         max-width: 100% !important;
+      }
+
+      .wstp-post-image-col td {
+        padding-right: 0 !important;
+      }
+
+      .wstp-post-image-side,
+      .wstp-post-image {
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+
+      .wstp-post-image-side table,
+      .wstp-post-image table,
+      .wstp-post-image-side td,
+      .wstp-post-image td {
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+
+      .wstp-post-image-side img,
+      .wstp-post-image img,
+      img.wstp-post-image-side,
+      img.wstp-post-image {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
       }
     }
 
@@ -111,8 +145,35 @@
 
 <body style="word-spacing:normal;background-color:{{wstp:color_body_bg}};">
   <div aria-roledescription="email" style="background-color:{{wstp:color_body_bg}};" role="article" lang="und" dir="auto">
-    {{wstp:header_block}}
     <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" bgcolor="{{wstp:color_content_bg}}" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+    <div style="background:{{wstp:color_content_bg}};background-color:{{wstp:color_content_bg}};margin:0px auto;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:{{wstp:color_content_bg}};background-color:{{wstp:color_content_bg}};width:100%;">
+        <tbody>
+          <tr>
+            <td style="direction:ltr;font-size:0px;padding:24px 24px 12px;text-align:center;">
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:552px;" ><![endif]-->
+              <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                  <tbody>
+                    <tr>
+                      <td style="vertical-align:top;padding:0;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
+                          <tbody>
+                            {{wstp:header_block}}
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" bgcolor="{{wstp:color_content_bg}}" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
     <div style="background:{{wstp:color_content_bg}};background-color:{{wstp:color_content_bg}};margin:0px auto;max-width:600px;">
       <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:{{wstp:color_content_bg}};background-color:{{wstp:color_content_bg}};width:100%;">
         <tbody>
@@ -156,16 +217,28 @@
       <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:{{wstp:color_content_bg}};background-color:{{wstp:color_content_bg}};width:100%;">
         <tbody>
           <tr>
-            <td style="direction:ltr;font-size:0px;padding:16px 24px;text-align:center;">
-              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="wstp-post-image-col-outlook" style="vertical-align:top;width:187.68px;" ><![endif]-->
+            <td style="direction:ltr;font-size:0px;padding:0;text-align:left;">
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="wstp-post-image-col-outlook" style="vertical-align:top;width:204px;" ><![endif]-->
               <div class="mj-column-per-34 mj-outlook-group-fix wstp-post-image-col" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
                 <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
                   <tbody>
                     <tr>
-                      <td style="vertical-align:top;padding:0 16px 0 0;">
+                      <td style="vertical-align:top;padding:0;">
                         <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
                           <tbody>
-                            {{wstp:post_image_side}}
+                            <tr>
+                              <td align="center" class="wstp-post-image-side" style="font-size:0px;padding:0;word-break:break-word;">
+                                <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;border-spacing:0px;">
+                                  <tbody>
+                                    <tr>
+                                      <td style="width:100px;">
+                                        <img alt="{{wstp:post_title}}" src="{{wstp:post_image_url}}" style="border:0;border-radius:4px;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="100" height="auto">
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </td>
@@ -173,7 +246,7 @@
                   </tbody>
                 </table>
               </div>
-              <!--[if mso | IE]></td><td class="" style="vertical-align:top;width:364.32px;" ><![endif]-->
+              <!--[if mso | IE]></td><td class="" style="vertical-align:top;width:396px;" ><![endif]-->
               <div class="mj-column-per-66 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
                 <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
                   <tbody>
@@ -182,12 +255,12 @@
                         <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
                           <tbody>
                             <tr>
-                              <td align="left" style="font-size:0px;padding:0 0 4px;word-break:break-word;">
+                              <td align="left" style="font-size:0px;padding:0;word-break:break-word;">
                                 <div style="font-family:Arial, Helvetica, sans-serif;font-size:20px;font-weight:bold;line-height:1.6;text-align:left;color:{{wstp:color_text}};"><a href="{{wstp:post_url}}" style="color: {{wstp:color_text}}; text-decoration: none;">{{wstp:post_title}}</a></div>
                               </td>
                             </tr>
                             <tr>
-                              <td align="left" style="font-size:0px;padding:0 0 10px;word-break:break-word;">
+                              <td align="left" style="font-size:0px;padding:0;word-break:break-word;">
                                 <div style="font-family:Arial, Helvetica, sans-serif;font-size:15px;line-height:1.6;text-align:left;color:{{wstp:color_muted}};">{{wstp:post_excerpt}}</div>
                               </td>
                             </tr>
@@ -224,8 +297,8 @@
       <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:{{wstp:color_content_bg}};background-color:{{wstp:color_content_bg}};width:100%;">
         <tbody>
           <tr>
-            <td style="direction:ltr;font-size:0px;padding:0 24px 16px;text-align:center;">
-              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:552px;" ><![endif]-->
+            <td style="direction:ltr;font-size:0px;padding:0;text-align:center;">
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:600px;" ><![endif]-->
               <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
                 <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
                   <tbody>
@@ -237,7 +310,7 @@
                               <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
                                 <p style="border-top:solid 1px #e5e7eb;font-size:1px;margin:0px auto;width:100%;">
                                 </p>
-                                <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" style="border-top:solid 1px #e5e7eb;font-size:1px;margin:0px auto;width:552px;" role="presentation" width="552px" ><tr><td style="height:0;line-height:0;"> &nbsp;
+                                <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" style="border-top:solid 1px #e5e7eb;font-size:1px;margin:0px auto;width:600px;" role="presentation" width="600px" ><tr><td style="height:0;line-height:0;"> &nbsp;
 </td></tr></table><![endif]-->
                               </td>
                             </tr>
@@ -255,7 +328,36 @@
       </table>
     </div>
     <!--[if mso | IE]></td></tr></table><![endif]-->
-    {{/wstp:posts_loop}}{{wstp:truncation_notice_block}}{{wstp:footer_block}}
+    {{/wstp:posts_loop}}{{wstp:truncation_notice_block:0:12:24:base-two}}
+    <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" bgcolor="{{wstp:color_content_bg}}" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+    <div style="background:{{wstp:color_content_bg}};background-color:{{wstp:color_content_bg}};margin:0px auto;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:{{wstp:color_content_bg}};background-color:{{wstp:color_content_bg}};width:100%;">
+        <tbody>
+          <tr>
+            <td style="direction:ltr;font-size:0px;padding:16px 24px 28px;text-align:center;">
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:552px;" ><![endif]-->
+              <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                  <tbody>
+                    <tr>
+                      <td style="vertical-align:top;padding:0;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
+                          <tbody>
+                            {{wstp:footer_block}}
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><![endif]-->
   </div>
 </body>
 

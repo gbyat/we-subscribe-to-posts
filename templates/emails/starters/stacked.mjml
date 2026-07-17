@@ -10,7 +10,11 @@
     </mj-style>
   </mj-head>
   <mj-body background-color="{{wstp:color_body_bg}}">
-    <mj-raw>{{wstp:header_block}}</mj-raw>
+    <mj-section background-color="{{wstp:color_content_bg}}" padding="24px 24px 12px">
+      <mj-column padding="0">
+        <mj-raw>{{wstp:header_block}}</mj-raw>
+      </mj-column>
+    </mj-section>
     <mj-section background-color="{{wstp:color_content_bg}}" padding="28px 24px 12px">
       <mj-column padding="0">
         <mj-text font-size="22px" font-weight="bold" color="{{wstp:color_text}}" padding="0 0 8px">{{wstp:greeting}}</mj-text>
@@ -32,7 +36,11 @@
     </mj-section>
     <mj-raw>{{/wstp:posts_loop}}</mj-raw>
 
-    <mj-raw>{{wstp:truncation_notice_block}}</mj-raw>
-    <mj-raw>{{wstp:footer_block}}</mj-raw>
+    <mj-raw>{{wstp:truncation_notice_block:0:12:24:base-two}}</mj-raw>
+    <mj-section background-color="{{wstp:color_content_bg}}" padding="16px 24px 28px">
+      <mj-column padding="0">
+        <mj-raw>{{wstp:footer_block}}</mj-raw>
+      </mj-column>
+    </mj-section>
   </mj-body>
 </mjml>

@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the WE Subscribe To Posts plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: WE Subscribe To Posts 1.2.1\n"
+"Project-Id-Version: WE Subscribe To Posts 1.3.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/we-subscribe-to-posts\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-16T12:21:35+02:00\n"
+"POT-Creation-Date: 2026-07-17T10:59:05+02:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: we-subscribe-to-posts\n"
@@ -44,12 +44,12 @@ msgid "Post Subscriptions Overview"
 msgstr ""
 
 #: includes/admin/class-dashboard-widget.php:86
-#: includes/admin/class-settings-page.php:1174
+#: includes/admin/class-settings-page.php:1164
 msgid "Yes"
 msgstr ""
 
 #: includes/admin/class-dashboard-widget.php:87
-#: includes/admin/class-settings-page.php:1175
+#: includes/admin/class-settings-page.php:1165
 msgid "No"
 msgstr ""
 
@@ -157,7 +157,7 @@ msgid "Last digest send: %s"
 msgstr ""
 
 #: includes/admin/class-dashboard-widget.php:143
-#: includes/admin/class-settings-page.php:1117
+#: includes/admin/class-settings-page.php:1107
 msgid "Mail transport"
 msgstr ""
 
@@ -182,7 +182,7 @@ msgid "Open Settings"
 msgstr ""
 
 #: includes/admin/class-dashboard-widget.php:202
-#: includes/admin/class-settings-page.php:1121
+#: includes/admin/class-settings-page.php:1111
 msgid "Custom SMTP"
 msgstr ""
 
@@ -218,230 +218,799 @@ msgstr ""
 msgid "Trend vs previous 7 days: %1$s by %2$d (%3$s%%)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:67
-#: includes/admin/class-mjml-template.php:68
-#: includes/admin/class-mjml-template.php:400
+#: includes/admin/class-mjml-template.php:98
+#: includes/admin/class-mjml-template.php:99
+#: includes/admin/class-mjml-template.php:716
 msgid "Digest Email Template"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:113
+#: includes/admin/class-mjml-template.php:146
 msgid "Select email header logo"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:114
+#: includes/admin/class-mjml-template.php:147
 msgid "Use logo"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:218
-msgid "Stacked"
-msgstr ""
-
-#: includes/admin/class-mjml-template.php:219
-msgid "Featured image above title and excerpt."
+#: includes/admin/class-mjml-template.php:148
+msgid "Media library is not available. Please reload the page."
 msgstr ""
 
 #: includes/admin/class-mjml-template.php:223
-msgid "Image left"
+msgid "Email canvas"
 msgstr ""
 
 #: includes/admin/class-mjml-template.php:224
-msgid "Two-column layout with image on the left."
+msgid "Outer email background and container for all sections."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:225
+#: includes/admin/class-mjml-template.php:485
+#: templates/admin/email-branding-form.php:18
+msgid "Outer background"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:226
+msgid "Email header"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:227
+msgid "Email footer (from Branding)"
 msgstr ""
 
 #: includes/admin/class-mjml-template.php:228
-msgid "Minimal"
+msgid "Add a heading, text, or button — each with its own colors. Or use a logo instead."
 msgstr ""
 
 #: includes/admin/class-mjml-template.php:229
-msgid "Text-only digest with a simple serif style."
+msgid "Your brand"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:230
+msgid "Logo (optional)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:231
+msgid "Leave empty to add a heading, text, or button in the header — each with its own colors."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:232
+#: templates/admin/email-branding-form.php:117
+msgid "Select logo"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:233
+#: templates/admin/email-branding-form.php:117
+msgid "Replace logo"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:234
+#: templates/admin/email-branding-form.php:118
+msgid "Remove logo"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:235
+#: templates/admin/email-branding-form.php:122
+msgid "Logo link URL"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:236
+#: templates/admin/email-branding-form.php:130
+msgid "Logo max width (px)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:237
+#: templates/admin/email-branding-form.php:126
+msgid "Logo alt text"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:238
+msgid "Link URL"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:239
+msgid "Makes the whole header text clickable. Or select text and use the link control in the toolbar."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:240
+msgid "Link URL for the header text:"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:241
+msgid "Links to:"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:242
+msgid "Underline links"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:243
+msgid "Off by default so linked brand text stays clean."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:244
+msgid "Space between lines (px)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:245
+msgid "Gap between heading and paragraph lines inside the header."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:246
+msgid "Content comes from the Branding tab."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:247
+msgid "Greeting & intro"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:248
+msgid "The greeting is personalized at send time. Edit the text below for your intro or a special announcement."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:249
+msgid "Greeting (personalized)"
+msgstr ""
+
+#. translators: %s: sample subscriber name in the visual editor.
+#. translators: %s: subscriber name.
+#: includes/admin/class-mjml-template.php:251
+#: includes/mailer/class-mjml-template-renderer.php:103
+#: templates/emails/digest.php:21
+#: templates/emails/optin-confirmation.php:22
+#, php-format
+msgid "Hi %s,"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:252
+#: includes/mailer/class-block-to-mjml.php:317
+#: includes/mailer/class-mjml-template-renderer.php:154
+#: templates/emails/digest.php:27
+msgid "Here are the latest published posts:"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:253
+msgid "Posts loop"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:254
+msgid "Truncation notice"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:255
+msgid "Appears only when the digest post limit hides extra posts. Omitted from the email when unused; spacing applies only then."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:256
+msgid "Post title"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:257
+msgid "Post excerpt"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:258
+msgid "Post image"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:259
+msgid "Post image (side)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:260
+msgid "Image"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:261
+#: includes/admin/class-mjml-template.php:312
+#: includes/mailer/class-block-to-mjml.php:1797
+#: includes/mailer/class-mjml-template-renderer.php:157
+#: includes/mailer/class-mjml-template-renderer.php:252
+#: templates/emails/digest.php:45
+msgid "Read more"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:262
+msgid "Spacing"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:263
+#: templates/admin/email-branding-form.php:34
+msgid "Colors"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:264
+msgid "Line color"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:265
+msgid "Add top padding so the line does not sit against the button above."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:266
+msgid "Borders"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:267
+msgid "Top (px)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:268
+msgid "Right (px)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:269
+msgid "Bottom (px)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:270
+msgid "Left (px)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:271
+msgid "Border color"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:272
+msgid "Typography"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:273
+msgid "Background"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:274
+msgid "Text"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:275
+msgid "Secondary text"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:276
+msgid "Links"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:277
+msgid "Font size (px)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:278
+msgid "Font"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:279
+msgid "Email-safe font stack (Outlook and most clients)."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:280
+msgid "Align"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:281
+msgid "Left"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:282
+msgid "Center"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:283
+msgid "Right"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:284
+msgid "Width (% of column)"
 msgstr ""
 
 #: includes/admin/class-mjml-template.php:285
-msgid "Personalized greeting line, e.g. “Hi Anna,”"
+msgid "Percent of the column. Compiled to pixels for Outlook (column % × this % × 600px). On mobile the column stacks to full width."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:286
+msgid "Column width (%)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:287
+msgid "Share of the email width (600px). Example: 34% ≈ 204px in Outlook. Prefer this over dragging — drag can store pixel widths."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:288
+msgid "List view"
 msgstr ""
 
 #: includes/admin/class-mjml-template.php:289
-msgid "Subscriber name only"
+msgid "List view is not available in this WordPress version."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:290
+msgid "Gap after (px)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:291
+msgid "Space below this field in the email. Shown in the editor canvas as you change it."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:292
+msgid "Border radius (px)"
 msgstr ""
 
 #: includes/admin/class-mjml-template.php:293
-msgid "Intro line above the post list"
+msgid "Padding top (px)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:294
+msgid "Padding bottom (px)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:295
+msgid "Padding left/right (px)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:296
+msgid "Column spacing"
 msgstr ""
 
 #: includes/admin/class-mjml-template.php:297
-msgid "Repeat the block inside for each post in the digest"
+msgid "Gap between columns (px)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:298
+msgid "Horizontal when columns sit side by side; vertical when stacked on mobile."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:299
+msgid "Button style"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:300
+msgid "Style"
 msgstr ""
 
 #: includes/admin/class-mjml-template.php:301
-msgid "Post title (inside loop)"
+msgid "Button"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:302
+msgid "Link"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:303
+msgid "Add block"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:304
+msgid "Add email content…"
 msgstr ""
 
 #: includes/admin/class-mjml-template.php:305
-msgid "Post excerpt (inside loop)"
+msgid "In the Header, add a heading, text, or button. Open the Styles tab (circle icon) for colors and spacing on each block."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:306
+msgid "Custom text"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:307
+msgid "Custom heading"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:308
+msgid "Your own static copy in the digest (links, bold, and italic are supported)."
 msgstr ""
 
 #: includes/admin/class-mjml-template.php:309
-msgid "Post permalink (inside loop)"
+msgid "Block"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:310
+#: includes/admin/class-mjml-template.php:1186
+#: includes/admin/class-mjml-template.php:1277
+msgid "Sample post title"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:311
+#: includes/admin/class-mjml-template.php:1187
+#: includes/admin/class-mjml-template.php:1280
+msgid "Short excerpt of the post…"
 msgstr ""
 
 #: includes/admin/class-mjml-template.php:313
-msgid "Featured image HTML for stacked layouts (inside loop)"
+msgid "Could not convert blocks to MJML."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:314
+msgid "MJML compilation failed."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:315
+msgid "Name for this layout:"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:316
+msgid "My layout"
 msgstr ""
 
 #: includes/admin/class-mjml-template.php:317
+msgid "Please enter a layout name."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:486
+#: templates/admin/email-branding-form.php:19
+msgid "Content, header, footer, posts"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:487
+#: templates/admin/email-branding-form.php:20
+msgid "Theme surface (optional)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:488
+#: templates/admin/email-branding-form.php:21
+msgid "Body and footer text"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:489
+#: templates/admin/email-branding-form.php:22
+msgid "Buttons and links"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:490
+#: templates/admin/email-branding-form.php:23
+msgid "Headings (darkest readable theme color)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:520
+msgid "Stacked"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:521
+msgid "Featured image above title and excerpt."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:525
+msgid "Image left"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:526
+msgid "Two-column layout with image on the left."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:530
+msgid "Minimal"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:531
+msgid "Text-only digest with a simple serif style."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:587
+msgid "Personalized greeting line, e.g. “Hi Anna,”"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:591
+msgid "Subscriber name only"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:595
+msgid "Legacy intro line (MJML starters / empty Visual intro). Prefer editing intro text in the Visual tab."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:599
+msgid "Repeat the block inside for each post in the digest"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:603
+msgid "Post title (inside loop)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:607
+msgid "Post excerpt (inside loop)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:611
+msgid "Post permalink (inside loop)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:615
+msgid "Featured image HTML for stacked layouts (inside loop)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:619
 msgid "Featured image HTML for side-by-side layouts (inside loop)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:321
+#: includes/admin/class-mjml-template.php:623
 msgid "Featured image URL only (inside loop)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:325
+#: includes/admin/class-mjml-template.php:627
 msgid "Read-more button label"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:329
+#: includes/admin/class-mjml-template.php:631
 msgid "Ready-made header HTML built from the branding settings below"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:333
+#: includes/admin/class-mjml-template.php:635
 msgid "Ready-made footer HTML built from the branding settings below"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:337
+#: includes/admin/class-mjml-template.php:639
 msgid "Outer email background (theme: base)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:341
+#: includes/admin/class-mjml-template.php:643
 msgid "Content card background (theme: base-two)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:345
+#: includes/admin/class-mjml-template.php:647
 msgid "Heading text color (theme: darkest readable accent/base-three)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:349
+#: includes/admin/class-mjml-template.php:651
 msgid "Body/footer text color (theme: accent)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:353
+#: includes/admin/class-mjml-template.php:655
 msgid "Button background color (theme: accent-two)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:357
+#: includes/admin/class-mjml-template.php:659
 msgid "Link color (theme: accent-two)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:361
+#: includes/admin/class-mjml-template.php:663
 msgid "Optional notice when post limit hides additional posts"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:365
+#: includes/admin/class-mjml-template.php:667
 msgid "One-click unsubscribe URL"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:369
-#: templates/admin/email-branding-form.php:156
+#: includes/admin/class-mjml-template.php:671
+#: templates/admin/email-branding-form.php:196
 msgid "Unsubscribe link label"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:373
+#: includes/admin/class-mjml-template.php:675
 msgid "Site name"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:406
-msgid "Template"
+#: includes/admin/class-mjml-template.php:723
+msgid "Visual"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:409
+#: includes/admin/class-mjml-template.php:726
+msgid "MJML"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:729
 msgid "Branding"
 msgstr ""
 
-#. translators: %s: external MJML editor URL.
-#: includes/admin/class-mjml-template.php:419
-#, php-format
-msgid "Design your email with <a href=\"%s\" target=\"_blank\" rel=\"noopener noreferrer\">MJML</a>, paste the source here, and save. MJML is compiled in your browser; sent digests use the stored HTML and need no Node.js on the server."
+#: includes/admin/class-mjml-template.php:735
+msgid "The template was last saved from the MJML tab. Saving Visual will regenerate MJML from blocks and overwrite advanced MJML edits."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:432
-msgid "MJML source"
+#: includes/admin/class-mjml-template.php:738
+msgid "Compose the digest from placeholder blocks (header, intro, posts loop fields, truncation, footer). Use Save as… to keep named copies while you try different layouts. Digests always use the currently saved active template."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:439
-msgid "Save template"
+#: includes/admin/class-mjml-template.php:742
+msgid "Editing saved layout:"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:441
+#: includes/admin/class-mjml-template.php:757
+msgid "Save visual template"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:759
+msgid "Save as…"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:762
+#: includes/admin/class-mjml-template.php:885
 msgid "Preview HTML"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:453
+#: includes/admin/class-mjml-template.php:783
+msgid "My layouts"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:784
+msgid "Named copies of your visual work. Load one to continue editing it; digests use whatever is currently saved as the active template."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:786
+msgid "No saved layouts yet. Use Save as… to keep a copy before trying another starter."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:791
+#: includes/admin/class-subscribers-page.php:340
+#: includes/subscription/class-admin-notification-service.php:164
+#: templates/admin/email-branding-form.php:137
+msgid "Name"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:792
+msgid "Updated"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:793
+#: includes/admin/class-subscribers-page.php:347
+msgid "Actions"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:808
+msgid "loaded"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:823
+msgid "Load"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:825
+msgid "Delete this saved layout?"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:829
+#: includes/admin/class-subscribers-page.php:626
+msgid "Delete"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:839
 msgid "Starter templates"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:459
-msgid "Replace the current template with this starter?"
+#: includes/admin/class-mjml-template.php:840
+msgid "Starters replace the active template. Save as… first if you want to keep your current work."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:463
+#: includes/admin/class-mjml-template.php:846
+msgid "Replace the current active template with this starter? Use Save as… first if you want to keep your work."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:850
 msgid "Use this starter"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:469
+#. translators: %s: external MJML editor URL.
+#: includes/admin/class-mjml-template.php:863
+#, php-format
+msgid "Advanced: edit MJML directly. Design with <a href=\"%s\" target=\"_blank\" rel=\"noopener noreferrer\">MJML</a>, paste the source here, and save. Compiled HTML is used when sending digests."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:876
+msgid "MJML source"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:883
+msgid "Save template"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:896
 msgid "Placeholders"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:473
+#: includes/admin/class-mjml-template.php:900
 msgid "Token"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:474
+#: includes/admin/class-mjml-template.php:901
 msgid "Description"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:585
-msgid "No compiled HTML template available for preview."
-msgstr ""
-
-#: includes/admin/class-mjml-template.php:586
-msgid "Preview failed"
-msgstr ""
-
-#: includes/admin/class-mjml-template.php:670
+#: includes/admin/class-mjml-template.php:1079
+#: includes/admin/class-mjml-template.php:1553
 #: includes/admin/class-preview-controller.php:58
-#: includes/admin/class-settings-page.php:1330
+#: includes/admin/class-settings-page.php:1320
 #: includes/admin/class-subscribers-page.php:126
 #: includes/admin/class-subscribers-page.php:520
 #: includes/admin/class-subscribers-page.php:750
 msgid "You are not allowed to do this."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:674
+#: includes/admin/class-mjml-template.php:1086
+msgid "No blocks provided."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:1162
+msgid "No compiled HTML template available for preview."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:1163
+msgid "Preview failed"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:1202
+msgid "Alex"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:1449
+#: includes/admin/class-mjml-template.php:1452
+#: includes/admin/class-mjml-template.php:1481
+msgid "Untitled layout"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:1557
 #: includes/admin/class-preview-controller.php:62
-#: includes/admin/class-settings-page.php:1334
+#: includes/admin/class-settings-page.php:1324
 #: includes/admin/class-subscribers-page.php:130
 #: includes/admin/class-subscribers-page.php:754
 msgid "Security check failed."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:713
+#. translators: %s: preview recipient email
+#: includes/admin/class-mjml-template.php:1616
+#, php-format
+msgid "Send a preview digest to %s (latest 3 posts)"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:1621
+msgid "Send preview now"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:1638
 msgid "MJML template saved and compiled HTML updated."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:714
+#: includes/admin/class-mjml-template.php:1639
+msgid "Visual template saved and compiled HTML updated."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:1640
+msgid "Layout saved to My layouts and set as active."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:1641
+msgid "Saved layout loaded into the editor."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:1642
+msgid "Saved layout deleted."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:1643
+msgid "Saved layout could not be found."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:1644
+msgid "Please enter a name for Save as…"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:1645
+msgid "Layout library is full. Delete an old layout first."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:1646
 msgid "Email branding saved."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:715
+#: includes/admin/class-mjml-template.php:1647
 msgid "Starter template loaded."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:716
+#: includes/admin/class-mjml-template.php:1648
 msgid "Starter template could not be loaded."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:717
-msgid "Compiled HTML is missing. Save again from the template screen so MJML can compile in your browser."
+#: includes/admin/class-mjml-template.php:1649
+msgid "Compiled HTML is missing. Save again so MJML can compile in your browser."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:1650
+#: includes/admin/class-settings-page.php:742
+msgid "Preview email sent successfully."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:1651
+#: includes/admin/class-settings-page.php:743
+msgid "Preview email could not be sent."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:1652
+msgid "Preview recipient email is invalid. Set it under Post Subscriptions → Settings."
 msgstr ""
 
 #: includes/admin/class-settings-page.php:70
@@ -520,14 +1089,6 @@ msgstr ""
 msgid "Sunday"
 msgstr ""
 
-#: includes/admin/class-settings-page.php:742
-msgid "Preview email sent successfully."
-msgstr ""
-
-#: includes/admin/class-settings-page.php:743
-msgid "Preview email could not be sent."
-msgstr ""
-
 #: includes/admin/class-settings-page.php:744
 msgid "Preview recipient email is invalid."
 msgstr ""
@@ -549,7 +1110,7 @@ msgid "Preview recipient email"
 msgstr ""
 
 #: includes/admin/class-settings-page.php:773
-msgid "Preview mails are sent to this address."
+msgid "Preview digests are sent to this address (Send preview now on Digest Email Template)."
 msgstr ""
 
 #: includes/admin/class-settings-page.php:777
@@ -824,107 +1385,95 @@ msgstr ""
 msgid "every 5 minutes"
 msgstr ""
 
-#: includes/admin/class-settings-page.php:1059
-msgid "Email preview"
-msgstr ""
-
-#: includes/admin/class-settings-page.php:1060
-msgid "Send a preview email with the latest 3 published posts."
-msgstr ""
-
-#: includes/admin/class-settings-page.php:1065
-msgid "Send preview now"
-msgstr ""
-
-#: includes/admin/class-settings-page.php:1097
+#: includes/admin/class-settings-page.php:1087
 msgid "Test transport email sent successfully."
 msgstr ""
 
-#: includes/admin/class-settings-page.php:1098
+#: includes/admin/class-settings-page.php:1088
 msgid "Test transport email could not be sent."
 msgstr ""
 
-#: includes/admin/class-settings-page.php:1099
+#: includes/admin/class-settings-page.php:1089
 msgid "Please provide a valid test recipient email."
 msgstr ""
 
-#: includes/admin/class-settings-page.php:1103
+#: includes/admin/class-settings-page.php:1093
 msgid "Mail Transport Settings"
 msgstr ""
 
-#: includes/admin/class-settings-page.php:1120
+#: includes/admin/class-settings-page.php:1110
 msgid "WordPress default (wp_mail / host)"
 msgstr ""
 
-#: includes/admin/class-settings-page.php:1122
+#: includes/admin/class-settings-page.php:1112
 msgid "Gmail (SMTP preset)"
 msgstr ""
 
-#: includes/admin/class-settings-page.php:1127
+#: includes/admin/class-settings-page.php:1117
 msgid "Use for all WordPress emails"
 msgstr ""
 
-#: includes/admin/class-settings-page.php:1132
+#: includes/admin/class-settings-page.php:1122
 msgid "Apply this transport globally (not only this plugin)."
 msgstr ""
 
-#: includes/admin/class-settings-page.php:1137
+#: includes/admin/class-settings-page.php:1127
 msgid "From email (optional)"
 msgstr ""
 
-#: includes/admin/class-settings-page.php:1143
+#: includes/admin/class-settings-page.php:1133
 msgid "From name (optional)"
 msgstr ""
 
-#: includes/admin/class-settings-page.php:1149
+#: includes/admin/class-settings-page.php:1139
 msgid "SMTP host"
 msgstr ""
 
-#: includes/admin/class-settings-page.php:1155
+#: includes/admin/class-settings-page.php:1145
 msgid "SMTP port"
 msgstr ""
 
-#: includes/admin/class-settings-page.php:1161
+#: includes/admin/class-settings-page.php:1151
 msgid "SMTP encryption"
 msgstr ""
 
-#: includes/admin/class-settings-page.php:1164
+#: includes/admin/class-settings-page.php:1154
 msgid "None"
 msgstr ""
 
-#: includes/admin/class-settings-page.php:1171
+#: includes/admin/class-settings-page.php:1161
 msgid "SMTP authentication"
 msgstr ""
 
-#: includes/admin/class-settings-page.php:1180
+#: includes/admin/class-settings-page.php:1170
 msgid "SMTP username"
 msgstr ""
 
-#: includes/admin/class-settings-page.php:1186
+#: includes/admin/class-settings-page.php:1176
 msgid "SMTP password/app password"
 msgstr ""
 
-#: includes/admin/class-settings-page.php:1189
+#: includes/admin/class-settings-page.php:1179
 msgid "For Gmail use an app password and keep TLS/587."
 msgstr ""
 
-#: includes/admin/class-settings-page.php:1194
+#: includes/admin/class-settings-page.php:1184
 msgid "Save mail transport settings"
 msgstr ""
 
-#: includes/admin/class-settings-page.php:1291
+#: includes/admin/class-settings-page.php:1281
 msgid "Test transport recipient"
 msgstr ""
 
-#: includes/admin/class-settings-page.php:1293
+#: includes/admin/class-settings-page.php:1283
 msgid "Send test email"
 msgstr ""
 
-#: includes/admin/class-settings-page.php:1309
+#: includes/admin/class-settings-page.php:1299
 msgid "Active transport summary"
 msgstr ""
 
-#: includes/admin/class-settings-page.php:1311
+#: includes/admin/class-settings-page.php:1301
 msgid "Transport: WordPress default wp_mail() / host environment"
 msgstr ""
 
@@ -1053,11 +1602,6 @@ msgstr[1] ""
 msgid "Email"
 msgstr ""
 
-#: includes/admin/class-subscribers-page.php:340
-#: includes/subscription/class-admin-notification-service.php:164
-msgid "Name"
-msgstr ""
-
 #: includes/admin/class-subscribers-page.php:343
 msgid "Created"
 msgstr ""
@@ -1074,10 +1618,6 @@ msgstr ""
 msgid "Consent Proof"
 msgstr ""
 
-#: includes/admin/class-subscribers-page.php:347
-msgid "Actions"
-msgstr ""
-
 #: includes/admin/class-subscribers-page.php:353
 msgid "No subscribers found."
 msgstr ""
@@ -1088,10 +1628,6 @@ msgstr ""
 
 #: includes/admin/class-subscribers-page.php:625
 msgid "Delete subscriber permanently?"
-msgstr ""
-
-#: includes/admin/class-subscribers-page.php:626
-msgid "Delete"
 msgstr ""
 
 #: includes/admin/class-subscribers-page.php:723
@@ -1247,6 +1783,10 @@ msgstr ""
 msgid "An unknown status occurred."
 msgstr ""
 
+#: includes/mailer/class-block-to-mjml.php:1255
+msgid "Learn more"
+msgstr ""
+
 #: includes/mailer/class-digest-builder.php:269
 msgid "Your latest post updates"
 msgstr ""
@@ -1256,19 +1796,19 @@ msgid "wp_mail returned false."
 msgstr ""
 
 #: includes/mailer/class-digest-scheduler.php:232
-#: includes/mailer/class-mjml-template-renderer.php:93
+#: includes/mailer/class-mjml-template-renderer.php:100
 #: templates/emails/optin-confirmation.php:13
 msgid "there"
 msgstr ""
 
-#: includes/mailer/class-email-branding.php:285
+#: includes/mailer/class-email-branding.php:288
 #: templates/subscription-form.php:179
 msgid "Website"
 msgstr ""
 
-#: includes/mailer/class-email-branding.php:290
-#: includes/mailer/class-mjml-template-renderer.php:106
-#: includes/mailer/class-mjml-template-renderer.php:315
+#: includes/mailer/class-email-branding.php:293
+#: includes/mailer/class-mjml-template-renderer.php:156
+#: includes/mailer/class-mjml-template-renderer.php:603
 #: templates/emails/digest.php:65
 msgid "Unsubscribe instantly"
 msgstr ""
@@ -1285,27 +1825,8 @@ msgstr ""
 msgid "This is a test email from We Subscribe To Posts transport settings."
 msgstr ""
 
-#. translators: %s: subscriber name.
-#: includes/mailer/class-mjml-template-renderer.php:96
-#: templates/emails/digest.php:21
-#: templates/emails/optin-confirmation.php:22
-#, php-format
-msgid "Hi %s,"
-msgstr ""
-
-#: includes/mailer/class-mjml-template-renderer.php:104
-#: templates/emails/digest.php:27
-msgid "Here are the latest published posts:"
-msgstr ""
-
-#: includes/mailer/class-mjml-template-renderer.php:107
-#: includes/mailer/class-mjml-template-renderer.php:143
-#: templates/emails/digest.php:45
-msgid "Read more"
-msgstr ""
-
 #. translators: %d: hidden posts count.
-#: includes/mailer/class-mjml-template-renderer.php:193
+#: includes/mailer/class-mjml-template-renderer.php:377
 #: templates/emails/digest.php:56
 #, php-format
 msgid "Plus %d more published post not shown due to your limit."
@@ -1313,15 +1834,15 @@ msgid_plural "Plus %d more published posts not shown due to your limit."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/mailer/class-mjml-template-renderer.php:300
+#: includes/mailer/class-mjml-template-renderer.php:588
 msgid "Phone:"
 msgstr ""
 
-#: includes/mailer/class-mjml-template-renderer.php:306
+#: includes/mailer/class-mjml-template-renderer.php:594
 msgid "Privacy"
 msgstr ""
 
-#: includes/mailer/class-mjml-template-renderer.php:307
+#: includes/mailer/class-mjml-template-renderer.php:595
 msgid "Imprint"
 msgstr ""
 
@@ -1392,36 +1913,8 @@ msgstr ""
 msgid "Could not send double opt-in message."
 msgstr ""
 
-#: templates/admin/email-branding-form.php:18
-msgid "Outer background"
-msgstr ""
-
-#: templates/admin/email-branding-form.php:19
-msgid "Content, header, footer, posts"
-msgstr ""
-
-#: templates/admin/email-branding-form.php:20
-msgid "Theme surface (optional)"
-msgstr ""
-
-#: templates/admin/email-branding-form.php:21
-msgid "Body and footer text"
-msgstr ""
-
-#: templates/admin/email-branding-form.php:22
-msgid "Buttons and links"
-msgstr ""
-
-#: templates/admin/email-branding-form.php:23
-msgid "Headings (darkest readable theme color)"
-msgstr ""
-
 #: templates/admin/email-branding-form.php:31
 msgid "Colors are applied automatically via placeholders such as {{wstp:color_body_bg}}, {{wstp:color_content_bg}}, {{wstp:color_text}} (headings), {{wstp:color_muted}} (body text), {{wstp:color_accent}}, and {{wstp:color_link}}."
-msgstr ""
-
-#: templates/admin/email-branding-form.php:34
-msgid "Colors"
 msgstr ""
 
 #: templates/admin/email-branding-form.php:37
@@ -1440,88 +1933,75 @@ msgstr ""
 msgid "Header"
 msgstr ""
 
-#: templates/admin/email-branding-form.php:78
+#: templates/admin/email-branding-form.php:77
+msgid "Optional logo for the email header. Without a logo, name and slogan are used as the default text header (also seeded into new Visual templates)."
+msgstr ""
+
+#: templates/admin/email-branding-form.php:106
 msgid "Logo"
 msgstr ""
 
-#: templates/admin/email-branding-form.php:82
-msgid "Select logo"
-msgstr ""
-
-#: templates/admin/email-branding-form.php:83
-msgid "Remove logo"
-msgstr ""
-
-#: templates/admin/email-branding-form.php:89
-msgid "Link URL"
-msgstr ""
-
-#: templates/admin/email-branding-form.php:93
-msgid "Logo alt text"
-msgstr ""
-
-#: templates/admin/email-branding-form.php:97
-msgid "Logo max width (px)"
-msgstr ""
-
-#: templates/admin/email-branding-form.php:101
-msgid "Text fallback"
-msgstr ""
-
-#: templates/admin/email-branding-form.php:104
-msgid "Used only when no logo image is set."
-msgstr ""
-
-#: templates/admin/email-branding-form.php:108
-#: templates/admin/email-branding-form.php:120
-msgid "Tagline"
-msgstr ""
-
-#: templates/admin/email-branding-form.php:113
-msgid "Footer"
-msgstr ""
-
-#: templates/admin/email-branding-form.php:116
-msgid "Name or company"
-msgstr ""
-
-#: templates/admin/email-branding-form.php:124
-msgid "Address"
-msgstr ""
-
-#: templates/admin/email-branding-form.php:128
-msgid "Phone"
-msgstr ""
-
-#: templates/admin/email-branding-form.php:132
-msgid "Primary URL"
-msgstr ""
-
-#: templates/admin/email-branding-form.php:136
-msgid "Primary label"
-msgstr ""
-
 #: templates/admin/email-branding-form.php:140
-msgid "Secondary URL"
+msgid "Used as the default heading when no logo is set."
 msgstr ""
 
 #: templates/admin/email-branding-form.php:144
-msgid "Secondary label"
+msgid "Slogan"
 msgstr ""
 
-#: templates/admin/email-branding-form.php:148
-msgid "Privacy URL"
+#: templates/admin/email-branding-form.php:147
+msgid "Optional line under the name (e.g. “since 2003”)."
 msgstr ""
 
-#: templates/admin/email-branding-form.php:152
-msgid "Imprint URL"
+#: templates/admin/email-branding-form.php:153
+msgid "Footer"
 msgstr ""
 
-#: templates/admin/email-branding-form.php:159
-msgid "Text of the unsubscribe link in the footer block."
+#: templates/admin/email-branding-form.php:156
+msgid "Name or company"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:160
+msgid "Tagline"
 msgstr ""
 
 #: templates/admin/email-branding-form.php:164
+msgid "Address"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:168
+msgid "Phone"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:172
+msgid "Primary URL"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:176
+msgid "Primary label"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:180
+msgid "Secondary URL"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:184
+msgid "Secondary label"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:188
+msgid "Privacy URL"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:192
+msgid "Imprint URL"
+msgstr ""
+
+#: templates/admin/email-branding-form.php:199
+msgid "Text of the unsubscribe link in the footer block."
+msgstr ""
+
+#: templates/admin/email-branding-form.php:204
 msgid "Save branding"
 msgstr ""
 

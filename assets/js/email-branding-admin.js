@@ -6,7 +6,10 @@
 	function getTabFromUrl() {
 		var params = new URLSearchParams( window.location.search );
 		var tab = params.get( 'tab' );
-		return tab === 'branding' ? 'branding' : 'template';
+		if ( tab === 'branding' || tab === 'visual' || tab === 'template' ) {
+			return tab;
+		}
+		return 'visual';
 	}
 
 	function initColorPickers() {
@@ -42,11 +45,15 @@
 		if ( tab === 'branding' ) {
 			initColorPickers();
 		}
+
+		if ( tab === 'visual' && typeof window.wstpMountEmailVisualEditor === 'function' ) {
+			window.wstpMountEmailVisualEditor();
+		}
 	}
 
 	$( '.nav-tab-wrapper a.nav-tab' ).on( 'click', function ( event ) {
 		event.preventDefault();
-		var tab = $( this ).data( 'tab' ) || 'template';
+		var tab = $( this ).data( 'tab' ) || 'visual';
 		var url = new URL( window.location.href );
 		url.searchParams.set( 'tab', tab );
 		window.history.replaceState( {}, '', url.toString() );

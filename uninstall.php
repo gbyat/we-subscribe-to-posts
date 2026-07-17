@@ -17,7 +17,11 @@ $option_names = array(
 	'wstp_admin_subscriber_notification_queue',
 	'wstp_digest_mjml_template',
 	'wstp_digest_html_template',
+	'wstp_digest_blocks',
+	'wstp_digest_template_source',
 	'wstp_digest_branding',
+	'wstp_digest_layout_library',
+	'wstp_digest_active_layout_id',
 );
 
 foreach ( $option_names as $option_name ) {

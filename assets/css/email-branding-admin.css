@@ -55,3 +55,30 @@
 .wstp-palette-card__swatch .iris-picker {
 	z-index: 100;
 }
+
+/* Header rich text editor on Branding tab */
+.wstp-email-branding-form .wp-editor-wrap {
+	max-width: 640px;
+}
+
+.wstp-email-branding-form .wp-editor-area {
+	min-height: 120px;
+}
+
+/* Checkerboard so transparent logos are visible without a fake white fill. */
+.wstp-header-logo-preview {
+	display: block;
+	max-width: 280px;
+	height: auto;
+	margin-top: 8px;
+	padding: 8px;
+	border: 1px solid #dcdcde;
+	background-color: transparent;
+	background-image:
+		linear-gradient(45deg, #e2e4e7 25%, transparent 25%),
+		linear-gradient(-45deg, #e2e4e7 25%, transparent 25%),
+		linear-gradient(45deg, transparent 75%, #e2e4e7 75%),
+		linear-gradient(-45deg, transparent 75%, #e2e4e7 75%);
+	background-size: 12px 12px;
+	background-position: 0 0, 0 6px, 6px -6px, -6px 0;
+}

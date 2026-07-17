@@ -301,16 +301,29 @@ final class Digest_Builder {
 	 * @return array<string,string|int>
 	 */
 	private function map_post_to_email_data( WP_Post $post ): array {
-		$featured_image_url = get_the_post_thumbnail_url( $post, 'large' );
-		$excerpt            = has_excerpt( $post ) ? get_the_excerpt( $post ) : wp_trim_words( wp_strip_all_tags( (string) $post->post_content ), 42 );
+		$featured_image_id  = (int) get_post_thumbnail_id( $post );
+		$featured_image_url = '';
+		if ( $featured_image_id > 0 ) {
+			$url = wp_get_attachment_image_url( $featured_image_id, 'large' );
+			if ( is_string( $url ) && '' !== $url ) {
+				$featured_image_url = set_url_scheme( $url );
+			}
+		}
+		if ( '' === $featured_image_url ) {
+			$url = get_the_post_thumbnail_url( $post, 'large' );
+			if ( is_string( $url ) && '' !== $url ) {
+				$featured_image_url = set_url_scheme( $url );
+			}
+		}
+		$excerpt = has_excerpt( $post ) ? get_the_excerpt( $post ) : wp_trim_words( wp_strip_all_tags( (string) $post->post_content ), 42 );
 
 		return array(
-			'id'                => (int) $post->ID,
-			'title'             => get_the_title( $post ),
-			'permalink'         => get_permalink( $post ),
-			'featured_image_id' => (int) get_post_thumbnail_id( $post ),
-			'featured_image_url'=> $featured_image_url ? $featured_image_url : '',
-			'excerpt'           => $excerpt,
+			'id'                 => (int) $post->ID,
+			'title'              => get_the_title( $post ),
+			'permalink'          => get_permalink( $post ),
+			'featured_image_id'  => $featured_image_id,
+			'featured_image_url' => $featured_image_url,
+			'excerpt'            => $excerpt,
 		);
 	}
 }

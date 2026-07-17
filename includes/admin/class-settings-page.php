@@ -770,7 +770,7 @@ final class Settings_Page
 							<th scope="row"><label for="wstp_preview_email"><?php esc_html_e('Preview recipient email', 'we-subscribe-to-posts'); ?></label></th>
 							<td>
 								<input id="wstp_preview_email" name="wstp_settings[preview_email]" type="email" class="regular-text" value="<?php echo esc_attr($preview_email); ?>" />
-								<p class="description"><?php esc_html_e('Preview mails are sent to this address.', 'we-subscribe-to-posts'); ?></p>
+								<p class="description"><?php esc_html_e('Preview digests are sent to this address (Send preview now on Digest Email Template).', 'we-subscribe-to-posts'); ?></p>
 							</td>
 							</tr>
 							<tr>
@@ -1054,16 +1054,6 @@ final class Settings_Page
 					<p><?php esc_html_e('For reliable digest delivery, set up a real server cron job that triggers WordPress cron regularly.', 'we-subscribe-to-posts'); ?></p>
 					<p><strong><?php esc_html_e('HTTP endpoint:', 'we-subscribe-to-posts'); ?></strong> <code><?php echo esc_html($cron_url); ?></code></p>
 					<p><strong><?php esc_html_e('Example interval:', 'we-subscribe-to-posts'); ?></strong> <?php esc_html_e('every 5 minutes', 'we-subscribe-to-posts'); ?></p>
-
-					<hr />
-					<h2><?php esc_html_e('Email preview', 'we-subscribe-to-posts'); ?></h2>
-					<p><?php esc_html_e('Send a preview email with the latest 3 published posts.', 'we-subscribe-to-posts'); ?></p>
-
-					<form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
-						<input type="hidden" name="action" value="wstp_send_preview" />
-						<?php wp_nonce_field('wstp_send_preview', 'wstp_preview_nonce'); ?>
-						<?php submit_button(__('Send preview now', 'we-subscribe-to-posts'), 'secondary', 'submit', false); ?>
-					</form>
 		</div>
 <?php
 	}

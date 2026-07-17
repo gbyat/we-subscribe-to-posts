@@ -99,10 +99,11 @@ final class Preview_Controller {
 	private function redirect_with_notice( string $code ): void {
 		$url = add_query_arg(
 			array(
-				'page'             => 'wstp-settings',
-				'wstp_admin_notice'=> $code,
+				'page'                 => 'wstp-email-template',
+				'tab'                  => 'visual',
+				'wstp_template_notice' => $code,
 			),
-			admin_url( 'options-general.php' )
+			admin_url( 'admin.php' )
 		);
 
 		wp_safe_redirect( $url );

@@ -19,11 +19,6 @@ final class Email_Branding {
 	public const OPTION_KEY = 'wstp_digest_branding';
 
 	/**
-	 * Email content shell width in pixels.
-	 */
-	private const CONTENT_WIDTH = 600;
-
-	/**
 	 * Theme palette slugs used by this plugin.
 	 *
 	 * @var array<int,string>
@@ -55,6 +50,7 @@ final class Email_Branding {
 				? $settings['palette_colors']
 				: array()
 		);
+		$settings = self::sync_logo_fields( $settings );
 
 		return $settings;
 	}
@@ -68,15 +64,19 @@ final class Email_Branding {
 	public static function sanitize_settings( $value ): array {
 		$input    = is_array( $value ) ? $value : array();
 		$defaults = self::get_defaults();
+		$title    = sanitize_text_field( (string) ( $input['header_title'] ?? $defaults['header_title'] ) );
+		$tagline  = sanitize_text_field( (string) ( $input['header_tagline'] ?? $defaults['header_tagline'] ) );
 
 		$settings = array(
 			'color_source'             => 'custom',
+			'header_logo_id'           => absint( $input['header_logo_id'] ?? 0 ),
 			'header_logo_url'          => esc_url_raw( (string) ( $input['header_logo_url'] ?? $defaults['header_logo_url'] ) ),
 			'header_logo_link_url'     => esc_url_raw( (string) ( $input['header_logo_link_url'] ?? $defaults['header_logo_link_url'] ) ),
 			'header_logo_alt'          => sanitize_text_field( (string) ( $input['header_logo_alt'] ?? $defaults['header_logo_alt'] ) ),
 			'header_logo_width'        => self::sanitize_logo_width( $input['header_logo_width'] ?? $defaults['header_logo_width'] ),
-			'header_title'             => sanitize_text_field( (string) ( $input['header_title'] ?? $defaults['header_title'] ) ),
-			'header_tagline'           => sanitize_text_field( (string) ( $input['header_tagline'] ?? $defaults['header_tagline'] ) ),
+			'header_html'              => self::sanitize_header_html( self::identity_to_header_html( $title, $tagline ) ),
+			'header_title'             => $title,
+			'header_tagline'           => $tagline,
 			'footer_identity'          => sanitize_text_field( (string) ( $input['footer_identity'] ?? $defaults['footer_identity'] ) ),
 			'footer_tagline'           => sanitize_text_field( (string) ( $input['footer_tagline'] ?? $defaults['footer_tagline'] ) ),
 			'footer_address'           => sanitize_textarea_field( (string) ( $input['footer_address'] ?? $defaults['footer_address'] ) ),
@@ -89,6 +89,8 @@ final class Email_Branding {
 			'footer_imprint_url'       => esc_url_raw( (string) ( $input['footer_imprint_url'] ?? $defaults['footer_imprint_url'] ) ),
 			'footer_unsubscribe_label' => sanitize_text_field( (string) ( $input['footer_unsubscribe_label'] ?? $defaults['footer_unsubscribe_label'] ) ),
 		);
+
+		$settings = self::sync_logo_fields( $settings );
 
 		$custom_colors = isset( $input['palette_colors'] ) && is_array( $input['palette_colors'] )
 			? $input['palette_colors']
@@ -239,24 +241,23 @@ final class Email_Branding {
 	/**
 	 * Wrap branding HTML in the shared email shell.
 	 *
+	 * Horizontal/vertical spacing is owned by the wrapping mj-section or visual
+	 * block padding — not by this shell — so equal paddingX yields equal content width.
+	 *
 	 * @param string $inner_html Inner markup.
-	 * @param string $region Region identifier.
+	 * @param string $region     Region identifier (header|footer|notice). Unused; kept for call-site clarity.
 	 * @return string
 	 */
-	public static function wrap_region( string $inner_html, string $region ): string {
+	public static function wrap_region( string $inner_html, string $region ): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		if ( '' === trim( $inner_html ) ) {
 			return '';
 		}
 
-		$colors  = self::get_resolved_colors();
-		$padding = 'header' === $region ? '24px 24px 12px' : ( 'notice' === $region ? '0 24px 12px' : '16px 24px 28px' );
-		$width   = (string) self::CONTENT_WIDTH;
-		$bg      = esc_attr( $colors['content_bg'] );
-
-		return '<!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:' . esc_attr( $width ) . 'px;" width="' . esc_attr( $width ) . '" bgcolor="' . $bg . '"><tr><td style="padding:' . esc_attr( $padding ) . ';text-align:center;"><![endif]-->'
-			. '<div style="background:' . $bg . ';background-color:' . $bg . ';margin:0 auto;max-width:' . esc_attr( $width ) . 'px;">'
-			. '<table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:' . $bg . ';background-color:' . $bg . ';width:100%;max-width:' . esc_attr( $width ) . 'px;">'
-			. '<tbody><tr><td style="padding:' . esc_attr( $padding ) . ';text-align:center;">'
+		// No background here — the wrapping mj-section / visual block owns section colors.
+		return '<!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;" width="100%"><tr><td style="padding:0;text-align:center;"><![endif]-->'
+			. '<div style="margin:0;width:100%;">'
+			. '<table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;background:transparent;background-color:transparent;">'
+			. '<tbody><tr><td style="padding:0;text-align:center;background:transparent;">'
 			. $inner_html
 			. '</td></tr></tbody></table></div>'
 			. '<!--[if mso | IE]></td></tr></table><![endif]-->';
@@ -271,10 +272,12 @@ final class Email_Branding {
 		return array(
 			'color_source'             => 'theme',
 			'palette_colors'           => self::fallback_palette_colors(),
+			'header_logo_id'           => 0,
 			'header_logo_url'          => '',
 			'header_logo_link_url'     => home_url( '/' ),
 			'header_logo_alt'          => '',
 			'header_logo_width'        => 280,
+			'header_html'              => '',
 			'header_title'             => '',
 			'header_tagline'           => '',
 			'footer_identity'          => '',
@@ -429,10 +432,18 @@ final class Email_Branding {
 	/**
 	 * Pull legacy branding values from wstp_settings once.
 	 *
+	 * Only runs before the branding option exists. Otherwise intentionally
+	 * cleared fields (e.g. removed logo) would be restored from legacy data.
+	 *
 	 * @param array<string,mixed> $settings Current settings.
 	 * @return array<string,mixed>
 	 */
 	private static function migrate_legacy_settings( array $settings ): array {
+		// Branding option already saved — never rehydrate cleared fields from legacy.
+		if ( false !== get_option( self::OPTION_KEY, false ) ) {
+			return self::migrate_legacy_color_fields( $settings );
+		}
+
 		$legacy = get_option( 'wstp_settings', array() );
 		if ( ! is_array( $legacy ) ) {
 			return self::migrate_legacy_color_fields( $settings );
@@ -870,6 +881,323 @@ final class Email_Branding {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Build header HTML from name + slogan (no site fallbacks).
+	 *
+	 * @param string $title   Brand name.
+	 * @param string $tagline Slogan / tagline.
+	 * @return string
+	 */
+	public static function identity_to_header_html( string $title, string $tagline ): string {
+		$title   = trim( $title );
+		$tagline = trim( $tagline );
+		if ( '' === $title && '' === $tagline ) {
+			return '';
+		}
+
+		$parts = array();
+		if ( '' !== $title ) {
+			$parts[] = '<h2>' . esc_html( $title ) . '</h2>';
+		}
+		if ( '' !== $tagline ) {
+			$parts[] = '<p>' . esc_html( $tagline ) . '</p>';
+		}
+
+		return implode( '', $parts );
+	}
+
+	/**
+	 * Resolve header text HTML when no logo.
+	 *
+	 * Prefers stored header_html; otherwise builds from name + slogan
+	 * (site name / description when branding fields are empty).
+	 *
+	 * @param array<string,mixed>|null $settings Optional settings.
+	 * @return string
+	 */
+	public static function resolve_header_text_html( ?array $settings = null ): string {
+		$settings = is_array( $settings ) ? $settings : self::get_settings();
+		$html     = isset( $settings['header_html'] ) ? trim( (string) $settings['header_html'] ) : '';
+		if ( '' !== $html ) {
+			return self::sanitize_header_html( $html );
+		}
+
+		$identity = self::resolve_header_identity( $settings );
+		return self::sanitize_header_html(
+			self::identity_to_header_html( $identity['title'], $identity['tagline'] )
+		);
+	}
+
+	/**
+	 * Name + slogan for text headers (fills from site identity when unset).
+	 *
+	 * @param array<string,mixed>|null $settings Optional settings.
+	 * @return array{title:string,tagline:string}
+	 */
+	public static function resolve_header_identity( ?array $settings = null ): array {
+		$settings = is_array( $settings ) ? $settings : self::get_settings();
+		$title    = isset( $settings['header_title'] ) ? trim( (string) $settings['header_title'] ) : '';
+		$tagline  = isset( $settings['header_tagline'] ) ? trim( (string) $settings['header_tagline'] ) : '';
+
+		if ( '' === $title ) {
+			$title = wp_specialchars_decode( (string) get_bloginfo( 'name' ), ENT_QUOTES );
+		}
+		if ( '' === $tagline ) {
+			$tagline = wp_specialchars_decode( (string) get_bloginfo( 'description' ), ENT_QUOTES );
+		}
+
+		return array(
+			'title'   => $title,
+			'tagline' => $tagline,
+		);
+	}
+
+	/**
+	 * Sanitize email-safe rich HTML for the header text.
+	 *
+	 * @param mixed $html Raw HTML.
+	 * @return string
+	 */
+	public static function sanitize_header_html( $html ): string {
+		$html = is_string( $html ) ? $html : '';
+		$html = wp_check_invalid_utf8( $html );
+
+		$allowed = array(
+			'a'      => array(
+				'href'   => true,
+				'target' => true,
+				'rel'    => true,
+				'style'  => true,
+			),
+			'strong' => array(),
+			'b'      => array(),
+			'em'     => array(),
+			'i'      => array(),
+			'u'      => array(),
+			'br'     => array(),
+			'p'      => array(
+				'style' => true,
+				'align' => true,
+			),
+			'h1'     => array(
+				'style' => true,
+				'align' => true,
+			),
+			'h2'     => array(
+				'style' => true,
+				'align' => true,
+			),
+			'h3'     => array(
+				'style' => true,
+				'align' => true,
+			),
+			'span'   => array(
+				'style' => true,
+			),
+		);
+
+		return trim( wp_kses( $html, $allowed ) );
+	}
+
+	/**
+	 * Inline email-safe styles for header rich text (headings, paragraphs, links).
+	 *
+	 * @param string $html            Sanitized HTML.
+	 * @param string $font            Font family.
+	 * @param string $text            Text color.
+	 * @param string $link            Link color.
+	 * @param string $align           left|center|right.
+	 * @param bool   $underline_links Whether links use text-decoration:underline.
+	 * @param int    $block_gap       Margin below each heading/paragraph (px), except last.
+	 * @return string
+	 */
+	public static function style_header_html_for_email( string $html, string $font, string $text, string $link, string $align = 'center', bool $underline_links = false, int $block_gap = 4 ): string {
+		$html  = self::sanitize_header_html( $html );
+		$align = in_array( $align, array( 'left', 'center', 'right' ), true ) ? $align : 'center';
+		if ( '' === $html ) {
+			return '';
+		}
+
+		$block_gap  = max( 0, min( 48, $block_gap ) );
+		$decoration = $underline_links ? 'underline' : 'none';
+		$margin     = 'margin:0 0 ' . $block_gap . 'px;';
+
+		$sizes = array(
+			'h1' => array( 28, 700, '1.25' ),
+			'h2' => array( 22, 700, '1.3' ),
+			'h3' => array( 18, 700, '1.35' ),
+			'p'  => array( 15, 400, '1.5' ),
+		);
+
+		foreach ( $sizes as $tag => $meta ) {
+			list( $size, $weight, $line ) = $meta;
+			$html                         = preg_replace_callback(
+				'/<(' . $tag . ')(\s[^>]*)?>(.*?)<\/' . $tag . '>/is',
+				static function ( array $matches ) use ( $tag, $size, $weight, $line, $font, $text, $align, $margin ): string {
+					$attrs     = isset( $matches[2] ) ? (string) $matches[2] : '';
+					$inner     = isset( $matches[3] ) ? (string) $matches[3] : '';
+					$tag_align = $align;
+					if ( preg_match( '/\balign=(["\'])(left|center|right)\1/i', $attrs, $am ) ) {
+						$tag_align = strtolower( (string) $am[2] );
+					} elseif ( preg_match( '/text-align\s*:\s*(left|center|right)/i', $attrs, $am ) ) {
+						$tag_align = strtolower( (string) $am[1] );
+					}
+					$style = $margin . 'padding:0;font-family:' . esc_attr( $font ) . ';font-size:' . (int) $size . 'px;font-weight:' . (int) $weight . ';line-height:' . esc_attr( $line ) . ';color:' . esc_attr( $text ) . ';text-align:' . esc_attr( $tag_align ) . ';';
+					return '<' . $tag . ' style="' . $style . '">' . $inner . '</' . $tag . '>';
+				},
+				$html
+			);
+			if ( ! is_string( $html ) ) {
+				return '';
+			}
+		}
+
+		// Zero margin on the last styled block so trailing gap does not inflate section padding.
+		$needle = 'margin:0 0 ' . $block_gap . 'px;';
+		$pos    = strrpos( $html, $needle );
+		if ( false !== $pos ) {
+			$html = substr_replace( $html, 'margin:0;', $pos, strlen( $needle ) );
+		}
+
+		// Bare text / inline-only fragments: wrap once.
+		if ( ! preg_match( '/<(h[1-3]|p)\b/i', $html ) ) {
+			$html = '<p style="margin:0;padding:0;font-family:' . esc_attr( $font ) . ';font-size:18px;font-weight:700;line-height:1.35;color:' . esc_attr( $text ) . ';text-align:' . esc_attr( $align ) . ';">' . $html . '</p>';
+		}
+
+		$styled = preg_replace_callback(
+			'/<a\b([^>]*)>/i',
+			static function ( array $matches ) use ( $link, $decoration ): string {
+				$attrs = isset( $matches[1] ) ? (string) $matches[1] : '';
+				$attrs = preg_replace( '/\sstyle=(["\']).*?\1/i', '', $attrs ) ?? $attrs;
+				return '<a' . $attrs . ' style="color:' . esc_attr( $link ) . ';text-decoration:' . esc_attr( $decoration ) . ';">';
+			},
+			$html
+		);
+
+		return is_string( $styled ) ? $styled : $html;
+	}
+
+	/**
+	 * Resolve the current header logo URL (prefers attachment ID so moves stay valid).
+	 *
+	 * @param array<string,mixed>|null $settings Optional settings bag.
+	 * @return string
+	 */
+	public static function resolve_logo_url( ?array $settings = null ): string {
+		$settings = is_array( $settings ) ? $settings : self::get_settings();
+		$synced   = self::sync_logo_fields( $settings );
+		return isset( $synced['header_logo_url'] ) ? (string) $synced['header_logo_url'] : '';
+	}
+
+	/**
+	 * Keep logo attachment ID and URL in sync.
+	 *
+	 * A stale attachment ID must never override a newly posted logo URL (e.g. when
+	 * the media picker updated the URL but the hidden ID field still had the old value).
+	 *
+	 * @param array<string,mixed> $settings Settings.
+	 * @return array<string,mixed>
+	 */
+	private static function sync_logo_fields( array $settings ): array {
+		$id  = isset( $settings['header_logo_id'] ) ? absint( $settings['header_logo_id'] ) : 0;
+		$url = isset( $settings['header_logo_url'] ) ? trim( (string) $settings['header_logo_url'] ) : '';
+
+		// Explicitly cleared — keep empty (do not resurrect from a stale ID).
+		if ( $id <= 0 && '' === $url ) {
+			$settings['header_logo_id']  = 0;
+			$settings['header_logo_url'] = '';
+			return $settings;
+		}
+
+		// Prefer an attachment resolved from the posted URL when it disagrees with $id.
+		if ( '' !== $url ) {
+			$url_id = attachment_url_to_postid( $url );
+			if ( $url_id > 0 && $url_id !== $id ) {
+				$id = $url_id;
+			} elseif ( $id > 0 ) {
+				$from_id = wp_get_attachment_image_url( $id, 'full' );
+				if ( is_string( $from_id ) && '' !== $from_id && ! self::logo_urls_match( $url, $from_id ) ) {
+					// URL changed but could not be mapped to an ID — trust the URL.
+					$id = 0;
+				}
+			}
+		}
+
+		if ( $id > 0 ) {
+			$from_id = wp_get_attachment_image_url( $id, 'full' );
+			if ( is_string( $from_id ) && '' !== $from_id ) {
+				$settings['header_logo_id']  = $id;
+				$settings['header_logo_url'] = $from_id;
+				return $settings;
+			}
+			$settings['header_logo_id'] = 0;
+		}
+
+		if ( '' !== $url ) {
+			$maybe_id = attachment_url_to_postid( $url );
+			if ( $maybe_id > 0 ) {
+				$settings['header_logo_id'] = $maybe_id;
+				$fresh                      = wp_get_attachment_image_url( $maybe_id, 'full' );
+				if ( is_string( $fresh ) && '' !== $fresh ) {
+					$settings['header_logo_url'] = $fresh;
+					return $settings;
+				}
+			}
+		}
+
+		$settings['header_logo_id']  = 0;
+		$settings['header_logo_url'] = '' !== $url ? esc_url_raw( $url ) : '';
+
+		return $settings;
+	}
+
+	/**
+	 * Whether two logo URLs refer to the same file (ignore size suffixes / query args).
+	 *
+	 * @param string $left Left URL.
+	 * @param string $right Right URL.
+	 * @return bool
+	 */
+	private static function logo_urls_match( string $left, string $right ): bool {
+		$normalize = static function ( string $url ): string {
+			$path = (string) wp_parse_url( $url, PHP_URL_PATH );
+			$path = rawurldecode( strtolower( $path ) );
+			// Strip WP intermediate / scaled suffixes: image-300x200.jpg, image-scaled.jpg
+			$path = preg_replace( '/-scaled(\.[a-z0-9]+)$/i', '$1', $path ) ?? $path;
+			$path = preg_replace( '/-\d+x\d+(\.[a-z0-9]+)$/i', '$1', $path ) ?? $path;
+			return untrailingslashit( $path );
+		};
+
+		return $normalize( $left ) === $normalize( $right );
+	}
+
+	/**
+	 * Logo URL for display (cache-busted when backed by an attachment).
+	 *
+	 * @param array<string,mixed>|null $settings Optional settings.
+	 * @return string
+	 */
+	public static function resolve_logo_url_for_preview( ?array $settings = null ): string {
+		$settings = is_array( $settings ) ? $settings : self::get_settings();
+		$synced   = self::sync_logo_fields( $settings );
+		$url      = isset( $synced['header_logo_url'] ) ? trim( (string) $synced['header_logo_url'] ) : '';
+		if ( '' === $url ) {
+			return '';
+		}
+
+		$id = isset( $synced['header_logo_id'] ) ? absint( $synced['header_logo_id'] ) : 0;
+		if ( $id <= 0 ) {
+			return $url;
+		}
+
+		$modified = get_post_modified_time( 'U', true, $id );
+		if ( ! is_numeric( $modified ) ) {
+			return $url;
+		}
+
+		return add_query_arg( 'wstp_ver', (string) (int) $modified, $url );
 	}
 
 	/**

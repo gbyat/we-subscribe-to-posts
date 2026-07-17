@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-07-17
+
+### Added
+
+- Visual Gutenberg email editor for digest templates (blocks → MJML).
+- Column width (%) control, Gap after spacing, and starter layouts (minimal, stacked, image-left).
+- Editable intro body with personalized greeting placeholder; German translations for the new UI.
+
+### Fixed
+
+- Outlook/column width handling (percent vs px) and mobile stacked images.
+- Footer phone `tel:` links; separator styles; duplicate color/typography inspector controls.
+- Send preview placed next to Preview HTML (Visual and MJML tabs).
+
+[1.2.1]: https://github.com/gbyat/we-subscribe-to-posts/releases/tag/v1.2.1
+
 ## [1.2.1] - 2026-07-16
 
 [1.2.0]: https://github.com/gbyat/we-subscribe-to-posts/releases/tag/v1.2.0
@@ -47,4 +63,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-[1.2.1]: https://github.com/gbyat/we-subscribe-to-posts/releases/tag/v1.2.1
+[1.3.0]: https://github.com/gbyat/we-subscribe-to-posts/releases/tag/v1.3.0

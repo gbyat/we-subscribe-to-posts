@@ -7,6 +7,7 @@
 
 namespace WSTP\Admin;
 
+use WSTP\Mailer\Block_To_Mjml;
 use WSTP\Mailer\Email_Branding;
 use WSTP\Mailer\Mjml_Template_Renderer;
 
@@ -25,6 +26,31 @@ final class Mjml_Template {
 	 * Option key for compiled HTML used when sending digests.
 	 */
 	public const OPTION_KEY_HTML = 'wstp_digest_html_template';
+
+	/**
+	 * Option key for serialized Gutenberg blocks (visual editor).
+	 */
+	public const OPTION_KEY_BLOCKS = 'wstp_digest_blocks';
+
+	/**
+	 * Option key for template editing source: visual|mjml.
+	 */
+	public const OPTION_KEY_SOURCE = 'wstp_digest_template_source';
+
+	/**
+	 * Option key for saved named visual layouts (library).
+	 */
+	public const OPTION_KEY_LAYOUTS = 'wstp_digest_layout_library';
+
+	/**
+	 * Option key for the library layout currently loaded into the active template.
+	 */
+	public const OPTION_KEY_ACTIVE_LAYOUT = 'wstp_digest_active_layout_id';
+
+	/**
+	 * Max named layouts stored in the library.
+	 */
+	private const LAYOUT_LIBRARY_MAX = 30;
 
 	/**
 	 * Default starter template slug.
@@ -51,9 +77,14 @@ final class Mjml_Template {
 		add_action( 'admin_init', array( self::class, 'maybe_install_default' ), 5 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 		add_action( 'admin_post_wstp_save_mjml_template', array( $this, 'handle_save' ) );
+		add_action( 'admin_post_wstp_save_visual_template', array( $this, 'handle_save_visual' ) );
+		add_action( 'admin_post_wstp_save_visual_as', array( $this, 'handle_save_visual_as' ) );
+		add_action( 'admin_post_wstp_load_saved_layout', array( $this, 'handle_load_saved_layout' ) );
+		add_action( 'admin_post_wstp_delete_saved_layout', array( $this, 'handle_delete_saved_layout' ) );
 		add_action( 'admin_post_wstp_save_email_branding', array( $this, 'handle_save_branding' ) );
 		add_action( 'admin_post_wstp_preview_mjml_template', array( $this, 'handle_preview' ) );
 		add_action( 'admin_post_wstp_load_mjml_starter', array( $this, 'handle_load_starter' ) );
+		add_action( 'wp_ajax_wstp_map_blocks_to_mjml', array( $this, 'ajax_map_blocks_to_mjml' ) );
 	}
 
 	/**
@@ -98,20 +129,23 @@ final class Mjml_Template {
 			WSTP_VERSION,
 			true
 		);
+		wp_enqueue_editor();
 		wp_enqueue_media();
+		$header_settings_js = WSTP_PATH . 'assets/js/email-header-settings.js';
 		wp_enqueue_script(
 			'wstp-email-header-settings',
 			WSTP_URL . 'assets/js/email-header-settings.js',
-			array( 'jquery' ),
-			WSTP_VERSION,
+			array( 'jquery', 'media-editor', 'editor' ),
+			is_readable( $header_settings_js ) ? (string) filemtime( $header_settings_js ) : WSTP_VERSION,
 			true
 		);
 		wp_localize_script(
 			'wstp-email-header-settings',
 			'wstpEmailHeaderSettings',
 			array(
-				'selectTitle'  => __( 'Select email header logo', 'we-subscribe-to-posts' ),
-				'selectButton' => __( 'Use logo', 'we-subscribe-to-posts' ),
+				'selectTitle'      => __( 'Select email header logo', 'we-subscribe-to-posts' ),
+				'selectButton'     => __( 'Use logo', 'we-subscribe-to-posts' ),
+				'mediaUnavailable' => __( 'Media library is not available. Please reload the page.', 'we-subscribe-to-posts' ),
 			)
 		);
 		wp_enqueue_style( 'wp-color-picker' );
@@ -129,6 +163,161 @@ final class Mjml_Template {
 			WSTP_VERSION,
 			true
 		);
+
+		wp_enqueue_style( 'wp-edit-blocks' );
+		wp_enqueue_style( 'wp-block-editor' );
+		wp_enqueue_style( 'wp-block-library' );
+		wp_enqueue_style( 'wp-format-library' );
+		$visual_css = WSTP_PATH . 'assets/css/email-visual-editor.css';
+		$visual_js  = WSTP_PATH . 'assets/js/email-visual-editor.js';
+		wp_enqueue_style(
+			'wstp-email-visual-editor',
+			WSTP_URL . 'assets/css/email-visual-editor.css',
+			array( 'wp-edit-blocks' ),
+			is_readable( $visual_css ) ? (string) filemtime( $visual_css ) : WSTP_VERSION
+		);
+		wp_enqueue_script(
+			'wstp-email-visual-editor',
+			WSTP_URL . 'assets/js/email-visual-editor.js',
+			array(
+				'wp-element',
+				'wp-blocks',
+				'wp-block-editor',
+				'wp-components',
+				'wp-data',
+				'wp-i18n',
+				'wp-block-library',
+				'wp-format-library',
+				'wp-keyboard-shortcuts',
+				'wp-editor',
+				'wp-hooks',
+				'wstp-mjml-browser',
+			),
+			is_readable( $visual_js ) ? (string) filemtime( $visual_js ) : WSTP_VERSION,
+			true
+		);
+		$branding_for_editor = Email_Branding::get_settings();
+		$header_identity     = Email_Branding::resolve_header_identity( $branding_for_editor );
+		wp_localize_script(
+			'wstp-email-visual-editor',
+			'wstpEmailVisualEditor',
+			array(
+				'blocks'        => self::get_blocks_template(),
+				'source'        => self::get_template_source(),
+				'mapAjaxUrl'    => admin_url( 'admin-ajax.php' ),
+				'mapNonce'      => wp_create_nonce( 'wstp_map_blocks_to_mjml' ),
+				'allowedBlocks' => self::get_allowed_visual_blocks(),
+				'palette'       => self::get_visual_editor_palette(),
+				'homeUrl'       => home_url( '/' ),
+				'branding'      => array(
+					'logoUrl'    => Email_Branding::resolve_logo_url_for_preview( $branding_for_editor ),
+					'logoAlt'    => (string) ( $branding_for_editor['header_logo_alt'] ?? '' ),
+					'logoWidth'  => (int) ( $branding_for_editor['header_logo_width'] ?? 280 ),
+					'logoLink'   => (string) ( $branding_for_editor['header_logo_link_url'] ?? home_url( '/' ) ),
+					'headerHtml' => Email_Branding::resolve_header_text_html( $branding_for_editor ),
+					'title'      => $header_identity['title'],
+					'tagline'    => $header_identity['tagline'],
+				),
+				'samplePost'    => $this->get_visual_editor_sample_post(),
+				'i18n'          => array(
+						'emailCanvas'     => __( 'Email canvas', 'we-subscribe-to-posts' ),
+						'emailCanvasHelp' => __( 'Outer email background and container for all sections.', 'we-subscribe-to-posts' ),
+						'outerBackground' => __( 'Outer background', 'we-subscribe-to-posts' ),
+						'header'          => __( 'Email header', 'we-subscribe-to-posts' ),
+						'footer'          => __( 'Email footer (from Branding)', 'we-subscribe-to-posts' ),
+						'headerHelp'      => __( 'Add a heading, text, or button — each with its own colors. Or use a logo instead.', 'we-subscribe-to-posts' ),
+						'headerPlaceholder' => __( 'Your brand', 'we-subscribe-to-posts' ),
+						'headerLogo'      => __( 'Logo (optional)', 'we-subscribe-to-posts' ),
+						'headerLogoHelp'  => __( 'Leave empty to add a heading, text, or button in the header — each with its own colors.', 'we-subscribe-to-posts' ),
+						'selectLogo'      => __( 'Select logo', 'we-subscribe-to-posts' ),
+						'replaceLogo'     => __( 'Replace logo', 'we-subscribe-to-posts' ),
+						'removeLogo'      => __( 'Remove logo', 'we-subscribe-to-posts' ),
+						'logoLink'        => __( 'Logo link URL', 'we-subscribe-to-posts' ),
+						'logoWidth'       => __( 'Logo max width (px)', 'we-subscribe-to-posts' ),
+						'logoAlt'         => __( 'Logo alt text', 'we-subscribe-to-posts' ),
+						'contentLink'     => __( 'Link URL', 'we-subscribe-to-posts' ),
+						'contentLinkHelp' => __( 'Makes the whole header text clickable. Or select text and use the link control in the toolbar.', 'we-subscribe-to-posts' ),
+						'contentLinkPrompt' => __( 'Link URL for the header text:', 'we-subscribe-to-posts' ),
+						'linkedTo'        => __( 'Links to:', 'we-subscribe-to-posts' ),
+						'underlineLinks'  => __( 'Underline links', 'we-subscribe-to-posts' ),
+						'underlineLinksHelp' => __( 'Off by default so linked brand text stays clean.', 'we-subscribe-to-posts' ),
+						'contentGap'      => __( 'Space between lines (px)', 'we-subscribe-to-posts' ),
+						'contentGapHelp'  => __( 'Gap between heading and paragraph lines inside the header.', 'we-subscribe-to-posts' ),
+						'footerHelp'      => __( 'Content comes from the Branding tab.', 'we-subscribe-to-posts' ),
+						'intro'           => __( 'Greeting & intro', 'we-subscribe-to-posts' ),
+						'introHelp'       => __( 'The greeting is personalized at send time. Edit the text below for your intro or a special announcement.', 'we-subscribe-to-posts' ),
+						'greetingLabel'   => __( 'Greeting (personalized)', 'we-subscribe-to-posts' ),
+						/* translators: %s: sample subscriber name in the visual editor. */
+						'greetingSample'  => __( 'Hi %s,', 'we-subscribe-to-posts' ),
+						'defaultPostsIntro' => __( 'Here are the latest published posts:', 'we-subscribe-to-posts' ),
+						'postsLoop'       => __( 'Posts loop', 'we-subscribe-to-posts' ),
+						'truncation'      => __( 'Truncation notice', 'we-subscribe-to-posts' ),
+						'truncationHelp'  => __( 'Appears only when the digest post limit hides extra posts. Omitted from the email when unused; spacing applies only then.', 'we-subscribe-to-posts' ),
+						'postTitle'       => __( 'Post title', 'we-subscribe-to-posts' ),
+						'postExcerpt'     => __( 'Post excerpt', 'we-subscribe-to-posts' ),
+						'postImage'       => __( 'Post image', 'we-subscribe-to-posts' ),
+						'postImageSide'   => __( 'Post image (side)', 'we-subscribe-to-posts' ),
+						'imageSettings'   => __( 'Image', 'we-subscribe-to-posts' ),
+						'postReadMore'    => __( 'Read more', 'we-subscribe-to-posts' ),
+						'spacing'         => __( 'Spacing', 'we-subscribe-to-posts' ),
+						'colors'          => __( 'Colors', 'we-subscribe-to-posts' ),
+						'separatorColor'  => __( 'Line color', 'we-subscribe-to-posts' ),
+						'separatorSpacingHelp' => __( 'Add top padding so the line does not sit against the button above.', 'we-subscribe-to-posts' ),
+						'borders'         => __( 'Borders', 'we-subscribe-to-posts' ),
+						'borderTop'       => __( 'Top (px)', 'we-subscribe-to-posts' ),
+						'borderRight'     => __( 'Right (px)', 'we-subscribe-to-posts' ),
+						'borderBottom'    => __( 'Bottom (px)', 'we-subscribe-to-posts' ),
+						'borderLeft'      => __( 'Left (px)', 'we-subscribe-to-posts' ),
+						'borderColor'     => __( 'Border color', 'we-subscribe-to-posts' ),
+						'typography'      => __( 'Typography', 'we-subscribe-to-posts' ),
+						'background'      => __( 'Background', 'we-subscribe-to-posts' ),
+						'textColor'       => __( 'Text', 'we-subscribe-to-posts' ),
+						'mutedColor'      => __( 'Secondary text', 'we-subscribe-to-posts' ),
+						'linkColor'       => __( 'Links', 'we-subscribe-to-posts' ),
+						'fontSize'        => __( 'Font size (px)', 'we-subscribe-to-posts' ),
+						'fontFamily'      => __( 'Font', 'we-subscribe-to-posts' ),
+						'emailFontHelp'   => __( 'Email-safe font stack (Outlook and most clients).', 'we-subscribe-to-posts' ),
+						'align'           => __( 'Align', 'we-subscribe-to-posts' ),
+						'alignLeft'       => __( 'Left', 'we-subscribe-to-posts' ),
+						'alignCenter'     => __( 'Center', 'we-subscribe-to-posts' ),
+						'alignRight'      => __( 'Right', 'we-subscribe-to-posts' ),
+						'widthPercent'    => __( 'Width (% of column)', 'we-subscribe-to-posts' ),
+						'widthPercentHelp'=> __( 'Percent of the column. Compiled to pixels for Outlook (column % × this % × 600px). On mobile the column stacks to full width.', 'we-subscribe-to-posts' ),
+						'columnWidth'     => __( 'Column width (%)', 'we-subscribe-to-posts' ),
+						'columnWidthHelp' => __( 'Share of the email width (600px). Example: 34% ≈ 204px in Outlook. Prefer this over dragging — drag can store pixel widths.', 'we-subscribe-to-posts' ),
+						'listView'        => __( 'List view', 'we-subscribe-to-posts' ),
+						'listViewUnavailable' => __( 'List view is not available in this WordPress version.', 'we-subscribe-to-posts' ),
+						'gapAfter'        => __( 'Gap after (px)', 'we-subscribe-to-posts' ),
+						'gapAfterHelp'    => __( 'Space below this field in the email. Shown in the editor canvas as you change it.', 'we-subscribe-to-posts' ),
+						'borderRadius'    => __( 'Border radius (px)', 'we-subscribe-to-posts' ),
+						'paddingTop'      => __( 'Padding top (px)', 'we-subscribe-to-posts' ),
+						'paddingBottom'   => __( 'Padding bottom (px)', 'we-subscribe-to-posts' ),
+						'paddingX'        => __( 'Padding left/right (px)', 'we-subscribe-to-posts' ),
+						'columnSpacing'   => __( 'Column spacing', 'we-subscribe-to-posts' ),
+						'columnGap'       => __( 'Gap between columns (px)', 'we-subscribe-to-posts' ),
+						'columnGapHelp'   => __( 'Horizontal when columns sit side by side; vertical when stacked on mobile.', 'we-subscribe-to-posts' ),
+						'buttonStyle'     => __( 'Button style', 'we-subscribe-to-posts' ),
+						'readMoreStyle'   => __( 'Style', 'we-subscribe-to-posts' ),
+						'styleButton'     => __( 'Button', 'we-subscribe-to-posts' ),
+						'styleLink'       => __( 'Link', 'we-subscribe-to-posts' ),
+						'addBlock'        => __( 'Add block', 'we-subscribe-to-posts' ),
+						'bodyPlaceholder' => __( 'Add email content…', 'we-subscribe-to-posts' ),
+						'editorHint'      => __( 'In the Header, add a heading, text, or button. Open the Styles tab (circle icon) for colors and spacing on each block.', 'we-subscribe-to-posts' ),
+						'customParagraph' => __( 'Custom text', 'we-subscribe-to-posts' ),
+						'customHeading'   => __( 'Custom heading', 'we-subscribe-to-posts' ),
+						'customTextHelp'  => __( 'Your own static copy in the digest (links, bold, and italic are supported).', 'we-subscribe-to-posts' ),
+						'blockSettings'   => __( 'Block', 'we-subscribe-to-posts' ),
+						'sampleTitle'     => __( 'Sample post title', 'we-subscribe-to-posts' ),
+						'sampleExcerpt'   => __( 'Short excerpt of the post…', 'we-subscribe-to-posts' ),
+						'readMore'        => __( 'Read more', 'we-subscribe-to-posts' ),
+						'mapFailed'       => __( 'Could not convert blocks to MJML.', 'we-subscribe-to-posts' ),
+						'compileFail'     => __( 'MJML compilation failed.', 'we-subscribe-to-posts' ),
+						'saveAsPrompt'    => __( 'Name for this layout:', 'we-subscribe-to-posts' ),
+						'saveAsDefault'   => __( 'My layout', 'we-subscribe-to-posts' ),
+						'saveAsEmpty'     => __( 'Please enter a layout name.', 'we-subscribe-to-posts' ),
+					),
+				)
+			);
 	}
 
 	/**
@@ -180,6 +369,16 @@ final class Mjml_Template {
 				update_option( self::OPTION_KEY_MJML, $starter_mjml, false );
 			}
 		}
+
+		$blocks = get_option( self::OPTION_KEY_BLOCKS, '' );
+		if ( ! is_string( $blocks ) || '' === trim( $blocks ) ) {
+			update_option( self::OPTION_KEY_BLOCKS, Block_To_Mjml::default_blocks_for_layout( self::DEFAULT_STARTER ), false );
+		}
+
+		$source = get_option( self::OPTION_KEY_SOURCE, '' );
+		if ( ! is_string( $source ) || ! in_array( $source, array( 'visual', 'mjml' ), true ) ) {
+			update_option( self::OPTION_KEY_SOURCE, 'visual', false );
+		}
 	}
 
 	/**
@@ -202,8 +401,111 @@ final class Mjml_Template {
 
 		update_option( self::OPTION_KEY_MJML, $mjml, false );
 		update_option( self::OPTION_KEY_HTML, $html, false );
+		update_option( self::OPTION_KEY_BLOCKS, Block_To_Mjml::default_blocks_for_layout( $starter_id ), false );
+		update_option( self::OPTION_KEY_SOURCE, 'visual', false );
+		delete_option( self::OPTION_KEY_ACTIVE_LAYOUT );
 
 		return true;
+	}
+
+	/**
+	 * Get serialized blocks for the visual editor.
+	 *
+	 * @return string
+	 */
+	public static function get_blocks_template(): string {
+		$stored = get_option( self::OPTION_KEY_BLOCKS, '' );
+		if ( is_string( $stored ) && '' !== trim( $stored ) ) {
+			return Block_To_Mjml::hydrate_header_block_from_branding( $stored );
+		}
+
+		return Block_To_Mjml::default_blocks_for_layout( self::DEFAULT_STARTER );
+	}
+
+	/**
+	 * Get active template source.
+	 *
+	 * @return string visual|mjml
+	 */
+	public static function get_template_source(): string {
+		$source = get_option( self::OPTION_KEY_SOURCE, 'visual' );
+		return in_array( $source, array( 'visual', 'mjml' ), true ) ? $source : 'visual';
+	}
+
+	/**
+	 * Default admin tab.
+	 *
+	 * @return string
+	 */
+	public static function get_default_tab(): string {
+		return 'visual' === self::get_template_source() ? 'visual' : 'template';
+	}
+
+	/**
+	 * Allowed block names for the visual email editor.
+	 *
+	 * @return array<int,string>
+	 */
+	public static function get_allowed_visual_blocks(): array {
+		return array(
+			'wstp/email-shell',
+			'wstp/email-header',
+			'wstp/email-footer',
+			'wstp/intro',
+			'wstp/truncation-notice',
+			'wstp/posts-loop',
+			'wstp/post-title',
+			'wstp/post-excerpt',
+			'wstp/post-image',
+			'wstp/post-image-side',
+			'wstp/post-read-more',
+			'core/paragraph',
+			'core/heading',
+			'core/image',
+			'core/buttons',
+			'core/button',
+			'core/columns',
+			'core/column',
+			'core/separator',
+		);
+	}
+
+	/**
+	 * Color palette for the visual editor (branding palette — unique hex values).
+	 *
+	 * @return array<int,array{slug:string,name:string,color:string}>
+	 */
+	public static function get_visual_editor_palette(): array {
+		$settings = Email_Branding::get_settings();
+		$colors   = isset( $settings['palette_colors'] ) && is_array( $settings['palette_colors'] )
+			? $settings['palette_colors']
+			: array();
+
+		$labels = array(
+			'base'         => __( 'Outer background', 'we-subscribe-to-posts' ),
+			'base-two'     => __( 'Content, header, footer, posts', 'we-subscribe-to-posts' ),
+			'base-three'   => __( 'Theme surface (optional)', 'we-subscribe-to-posts' ),
+			'accent'       => __( 'Body and footer text', 'we-subscribe-to-posts' ),
+			'accent-two'   => __( 'Buttons and links', 'we-subscribe-to-posts' ),
+			'accent-three' => __( 'Headings (darkest readable theme color)', 'we-subscribe-to-posts' ),
+		);
+
+		$order   = array( 'base', 'base-two', 'base-three', 'accent', 'accent-two', 'accent-three' );
+		$palette = array();
+
+		foreach ( $order as $slug ) {
+			$hex = isset( $colors[ $slug ] ) ? (string) $colors[ $slug ] : '';
+			if ( '' === $hex ) {
+				continue;
+			}
+			$palette[] = array(
+				'slug'  => $slug,
+				'name'  => $labels[ $slug ] ?? $slug,
+				'color' => $hex,
+			);
+		}
+
+		return $palette;
 	}
 
 	/**
@@ -290,7 +592,7 @@ final class Mjml_Template {
 			),
 			array(
 				'token'       => '{{wstp:posts_intro}}',
-				'description' => __( 'Intro line above the post list', 'we-subscribe-to-posts' ),
+				'description' => __( 'Legacy intro line (MJML starters / empty Visual intro). Prefer editing intro text in the Visual tab.', 'we-subscribe-to-posts' ),
 			),
 			array(
 				'token'       => '{{wstp:posts_loop}} ... {{/wstp:posts_loop}}',
@@ -386,29 +688,171 @@ final class Mjml_Template {
 		}
 
 		self::ensure_branding_option();
+		self::maybe_install_default();
 
 		$template        = self::get_template();
 		$notice          = isset( $_GET['wstp_template_notice'] ) ? sanitize_key( wp_unslash( $_GET['wstp_template_notice'] ) ) : '';
-		$active_tab      = isset( $_GET['tab'] ) && 'branding' === sanitize_key( wp_unslash( $_GET['tab'] ) ) ? 'branding' : 'template';
+		$requested_tab   = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : self::get_default_tab();
+		$active_tab      = in_array( $requested_tab, array( 'visual', 'template', 'branding' ), true ) ? $requested_tab : self::get_default_tab();
 		$starters        = self::get_starters();
+		$saved_layouts   = self::get_layout_library();
+		$active_layout   = self::get_active_layout_id();
 		$branding        = Email_Branding::get_settings();
 		$resolved_colors = Email_Branding::get_resolved_colors();
 		$theme_palette   = Email_Branding::get_theme_palette_preview();
+		$template_source = self::get_template_source();
 		$base_url        = add_query_arg( 'page', self::MENU_SLUG, admin_url( 'admin.php' ) );
+		$active_layout_name = '';
+		if ( '' !== $active_layout ) {
+			foreach ( $saved_layouts as $layout_row ) {
+				if ( (string) ( $layout_row['id'] ?? '' ) === $active_layout ) {
+					$active_layout_name = (string) ( $layout_row['name'] ?? '' );
+					break;
+				}
+			}
+		}
 		?>
 		<div class="wrap">
 			<h1><?php esc_html_e( 'Digest Email Template', 'we-subscribe-to-posts' ); ?></h1>
 
 			<?php $this->render_admin_notice( $notice ); ?>
+			<?php $this->render_send_preview_form(); ?>
 
 			<nav class="nav-tab-wrapper wp-clearfix" style="margin-bottom:20px;">
+				<a href="<?php echo esc_url( add_query_arg( 'tab', 'visual', $base_url ) ); ?>" class="nav-tab <?php echo 'visual' === $active_tab ? 'nav-tab-active' : ''; ?>" data-tab="visual">
+					<?php esc_html_e( 'Visual', 'we-subscribe-to-posts' ); ?>
+				</a>
 				<a href="<?php echo esc_url( add_query_arg( 'tab', 'template', $base_url ) ); ?>" class="nav-tab <?php echo 'template' === $active_tab ? 'nav-tab-active' : ''; ?>" data-tab="template">
-					<?php esc_html_e( 'Template', 'we-subscribe-to-posts' ); ?>
+					<?php esc_html_e( 'MJML', 'we-subscribe-to-posts' ); ?>
 				</a>
 				<a href="<?php echo esc_url( add_query_arg( 'tab', 'branding', $base_url ) ); ?>" class="nav-tab <?php echo 'branding' === $active_tab ? 'nav-tab-active' : ''; ?>" data-tab="branding">
 					<?php esc_html_e( 'Branding', 'we-subscribe-to-posts' ); ?>
 				</a>
 			</nav>
+
+			<div class="wstp-template-tab-panel" data-tab="visual" style="<?php echo 'visual' !== $active_tab ? 'display:none;' : ''; ?>">
+				<?php if ( 'mjml' === $template_source ) : ?>
+					<div class="notice notice-warning inline"><p><?php esc_html_e( 'The template was last saved from the MJML tab. Saving Visual will regenerate MJML from blocks and overwrite advanced MJML edits.', 'we-subscribe-to-posts' ); ?></p></div>
+				<?php endif; ?>
+
+				<p class="description"><?php esc_html_e( 'Compose the digest from placeholder blocks (header, intro, posts loop fields, truncation, footer). Use Save as… to keep named copies while you try different layouts. Digests always use the currently saved active template.', 'we-subscribe-to-posts' ); ?></p>
+
+				<?php if ( '' !== $active_layout_name ) : ?>
+					<p class="description" style="margin-top:0;">
+						<?php esc_html_e( 'Editing saved layout:', 'we-subscribe-to-posts' ); ?>
+						<strong><?php echo esc_html( $active_layout_name ); ?></strong>
+					</p>
+				<?php endif; ?>
+
+				<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" id="wstp-visual-save-form">
+					<input type="hidden" name="action" value="wstp_save_visual_template" />
+					<input type="hidden" name="wstp_blocks_template" id="wstp-blocks-template" value="" />
+					<input type="hidden" name="wstp_mjml_template" id="wstp-visual-mjml-template" value="" />
+					<input type="hidden" name="wstp_html_template" id="wstp-visual-html-template" value="" />
+					<?php wp_nonce_field( 'wstp_save_visual_template', 'wstp_visual_template_nonce' ); ?>
+
+					<div id="wstp-email-visual-root" class="wstp-email-visual-root"></div>
+					<p id="wstp-visual-compile-error" class="notice notice-error inline" style="display:none;margin-top:12px;"></p>
+					<p class="submit" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+						<?php submit_button( __( 'Save visual template', 'we-subscribe-to-posts' ), 'primary', 'wstp_save_visual', false ); ?>
+						<button type="button" class="button" id="wstp-save-visual-as">
+							<?php esc_html_e( 'Save as…', 'we-subscribe-to-posts' ); ?>
+						</button>
+						<button type="button" class="button" id="wstp-preview-visual">
+							<?php esc_html_e( 'Preview HTML', 'we-subscribe-to-posts' ); ?>
+						</button>
+						<?php $this->render_send_preview_button(); ?>
+					</p>
+				</form>
+
+				<form id="wstp-visual-save-as-form" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" style="display:none;">
+					<input type="hidden" name="action" value="wstp_save_visual_as" />
+					<input type="hidden" name="wstp_layout_name" id="wstp-save-as-name" value="" />
+					<input type="hidden" name="wstp_blocks_template" id="wstp-save-as-blocks" value="" />
+					<input type="hidden" name="wstp_mjml_template" id="wstp-save-as-mjml" value="" />
+					<input type="hidden" name="wstp_html_template" id="wstp-save-as-html" value="" />
+					<?php wp_nonce_field( 'wstp_save_visual_as', 'wstp_save_visual_as_nonce' ); ?>
+				</form>
+
+				<form id="wstp-visual-preview-form" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php?action=wstp_preview_mjml_template' ) ); ?>" target="_blank" style="display:none;">
+					<?php wp_nonce_field( 'wstp_preview_mjml_template', 'wstp_mjml_preview_nonce' ); ?>
+					<input type="hidden" name="wstp_html_template" id="wstp-visual-preview-input" value="" />
+				</form>
+
+				<hr />
+				<h2><?php esc_html_e( 'My layouts', 'we-subscribe-to-posts' ); ?></h2>
+				<p class="description"><?php esc_html_e( 'Named copies of your visual work. Load one to continue editing it; digests use whatever is currently saved as the active template.', 'we-subscribe-to-posts' ); ?></p>
+				<?php if ( empty( $saved_layouts ) ) : ?>
+					<p class="description"><?php esc_html_e( 'No saved layouts yet. Use Save as… to keep a copy before trying another starter.', 'we-subscribe-to-posts' ); ?></p>
+				<?php else : ?>
+					<table class="widefat striped" style="max-width:720px;">
+						<thead>
+							<tr>
+								<th><?php esc_html_e( 'Name', 'we-subscribe-to-posts' ); ?></th>
+								<th><?php esc_html_e( 'Updated', 'we-subscribe-to-posts' ); ?></th>
+								<th><?php esc_html_e( 'Actions', 'we-subscribe-to-posts' ); ?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php foreach ( $saved_layouts as $layout_row ) : ?>
+								<?php
+								$layout_id   = (string) ( $layout_row['id'] ?? '' );
+								$layout_name = (string) ( $layout_row['name'] ?? '' );
+								$updated_at  = isset( $layout_row['updated'] ) ? (int) $layout_row['updated'] : 0;
+								$is_active   = $layout_id === $active_layout;
+								?>
+								<tr>
+									<td>
+										<strong><?php echo esc_html( $layout_name ); ?></strong>
+										<?php if ( $is_active ) : ?>
+											<span class="description"> — <?php esc_html_e( 'loaded', 'we-subscribe-to-posts' ); ?></span>
+										<?php endif; ?>
+									</td>
+									<td>
+										<?php
+										echo $updated_at > 0
+											? esc_html( (string) wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $updated_at ) )
+											: '—';
+										?>
+									</td>
+									<td style="white-space:nowrap;">
+										<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" style="display:inline;">
+											<input type="hidden" name="action" value="wstp_load_saved_layout" />
+											<input type="hidden" name="wstp_layout_id" value="<?php echo esc_attr( $layout_id ); ?>" />
+											<?php wp_nonce_field( 'wstp_load_saved_layout', 'wstp_load_saved_layout_nonce' ); ?>
+											<?php submit_button( __( 'Load', 'we-subscribe-to-posts' ), 'secondary', 'submit', false ); ?>
+										</form>
+										<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" style="display:inline;margin-left:4px;" onsubmit="return confirm('<?php echo esc_js( __( 'Delete this saved layout?', 'we-subscribe-to-posts' ) ); ?>');">
+											<input type="hidden" name="action" value="wstp_delete_saved_layout" />
+											<input type="hidden" name="wstp_layout_id" value="<?php echo esc_attr( $layout_id ); ?>" />
+											<?php wp_nonce_field( 'wstp_delete_saved_layout', 'wstp_delete_saved_layout_nonce' ); ?>
+											<?php submit_button( __( 'Delete', 'we-subscribe-to-posts' ), 'delete', 'submit', false ); ?>
+										</form>
+									</td>
+								</tr>
+							<?php endforeach; ?>
+						</tbody>
+					</table>
+				<?php endif; ?>
+
+				<hr />
+				<h2><?php esc_html_e( 'Starter templates', 'we-subscribe-to-posts' ); ?></h2>
+				<p class="description"><?php esc_html_e( 'Starters replace the active template. Save as… first if you want to keep your current work.', 'we-subscribe-to-posts' ); ?></p>
+				<div style="display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(220px,1fr));">
+					<?php foreach ( $starters as $starter ) : ?>
+						<div class="card" style="padding:16px;">
+							<h3 style="margin-top:0;"><?php echo esc_html( $starter['label'] ); ?></h3>
+							<p><?php echo esc_html( $starter['description'] ); ?></p>
+							<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" onsubmit="return confirm('<?php echo esc_js( __( 'Replace the current active template with this starter? Use Save as… first if you want to keep your work.', 'we-subscribe-to-posts' ) ); ?>');">
+								<input type="hidden" name="action" value="wstp_load_mjml_starter" />
+								<input type="hidden" name="wstp_starter_id" value="<?php echo esc_attr( $starter['id'] ); ?>" />
+								<?php wp_nonce_field( 'wstp_load_mjml_starter', 'wstp_mjml_starter_nonce' ); ?>
+								<?php submit_button( __( 'Use this starter', 'we-subscribe-to-posts' ), 'secondary', 'submit', false ); ?>
+							</form>
+						</div>
+					<?php endforeach; ?>
+				</div>
+			</div>
 
 			<div class="wstp-template-tab-panel" data-tab="template" style="<?php echo 'template' !== $active_tab ? 'display:none;' : ''; ?>">
 			<p>
@@ -416,7 +860,7 @@ final class Mjml_Template {
 				echo wp_kses_post(
 					sprintf(
 						/* translators: %s: external MJML editor URL. */
-						__( 'Design your email with <a href="%s" target="_blank" rel="noopener noreferrer">MJML</a>, paste the source here, and save. MJML is compiled in your browser; sent digests use the stored HTML and need no Node.js on the server.', 'we-subscribe-to-posts' ),
+						__( 'Advanced: edit MJML directly. Design with <a href="%s" target="_blank" rel="noopener noreferrer">MJML</a>, paste the source here, and save. Compiled HTML is used when sending digests.', 'we-subscribe-to-posts' ),
 						'https://mjml.io/try-it-live'
 					)
 				);
@@ -440,6 +884,7 @@ final class Mjml_Template {
 							<button type="button" class="button" id="wstp-preview-mjml">
 								<?php esc_html_e( 'Preview HTML', 'we-subscribe-to-posts' ); ?>
 							</button>
+							<?php $this->render_send_preview_button(); ?>
 						</p>
 					</form>
 
@@ -447,24 +892,6 @@ final class Mjml_Template {
 						<?php wp_nonce_field( 'wstp_preview_mjml_template', 'wstp_mjml_preview_nonce' ); ?>
 						<input type="hidden" name="wstp_html_template" id="wstp-mjml-preview-input" value="" />
 					</form>
-
-					<hr />
-
-					<h2><?php esc_html_e( 'Starter templates', 'we-subscribe-to-posts' ); ?></h2>
-					<div style="display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(220px,1fr));">
-						<?php foreach ( $starters as $starter ) : ?>
-							<div class="card" style="padding:16px;">
-								<h3 style="margin-top:0;"><?php echo esc_html( $starter['label'] ); ?></h3>
-								<p><?php echo esc_html( $starter['description'] ); ?></p>
-								<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" onsubmit="return confirm('<?php echo esc_js( __( 'Replace the current template with this starter?', 'we-subscribe-to-posts' ) ); ?>');">
-									<input type="hidden" name="action" value="wstp_load_mjml_starter" />
-									<input type="hidden" name="wstp_starter_id" value="<?php echo esc_attr( $starter['id'] ); ?>" />
-									<?php wp_nonce_field( 'wstp_load_mjml_starter', 'wstp_mjml_starter_nonce' ); ?>
-									<?php submit_button( __( 'Use this starter', 'we-subscribe-to-posts' ), 'secondary', 'submit', false ); ?>
-								</form>
-							</div>
-						<?php endforeach; ?>
-					</div>
 
 			<h2><?php esc_html_e( 'Placeholders', 'we-subscribe-to-posts' ); ?></h2>
 			<table class="widefat striped">
@@ -509,8 +936,158 @@ final class Mjml_Template {
 
 		update_option( self::OPTION_KEY_MJML, $template, false );
 		update_option( self::OPTION_KEY_HTML, $html, false );
+		update_option( self::OPTION_KEY_SOURCE, 'mjml', false );
 
 		$this->redirect_with_notice( 'saved', 'template' );
+	}
+
+	/**
+	 * Save visual (blocks) template handler.
+	 *
+	 * @return void
+	 */
+	public function handle_save_visual(): void {
+		$this->assert_admin_post( 'wstp_save_visual_template', 'wstp_visual_template_nonce' );
+
+		$blocks = isset( $_POST['wstp_blocks_template'] ) ? $this->sanitize_template( wp_unslash( $_POST['wstp_blocks_template'] ) ) : '';
+		$mjml   = isset( $_POST['wstp_mjml_template'] ) ? $this->sanitize_template( wp_unslash( $_POST['wstp_mjml_template'] ) ) : '';
+		$html   = isset( $_POST['wstp_html_template'] ) ? $this->sanitize_template( wp_unslash( $_POST['wstp_html_template'] ) ) : '';
+
+		if ( '' === trim( $blocks ) ) {
+			$blocks = Block_To_Mjml::default_blocks_for_layout( self::DEFAULT_STARTER );
+		}
+
+		if ( '' === trim( $mjml ) ) {
+			$mjml = Block_To_Mjml::convert( $blocks );
+		}
+
+		if ( '' === trim( $html ) ) {
+			$this->redirect_with_notice( 'compile_required', 'visual' );
+		}
+
+		update_option( self::OPTION_KEY_BLOCKS, $blocks, false );
+		update_option( self::OPTION_KEY_MJML, $mjml, false );
+		update_option( self::OPTION_KEY_HTML, $html, false );
+		update_option( self::OPTION_KEY_SOURCE, 'visual', false );
+
+		$active_id = self::get_active_layout_id();
+		if ( '' !== $active_id ) {
+			self::upsert_layout(
+				$active_id,
+				self::get_layout_name( $active_id ),
+				$blocks,
+				$mjml,
+				$html
+			);
+		}
+
+		$this->redirect_with_notice( 'visual_saved', 'visual' );
+	}
+
+	/**
+	 * Save current visual template as a named layout in the library.
+	 *
+	 * @return void
+	 */
+	public function handle_save_visual_as(): void {
+		$this->assert_admin_post( 'wstp_save_visual_as', 'wstp_save_visual_as_nonce' );
+
+		$name   = isset( $_POST['wstp_layout_name'] ) ? sanitize_text_field( wp_unslash( $_POST['wstp_layout_name'] ) ) : '';
+		$blocks = isset( $_POST['wstp_blocks_template'] ) ? $this->sanitize_template( wp_unslash( $_POST['wstp_blocks_template'] ) ) : '';
+		$mjml   = isset( $_POST['wstp_mjml_template'] ) ? $this->sanitize_template( wp_unslash( $_POST['wstp_mjml_template'] ) ) : '';
+		$html   = isset( $_POST['wstp_html_template'] ) ? $this->sanitize_template( wp_unslash( $_POST['wstp_html_template'] ) ) : '';
+
+		if ( '' === $name ) {
+			$this->redirect_with_notice( 'layout_name_required', 'visual' );
+		}
+
+		if ( '' === trim( $blocks ) ) {
+			$blocks = Block_To_Mjml::default_blocks_for_layout( self::DEFAULT_STARTER );
+		}
+		if ( '' === trim( $mjml ) ) {
+			$mjml = Block_To_Mjml::convert( $blocks );
+		}
+		if ( '' === trim( $html ) ) {
+			$this->redirect_with_notice( 'compile_required', 'visual' );
+		}
+
+		$layout_id = self::create_layout_id();
+		$saved     = self::upsert_layout( $layout_id, $name, $blocks, $mjml, $html );
+		if ( ! $saved ) {
+			$this->redirect_with_notice( 'layout_limit', 'visual' );
+		}
+
+		update_option( self::OPTION_KEY_BLOCKS, $blocks, false );
+		update_option( self::OPTION_KEY_MJML, $mjml, false );
+		update_option( self::OPTION_KEY_HTML, $html, false );
+		update_option( self::OPTION_KEY_SOURCE, 'visual', false );
+		update_option( self::OPTION_KEY_ACTIVE_LAYOUT, $layout_id, false );
+
+		$this->redirect_with_notice( 'layout_saved_as', 'visual' );
+	}
+
+	/**
+	 * Load a named layout into the active template.
+	 *
+	 * @return void
+	 */
+	public function handle_load_saved_layout(): void {
+		$this->assert_admin_post( 'wstp_load_saved_layout', 'wstp_load_saved_layout_nonce' );
+
+		$layout_id = isset( $_POST['wstp_layout_id'] ) ? sanitize_key( wp_unslash( $_POST['wstp_layout_id'] ) ) : '';
+		$layout    = self::get_layout( $layout_id );
+		if ( null === $layout ) {
+			$this->redirect_with_notice( 'layout_missing', 'visual' );
+		}
+
+		update_option( self::OPTION_KEY_BLOCKS, (string) $layout['blocks'], false );
+		update_option( self::OPTION_KEY_MJML, (string) $layout['mjml'], false );
+		update_option( self::OPTION_KEY_HTML, (string) $layout['html'], false );
+		update_option( self::OPTION_KEY_SOURCE, 'visual', false );
+		update_option( self::OPTION_KEY_ACTIVE_LAYOUT, $layout_id, false );
+
+		$this->redirect_with_notice( 'layout_loaded', 'visual' );
+	}
+
+	/**
+	 * Delete a named layout from the library.
+	 *
+	 * @return void
+	 */
+	public function handle_delete_saved_layout(): void {
+		$this->assert_admin_post( 'wstp_delete_saved_layout', 'wstp_delete_saved_layout_nonce' );
+
+		$layout_id = isset( $_POST['wstp_layout_id'] ) ? sanitize_key( wp_unslash( $_POST['wstp_layout_id'] ) ) : '';
+		if ( '' === $layout_id || ! self::delete_layout( $layout_id ) ) {
+			$this->redirect_with_notice( 'layout_missing', 'visual' );
+		}
+
+		if ( self::get_active_layout_id() === $layout_id ) {
+			delete_option( self::OPTION_KEY_ACTIVE_LAYOUT );
+		}
+
+		$this->redirect_with_notice( 'layout_deleted', 'visual' );
+	}
+
+	/**
+	 * AJAX: map serialized blocks to MJML.
+	 *
+	 * @return void
+	 */
+	public function ajax_map_blocks_to_mjml(): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You are not allowed to do this.', 'we-subscribe-to-posts' ) ), 403 );
+		}
+
+		check_ajax_referer( 'wstp_map_blocks_to_mjml', 'nonce' );
+
+		$blocks = isset( $_POST['blocks'] ) ? $this->sanitize_template( wp_unslash( $_POST['blocks'] ) ) : '';
+		if ( '' === trim( $blocks ) ) {
+			wp_send_json_error( array( 'message' => __( 'No blocks provided.', 'we-subscribe-to-posts' ) ), 400 );
+		}
+
+		$mjml = Block_To_Mjml::convert( $blocks );
+		wp_send_json_success( array( 'mjml' => $mjml ) );
 	}
 
 	/**
@@ -568,7 +1145,7 @@ final class Mjml_Template {
 			$this->redirect_with_notice( 'starter_missing' );
 		}
 
-		$this->redirect_with_notice( 'starter_loaded', 'template' );
+		$this->redirect_with_notice( 'starter_loaded', 'visual' );
 	}
 
 	/**
@@ -598,35 +1175,41 @@ final class Mjml_Template {
 	}
 
 	/**
+	 * Sample post data for the visual editor canvas (titles/images).
+	 *
+	 * @return array<string,string>
+	 */
+	private function get_visual_editor_sample_post(): array {
+		$posts = $this->get_preview_posts( 1 );
+		$post  = isset( $posts[0] ) && is_array( $posts[0] ) ? $posts[0] : array();
+
+		$title = isset( $post['title'] ) ? (string) $post['title'] : __( 'Sample post title', 'we-subscribe-to-posts' );
+		$excerpt = isset( $post['excerpt'] ) ? (string) $post['excerpt'] : __( 'Short excerpt of the post…', 'we-subscribe-to-posts' );
+		$excerpt = wp_specialchars_decode( $excerpt, ENT_QUOTES );
+		$excerpt = html_entity_decode( $excerpt, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+
+		$image = isset( $post['featured_image_url'] ) ? trim( (string) $post['featured_image_url'] ) : '';
+		if ( '' === $image ) {
+			$image = self::preview_placeholder_image_url();
+		}
+
+		return array(
+			'title'   => $title,
+			'excerpt' => $excerpt,
+			'image'   => $image,
+			'name'    => wp_get_current_user()->display_name
+				? wp_get_current_user()->display_name
+				: __( 'Alex', 'we-subscribe-to-posts' ),
+		);
+	}
+
+	/**
 	 * Build sample preview context.
 	 *
 	 * @return array<string,mixed>
 	 */
 	private function get_preview_context(): array {
-		$posts = array();
-		$query = new \WP_Query(
-			array(
-				'post_type'      => 'post',
-				'post_status'    => 'publish',
-				'posts_per_page' => 3,
-				'orderby'        => 'date',
-				'order'          => 'DESC',
-			)
-		);
-
-		foreach ( $query->posts as $post ) {
-			if ( ! $post instanceof \WP_Post ) {
-				continue;
-			}
-			$image = get_the_post_thumbnail_url( $post, 'large' );
-			$posts[] = array(
-				'id'                 => (int) $post->ID,
-				'title'              => get_the_title( $post ),
-				'permalink'          => get_permalink( $post ),
-				'featured_image_url' => $image ? $image : '',
-				'excerpt'            => has_excerpt( $post ) ? get_the_excerpt( $post ) : wp_trim_words( wp_strip_all_tags( (string) $post->post_content ), 42 ),
-			);
-		}
+		$posts = $this->get_preview_posts( 3 );
 
 		return array(
 			'greeting_name'      => wp_get_current_user()->display_name ? wp_get_current_user()->display_name : 'Preview',
@@ -634,6 +1217,133 @@ final class Mjml_Template {
 			'posts_truncated_by' => 0,
 			'unsubscribe_url'    => home_url( '/' ),
 		);
+	}
+
+	/**
+	 * Latest posts for HTML preview — prefer posts that have a featured image.
+	 *
+	 * @param int $limit Max posts.
+	 * @return array<int,array<string,mixed>>
+	 */
+	private function get_preview_posts( int $limit = 3 ): array {
+		$limit = max( 1, min( 10, $limit ) );
+		$posts = array();
+		$seen  = array();
+
+		$queries = array(
+			array(
+				'post_type'      => 'post',
+				'post_status'    => 'publish',
+				'posts_per_page' => $limit,
+				'orderby'        => 'date',
+				'order'          => 'DESC',
+				'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Admin preview only.
+					array(
+						'key'     => '_thumbnail_id',
+						'compare' => 'EXISTS',
+					),
+				),
+			),
+			array(
+				'post_type'      => 'post',
+				'post_status'    => 'publish',
+				'posts_per_page' => $limit,
+				'orderby'        => 'date',
+				'order'          => 'DESC',
+			),
+		);
+
+		foreach ( $queries as $args ) {
+			if ( count( $posts ) >= $limit ) {
+				break;
+			}
+			$query = new \WP_Query( $args );
+			foreach ( $query->posts as $post ) {
+				if ( ! $post instanceof \WP_Post || isset( $seen[ $post->ID ] ) ) {
+					continue;
+				}
+				$seen[ $post->ID ] = true;
+				$posts[]           = $this->map_preview_post( $post );
+				if ( count( $posts ) >= $limit ) {
+					break;
+				}
+			}
+			wp_reset_postdata();
+		}
+
+		if ( empty( $posts ) ) {
+			$posts[] = array(
+				'id'                 => 0,
+				'title'              => __( 'Sample post title', 'we-subscribe-to-posts' ),
+				'permalink'          => home_url( '/' ),
+				'featured_image_url' => self::preview_placeholder_image_url(),
+				'excerpt'            => __( 'Short excerpt of the post…', 'we-subscribe-to-posts' ),
+			);
+		}
+
+		return $posts;
+	}
+
+	/**
+	 * Map a WP_Post to preview digest row data.
+	 *
+	 * @param \WP_Post $post Post.
+	 * @return array<string,mixed>
+	 */
+	private function map_preview_post( \WP_Post $post ): array {
+		$image   = self::resolve_preview_featured_image_url( $post );
+		$excerpt = has_excerpt( $post ) ? get_the_excerpt( $post ) : wp_trim_words( wp_strip_all_tags( (string) $post->post_content ), 42 );
+		$excerpt = wp_specialchars_decode( (string) $excerpt, ENT_QUOTES );
+		$excerpt = html_entity_decode( $excerpt, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+
+		return array(
+			'id'                 => (int) $post->ID,
+			'title'              => get_the_title( $post ),
+			'permalink'          => get_permalink( $post ),
+			'featured_image_id'  => (int) get_post_thumbnail_id( $post ),
+			'featured_image_url' => $image,
+			'excerpt'            => $excerpt,
+		);
+	}
+
+	/**
+	 * Absolute featured image URL for preview, with placeholder fallback.
+	 *
+	 * @param \WP_Post $post Post.
+	 * @return string
+	 */
+	private static function resolve_preview_featured_image_url( \WP_Post $post ): string {
+		$thumb_id = (int) get_post_thumbnail_id( $post );
+		if ( $thumb_id > 0 ) {
+			foreach ( array( 'large', 'medium_large', 'medium', 'full' ) as $size ) {
+				$url = wp_get_attachment_image_url( $thumb_id, $size );
+				if ( is_string( $url ) && '' !== $url ) {
+					return esc_url_raw( set_url_scheme( $url ) );
+				}
+			}
+		}
+
+		$url = get_the_post_thumbnail_url( $post, 'large' );
+		if ( is_string( $url ) && '' !== $url ) {
+			return esc_url_raw( set_url_scheme( $url ) );
+		}
+
+		return self::preview_placeholder_image_url();
+	}
+
+	/**
+	 * Neutral placeholder used when a preview post has no featured image.
+	 *
+	 * Prefer PNG over SVG so HTML email previews render reliably.
+	 *
+	 * @return string
+	 */
+	private static function preview_placeholder_image_url(): string {
+		$png = WSTP_PATH . 'assets/images/preview-post.png';
+		if ( is_readable( $png ) ) {
+			return esc_url_raw( set_url_scheme( WSTP_URL . 'assets/images/preview-post.png' ) );
+		}
+		return esc_url_raw( set_url_scheme( WSTP_URL . 'assets/images/preview-post.svg' ) );
 	}
 
 	/**
@@ -656,6 +1366,179 @@ final class Mjml_Template {
 	private static function sanitize_starter_id( string $starter_id ): string {
 		$starter_id = sanitize_key( $starter_id );
 		return isset( self::get_starters()[ $starter_id ] ) ? $starter_id : '';
+	}
+
+	/**
+	 * Saved named layouts (newest first).
+	 *
+	 * @return array<int,array{id:string,name:string,blocks:string,mjml:string,html:string,updated:int}>
+	 */
+	public static function get_layout_library(): array {
+		$raw = get_option( self::OPTION_KEY_LAYOUTS, array() );
+		if ( ! is_array( $raw ) ) {
+			return array();
+		}
+
+		$out = array();
+		foreach ( $raw as $row ) {
+			if ( ! is_array( $row ) ) {
+				continue;
+			}
+			$id = isset( $row['id'] ) ? sanitize_key( (string) $row['id'] ) : '';
+			if ( '' === $id ) {
+				continue;
+			}
+			$out[] = array(
+				'id'      => $id,
+				'name'    => sanitize_text_field( (string) ( $row['name'] ?? '' ) ),
+				'blocks'  => is_string( $row['blocks'] ?? null ) ? (string) $row['blocks'] : '',
+				'mjml'    => is_string( $row['mjml'] ?? null ) ? (string) $row['mjml'] : '',
+				'html'    => is_string( $row['html'] ?? null ) ? (string) $row['html'] : '',
+				'updated' => isset( $row['updated'] ) ? (int) $row['updated'] : 0,
+			);
+		}
+
+		usort(
+			$out,
+			static function ( array $a, array $b ): int {
+				return (int) $b['updated'] <=> (int) $a['updated'];
+			}
+		);
+
+		return $out;
+	}
+
+	/**
+	 * Active library layout id (empty when not linked).
+	 *
+	 * @return string
+	 */
+	public static function get_active_layout_id(): string {
+		$id = get_option( self::OPTION_KEY_ACTIVE_LAYOUT, '' );
+		return is_string( $id ) ? sanitize_key( $id ) : '';
+	}
+
+	/**
+	 * Get one layout by id.
+	 *
+	 * @param string $layout_id Layout id.
+	 * @return array{id:string,name:string,blocks:string,mjml:string,html:string,updated:int}|null
+	 */
+	public static function get_layout( string $layout_id ): ?array {
+		$layout_id = sanitize_key( $layout_id );
+		if ( '' === $layout_id ) {
+			return null;
+		}
+		foreach ( self::get_layout_library() as $row ) {
+			if ( $row['id'] === $layout_id ) {
+				return $row;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Display name for a layout id.
+	 *
+	 * @param string $layout_id Layout id.
+	 * @return string
+	 */
+	public static function get_layout_name( string $layout_id ): string {
+		$layout = self::get_layout( $layout_id );
+		if ( null === $layout ) {
+			return __( 'Untitled layout', 'we-subscribe-to-posts' );
+		}
+		$name = trim( $layout['name'] );
+		return '' !== $name ? $name : __( 'Untitled layout', 'we-subscribe-to-posts' );
+	}
+
+	/**
+	 * Create a unique layout id.
+	 *
+	 * @return string
+	 */
+	private static function create_layout_id(): string {
+		return 'layout_' . substr( md5( uniqid( (string) wp_rand(), true ) ), 0, 12 );
+	}
+
+	/**
+	 * Insert or update a layout in the library.
+	 *
+	 * @param string $layout_id Layout id.
+	 * @param string $name      Display name.
+	 * @param string $blocks    Block markup.
+	 * @param string $mjml      MJML source.
+	 * @param string $html      Compiled HTML.
+	 * @return bool False when library is full and id is new.
+	 */
+	private static function upsert_layout( string $layout_id, string $name, string $blocks, string $mjml, string $html ): bool {
+		$layout_id = sanitize_key( $layout_id );
+		$name      = sanitize_text_field( $name );
+		if ( '' === $layout_id ) {
+			return false;
+		}
+		if ( '' === $name ) {
+			$name = __( 'Untitled layout', 'we-subscribe-to-posts' );
+		}
+
+		$library = self::get_layout_library();
+		$found   = false;
+		foreach ( $library as $index => $row ) {
+			if ( $row['id'] === $layout_id ) {
+				$library[ $index ] = array(
+					'id'      => $layout_id,
+					'name'    => $name,
+					'blocks'  => $blocks,
+					'mjml'    => $mjml,
+					'html'    => $html,
+					'updated' => time(),
+				);
+				$found = true;
+				break;
+			}
+		}
+
+		if ( ! $found ) {
+			if ( count( $library ) >= self::LAYOUT_LIBRARY_MAX ) {
+				return false;
+			}
+			$library[] = array(
+				'id'      => $layout_id,
+				'name'    => $name,
+				'blocks'  => $blocks,
+				'mjml'    => $mjml,
+				'html'    => $html,
+				'updated' => time(),
+			);
+		}
+
+		update_option( self::OPTION_KEY_LAYOUTS, array_values( $library ), false );
+		return true;
+	}
+
+	/**
+	 * Remove a layout from the library.
+	 *
+	 * @param string $layout_id Layout id.
+	 * @return bool
+	 */
+	private static function delete_layout( string $layout_id ): bool {
+		$layout_id = sanitize_key( $layout_id );
+		$library   = self::get_layout_library();
+		$next      = array();
+		$removed   = false;
+		foreach ( $library as $row ) {
+			if ( $row['id'] === $layout_id ) {
+				$removed = true;
+				continue;
+			}
+			$next[] = $row;
+		}
+		if ( ! $removed ) {
+			return false;
+		}
+		update_option( self::OPTION_KEY_LAYOUTS, $next, false );
+		return true;
 	}
 
 	/**
@@ -683,7 +1566,9 @@ final class Mjml_Template {
 	 * @return void
 	 */
 	private function redirect_with_notice( string $code, string $tab = 'template' ): void {
-		$tab = 'branding' === $tab ? 'branding' : 'template';
+		if ( ! in_array( $tab, array( 'visual', 'template', 'branding' ), true ) ) {
+			$tab = 'template';
+		}
 
 		wp_safe_redirect(
 			add_query_arg(
@@ -699,6 +1584,46 @@ final class Mjml_Template {
 	}
 
 	/**
+	 * Hidden form for “Send preview now” (shared; buttons use form="…").
+	 *
+	 * @return void
+	 */
+	private function render_send_preview_form(): void {
+		?>
+		<form id="wstp-send-preview-form" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" style="display:none;">
+			<input type="hidden" name="action" value="wstp_send_preview" />
+			<?php wp_nonce_field( 'wstp_send_preview', 'wstp_preview_nonce' ); ?>
+		</form>
+		<?php
+	}
+
+	/**
+	 * Send-preview control next to HTML preview (recipient from general settings).
+	 *
+	 * @return void
+	 */
+	private function render_send_preview_button(): void {
+		$settings = get_option( 'wstp_settings', array() );
+		if ( ! is_array( $settings ) ) {
+			$settings = array();
+		}
+		$preview_email = isset( $settings['preview_email'] ) && is_email( (string) $settings['preview_email'] )
+			? (string) $settings['preview_email']
+			: (string) get_option( 'admin_email' );
+
+		$title = sprintf(
+			/* translators: %s: preview recipient email */
+			__( 'Send a preview digest to %s (latest 3 posts)', 'we-subscribe-to-posts' ),
+			$preview_email
+		);
+		?>
+		<button type="submit" class="button" form="wstp-send-preview-form" title="<?php echo esc_attr( $title ); ?>">
+			<?php esc_html_e( 'Send preview now', 'we-subscribe-to-posts' ); ?>
+		</button>
+		<?php
+	}
+
+	/**
 	 * Render admin notice by code.
 	 *
 	 * @param string $code Notice code.
@@ -710,11 +1635,21 @@ final class Mjml_Template {
 		}
 
 		$messages = array(
-			'saved'            => array( 'success', __( 'MJML template saved and compiled HTML updated.', 'we-subscribe-to-posts' ) ),
-			'branding_saved'   => array( 'success', __( 'Email branding saved.', 'we-subscribe-to-posts' ) ),
-			'starter_loaded'   => array( 'success', __( 'Starter template loaded.', 'we-subscribe-to-posts' ) ),
-			'starter_missing'  => array( 'error', __( 'Starter template could not be loaded.', 'we-subscribe-to-posts' ) ),
-			'compile_required' => array( 'error', __( 'Compiled HTML is missing. Save again from the template screen so MJML can compile in your browser.', 'we-subscribe-to-posts' ) ),
+			'saved'                 => array( 'success', __( 'MJML template saved and compiled HTML updated.', 'we-subscribe-to-posts' ) ),
+			'visual_saved'          => array( 'success', __( 'Visual template saved and compiled HTML updated.', 'we-subscribe-to-posts' ) ),
+			'layout_saved_as'       => array( 'success', __( 'Layout saved to My layouts and set as active.', 'we-subscribe-to-posts' ) ),
+			'layout_loaded'         => array( 'success', __( 'Saved layout loaded into the editor.', 'we-subscribe-to-posts' ) ),
+			'layout_deleted'        => array( 'success', __( 'Saved layout deleted.', 'we-subscribe-to-posts' ) ),
+			'layout_missing'        => array( 'error', __( 'Saved layout could not be found.', 'we-subscribe-to-posts' ) ),
+			'layout_name_required'  => array( 'error', __( 'Please enter a name for Save as…', 'we-subscribe-to-posts' ) ),
+			'layout_limit'          => array( 'error', __( 'Layout library is full. Delete an old layout first.', 'we-subscribe-to-posts' ) ),
+			'branding_saved'        => array( 'success', __( 'Email branding saved.', 'we-subscribe-to-posts' ) ),
+			'starter_loaded'        => array( 'success', __( 'Starter template loaded.', 'we-subscribe-to-posts' ) ),
+			'starter_missing'       => array( 'error', __( 'Starter template could not be loaded.', 'we-subscribe-to-posts' ) ),
+			'compile_required'      => array( 'error', __( 'Compiled HTML is missing. Save again so MJML can compile in your browser.', 'we-subscribe-to-posts' ) ),
+			'preview_sent'          => array( 'success', __( 'Preview email sent successfully.', 'we-subscribe-to-posts' ) ),
+			'preview_failed'        => array( 'error', __( 'Preview email could not be sent.', 'we-subscribe-to-posts' ) ),
+			'preview_invalid_email' => array( 'error', __( 'Preview recipient email is invalid. Set it under Post Subscriptions → Settings.', 'we-subscribe-to-posts' ) ),
 		);
 
 		if ( ! isset( $messages[ $code ] ) ) {
