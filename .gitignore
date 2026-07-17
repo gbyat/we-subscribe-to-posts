@@ -14,3 +14,4 @@ TASK-LOG.md
 # Composer / PHP tool caches
 .phpcs-cache
 .phpunit.result.cache
+composer.phar
