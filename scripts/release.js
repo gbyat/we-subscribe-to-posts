@@ -84,13 +84,19 @@ try {
 		process.exit(1);
 	}
 
+	const previousVersion = JSON.parse(
+		fs.readFileSync(path.join(rootDir, 'package.json'), 'utf8')
+	).version;
+
 	run(npmCommand, ['version', releaseType, '--no-git-tag-version']);
 	run('node', ['scripts/sync-version.js']);
+
+	const version = JSON.parse(fs.readFileSync(path.join(rootDir, 'package.json'), 'utf8')).version;
+	run('node', ['scripts/promote-changelog.js', version, previousVersion]);
 
 	runOptional(npmCommand, ['run', 'pot'], 'POT generation');
 	runOptional(npmCommand, ['run', 'json'], 'JSON translation generation');
 
-	const version = JSON.parse(fs.readFileSync(path.join(rootDir, 'package.json'), 'utf8')).version;
 	const tag = `v${version}`;
 
 	const existingTag = runQuiet('git', ['tag', '-l', tag]);

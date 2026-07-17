@@ -5,7 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- Rebuilt German `.mo` from the complete `.po` catalog.
+- Unified translator comment for the personalized greeting string (`Hi %s,`).
+
 ## [1.3.2] - 2026-07-17
+
+### Changed
+
+- Adopted WordPress Coding Standards 3.4 (WordPress-Extra); PHPCS reports 0 errors / 0 warnings.
+- Pinned PHPCS / WPCS and committed `composer.lock` for reproducible lint installs.
+
+### Fixed
+
+- Prepared SQL placeholders and related database query lint issues.
+- Nonce / capability documentation and security-oriented PHPCS findings across admin and mailer code.
+
+### Documentation
+
+- README and `readme.txt` updated for the visual email editor and WPCS 3.4 baseline.
 
 [1.3.1]: https://github.com/gbyat/we-subscribe-to-posts/releases/tag/v1.3.1
 
@@ -78,7 +99,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.1] - 2026-06-03
 
 - Initial development.
-
-## [Unreleased]
-
-[1.3.2]: https://github.com/gbyat/we-subscribe-to-posts/releases/tag/v1.3.2

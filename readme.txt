@@ -55,6 +55,13 @@ Yes. In the posts loop, the Post excerpt block has a word-count setting.
 
 == Changelog ==
 
+= 1.3.2 =
+
+* WordPress Coding Standards 3.4 baseline; PHPCS clean (0 errors / 0 warnings)
+* Committed `composer.lock`; pinned PHPCS / WPCS
+* Prepared SQL and security-related lint fixes
+* README / readme.txt updates for visual editor and WPCS
+
 = 1.3.1 =
 
 * Post meta block (date and/or author) in the posts loop
