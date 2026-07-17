@@ -247,7 +247,7 @@ final class Mjml_Template {
 					'intro'                => __( 'Greeting & intro', 'we-subscribe-to-posts' ),
 					'introHelp'            => __( 'The greeting is personalized at send time. Add paragraph or heading blocks below for an optional intro or announcement.', 'we-subscribe-to-posts' ),
 					'greetingLabel'        => __( 'Greeting (personalized)', 'we-subscribe-to-posts' ),
-					/* translators: %s: sample subscriber name in the visual editor. */
+					/* translators: %s: subscriber name. */
 					'greetingSample'       => __( 'Hi %s,', 'we-subscribe-to-posts' ),
 					'postsLoop'            => __( 'Posts loop', 'we-subscribe-to-posts' ),
 					'truncation'           => __( 'Truncation notice', 'we-subscribe-to-posts' ),
