@@ -266,10 +266,14 @@
 	 * @param {Function} setAttributes Block setAttributes.
 	 * @param {string}   value         left|center|right.
 	 */
-	function setTextAlignAttributes( setAttributes, value ) {
+	function setTextAlignAttributes( setAttributes, value, blockName ) {
 		var next = value === 'center' || value === 'right' ? value : 'left';
-		// Heading uses textAlign; paragraph still accepts align. Set both for MJML.
-		setAttributes( { textAlign: next, align: next } );
+		if ( blockName === 'core/paragraph' ) {
+			setAttributes( { align: next, textAlign: next } );
+			return;
+		}
+		// Headings use textAlign only — a leftover `align` can break block validation.
+		setAttributes( { textAlign: next } );
 	}
 
 	function paletteColors() {
@@ -490,7 +494,7 @@
 										{ label: i18n.alignRight || 'Right', value: 'right' },
 									],
 									onChange: function ( value ) {
-										setTextAlignAttributes( setAttributes, value );
+										setTextAlignAttributes( setAttributes, value, props.name || 'core/paragraph' );
 									},
 							  } )
 							: null,
@@ -1282,6 +1286,7 @@
 	function TextAlignToolbar( props ) {
 		var align = resolveTextAlign( props.attributes );
 		var setAttributes = props.setAttributes;
+		var blockName = props.name;
 		if ( AlignmentToolbar ) {
 			return el(
 				BlockControls,
@@ -1289,7 +1294,7 @@
 				el( AlignmentToolbar, {
 					value: align,
 					onChange: function ( next ) {
-						setTextAlignAttributes( setAttributes, next || 'left' );
+						setTextAlignAttributes( setAttributes, next || 'left', blockName );
 					},
 				} )
 			);
@@ -1304,7 +1309,7 @@
 					el( AlignmentControl, {
 						value: align,
 						onChange: function ( next ) {
-							setTextAlignAttributes( setAttributes, next || 'left' );
+							setTextAlignAttributes( setAttributes, next || 'left', blockName );
 						},
 					} )
 				)
@@ -1772,25 +1777,7 @@
 									},
 								} )
 							)
-						),
-						// Tint the preview line so the choice is visible in the canvas.
-						el( 'style', {
-							dangerouslySetInnerHTML: {
-								__html:
-									'.block-editor-block-list__block[data-block="' +
-									props.clientId +
-									'"] .wp-block-separator{border-color:' +
-									color +
-									'!important;color:' +
-									color +
-									'!important;}' +
-									'.block-editor-block-list__block[data-block="' +
-									props.clientId +
-									'"] .wp-block-separator.is-style-dots:before{color:' +
-									color +
-									'!important;background-image:none!important;}',
-							},
-						} )
+						)
 					);
 				};
 			}
@@ -1806,6 +1793,7 @@
 						return el( BlockListBlock, props );
 					}
 					var attrs = props.attributes || ( props.block && props.block.attributes ) || {};
+					var lineColor = storeToColor( attrs.wstpColor, storeToColor( 'accent', '#94a3b8' ) );
 					var wrapperProps = Object.assign( {}, props.wrapperProps || {}, {
 						className: [
 							( props.wrapperProps && props.wrapperProps.className ) || '',
@@ -1816,7 +1804,12 @@
 						style: Object.assign(
 							{},
 							( props.wrapperProps && props.wrapperProps.style ) || {},
-							previewPad( attrs )
+							previewPad( attrs ),
+							{
+								// Line is drawn via CSS ::after using currentColor.
+								color: lineColor,
+								backgroundColor: 'transparent',
+							}
 						),
 					} );
 					return el( BlockListBlock, Object.assign( {}, props, { wrapperProps: wrapperProps } ) );
@@ -1938,7 +1931,7 @@
 											{ label: i18n.alignRight || 'Right', value: 'right' },
 										],
 										onChange: function ( value ) {
-											setTextAlignAttributes( props.setAttributes, value );
+											setTextAlignAttributes( props.setAttributes, value, props.name );
 										},
 									} )
 								)
@@ -1948,8 +1941,8 @@
 					if ( props.name !== 'core/paragraph' && props.name !== 'core/heading' ) {
 						return el( BlockEdit, props );
 					}
-					// Native Color + Typography (font size). Alignment is explicit:
-					// the standalone email canvas often omits core's text-align toolbar.
+					// Native Color + Typography (font size). Alignment: toolbar only
+					// (sidebar SelectControl would duplicate the BlockControls control).
 					return el(
 						Fragment,
 						null,
@@ -1964,7 +1957,7 @@
 									showColors: false,
 									showText: false,
 									showFont: true,
-									showAlign: true,
+									showAlign: false,
 									showFontSize: false,
 								} )
 							)
@@ -2426,8 +2419,167 @@
 		);
 	}
 
+	/**
+	 * Pull inner HTML from a heading/paragraph originalContent string.
+	 *
+	 * @param {string} html Raw element HTML.
+	 * @param {string} tag  Tag name (h2, p, …).
+	 * @return {string} Inner HTML.
+	 */
+	function extractTagInnerHtml( html, tag ) {
+		var re = new RegExp( '<' + tag + '[^>]*>([\\s\\S]*?)<\\/' + tag + '>', 'i' );
+		var match = String( html || '' ).match( re );
+		return match ? match[1] : '';
+	}
+
+	/**
+	 * Email-only attrs safe to keep on core text blocks (do not affect save HTML).
+	 *
+	 * @param {Object} attrs Block attributes.
+	 * @return {Object}
+	 */
+	function emailOnlyTextAttrs( attrs ) {
+		attrs = attrs || {};
+		var out = {
+			paddingTop: typeof attrs.paddingTop === 'number' ? attrs.paddingTop : 0,
+			paddingBottom: typeof attrs.paddingBottom === 'number' ? attrs.paddingBottom : 0,
+			paddingX: typeof attrs.paddingX === 'number' ? attrs.paddingX : 0,
+			fontFamily: attrs.fontFamily || DEFAULT_EMAIL_FONT,
+		};
+		[ 'borderTop', 'borderRight', 'borderBottom', 'borderLeft' ].forEach( function ( key ) {
+			if ( typeof attrs[ key ] === 'number' && attrs[ key ] > 0 ) {
+				out[ key ] = attrs[ key ];
+			}
+		} );
+		if ( attrs.borderColor ) {
+			out.borderColor = attrs.borderColor;
+		}
+		return out;
+	}
+
+	/**
+	 * Recreate core/heading or core/paragraph via createBlock so validation always passes.
+	 * Drops heading `align` and numeric `fontSize` seeds that diverge from core save HTML.
+	 * Keeps native textColor/backgroundColor — createBlock emits matching markup.
+	 *
+	 * @param {Object} block Parsed block.
+	 * @return {Object} Fresh block.
+	 */
+	function recreateEmailFreeTextBlock( block ) {
+		var attrs = block.attributes || {};
+		var raw = block.originalContent || '';
+		var align = resolveTextAlign( attrs );
+		var emailAttrs = emailOnlyTextAttrs( attrs );
+
+		if ( attrs.textColor ) {
+			emailAttrs.textColor = attrs.textColor;
+		}
+		if ( attrs.backgroundColor ) {
+			emailAttrs.backgroundColor = attrs.backgroundColor;
+		}
+		if ( attrs.style && typeof attrs.style === 'object' ) {
+			var styleOut = {};
+			if ( attrs.style.color && typeof attrs.style.color === 'object' ) {
+				styleOut.color = attrs.style.color;
+			}
+			if ( attrs.style.typography && typeof attrs.style.typography === 'object' ) {
+				styleOut.typography = attrs.style.typography;
+			}
+			if ( Object.keys( styleOut ).length ) {
+				emailAttrs.style = styleOut;
+			}
+		}
+
+		if ( block.name === 'core/heading' ) {
+			var level = attrs.level || 2;
+			var headingContent = attrs.content;
+			if ( ! headingContent && raw ) {
+				headingContent = extractTagInnerHtml( raw, 'h' + level );
+			}
+			if ( ! headingContent && raw ) {
+				headingContent = extractTagInnerHtml( raw, 'h2' );
+			}
+			return createBlock(
+				'core/heading',
+				Object.assign(
+					{
+						level: level,
+						content: headingContent || '',
+						textAlign: align,
+					},
+					emailAttrs
+				)
+			);
+		}
+
+		var paraContent = attrs.content;
+		if ( ! paraContent && raw ) {
+			paraContent = extractTagInnerHtml( raw, 'p' );
+		}
+		return createBlock(
+			'core/paragraph',
+			Object.assign(
+				{
+					content: paraContent || '',
+					align: align,
+				},
+				emailAttrs
+			)
+		);
+	}
+
+	/**
+	 * Walk the tree and recreate every core heading/paragraph (fixes invalid header seeds).
+	 *
+	 * @param {Array} blocks Block list.
+	 * @return {Array}
+	 */
+	function recoverEmailFreeTextTree( blocks ) {
+		if ( ! Array.isArray( blocks ) ) {
+			return blocks;
+		}
+		return blocks.map( function ( block ) {
+			var inner = recoverEmailFreeTextTree( block.innerBlocks || [] );
+			var next = block;
+			if ( block.name === 'core/heading' || block.name === 'core/paragraph' ) {
+				next = recreateEmailFreeTextBlock( block );
+			}
+			return Object.assign( {}, next, { innerBlocks: inner } );
+		} );
+	}
+
+	/**
+	 * Ensure free-text filters run before core blocks are registered, and re-register
+	 * heading/paragraph when our email attrs were missing (script load order).
+	 *
+	 * @return {void}
+	 */
+	function ensureCoreTextBlocksForEmail() {
+		registerFreeTextBlocks();
+		if ( ! wp.blocks || typeof wp.blocks.getBlockType !== 'function' ) {
+			return;
+		}
+		var needsReregister = false;
+		[ 'core/heading', 'core/paragraph' ].forEach( function ( name ) {
+			var type = wp.blocks.getBlockType( name );
+			if ( type && ! ( type.attributes && type.attributes.paddingTop ) ) {
+				needsReregister = true;
+				if ( typeof wp.blocks.unregisterBlockType === 'function' ) {
+					wp.blocks.unregisterBlockType( name );
+				}
+			}
+		} );
+		if (
+			needsReregister &&
+			wp.blockLibrary &&
+			typeof wp.blockLibrary.registerCoreBlocks === 'function'
+		) {
+			wp.blockLibrary.registerCoreBlocks();
+		}
+	}
+
 	function EmailVisualEditor() {
-		var initial = parse( config.blocks || '' );
+		var initial = recoverEmailFreeTextTree( parse( config.blocks || '' ) );
 		var state = useState( initial );
 		var blocks = state[ 0 ];
 		var setBlocks = state[ 1 ];
@@ -2523,9 +2675,15 @@
 			return;
 		}
 
+		registerHideEmailAdvancedFields();
+		registerColumnSpacing();
+		registerSeparatorColor();
+		ensureCoreTextBlocksForEmail();
 		registerEmailBlocks();
 		if ( wp.blockLibrary && typeof wp.blockLibrary.registerCoreBlocks === 'function' ) {
 			wp.blockLibrary.registerCoreBlocks();
+			// Filters must apply to core text blocks — re-run if they loaded first.
+			ensureCoreTextBlocksForEmail();
 		}
 
 		rootEl.setAttribute( 'data-wstp-mounted', '1' );

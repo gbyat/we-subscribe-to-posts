@@ -205,10 +205,10 @@ final class Block_To_Mjml {
 	}
 
 	/**
-	 * Repair core heading/paragraph blocks so attrs match save() HTML.
+	 * Light cleanup of legacy seed attrs on core heading/paragraph.
 	 *
-	 * Older seeds stored textColor/fontSize/content on headings while the HTML
-	 * only had has-text-align-*, which Gutenberg marks as invalid on parse.
+	 * Does not remove textColor, backgroundColor, or style (user design settings).
+	 * Client-side recreate keeps blocks valid in the editor.
 	 *
 	 * @param string $blocks Serialized blocks.
 	 * @return string
@@ -328,92 +328,39 @@ final class Block_To_Mjml {
 	/**
 	 * Normalize one core heading/paragraph so Gutenberg validation succeeds.
 	 *
+	 * Only strips legacy seed bugs (content attr, heading `align`, numeric fontSize).
+	 * Never removes textColor / backgroundColor / style — those are user settings.
+	 *
 	 * @param array<string,mixed> $block Block.
 	 * @return array<string,mixed>
 	 */
 	private static function normalize_email_core_text_block( array $block ): array {
 		$name  = isset( $block['blockName'] ) ? (string) $block['blockName'] : '';
 		$attrs = isset( $block['attrs'] ) && is_array( $block['attrs'] ) ? $block['attrs'] : array();
-		$inner = isset( $block['innerHTML'] ) ? (string) $block['innerHTML'] : '';
+		$dirty = false;
 
-		$pad_top    = isset( $attrs['paddingTop'] ) ? max( 0, (int) $attrs['paddingTop'] ) : 0;
-		$pad_bottom = isset( $attrs['paddingBottom'] ) ? max( 0, (int) $attrs['paddingBottom'] ) : 0;
-		$pad_x      = isset( $attrs['paddingX'] ) ? max( 0, (int) $attrs['paddingX'] ) : 0;
-		$font       = isset( $attrs['fontFamily'] ) ? (string) $attrs['fontFamily'] : '';
-
-		$needs_strip = isset( $attrs['textColor'] )
-			|| isset( $attrs['backgroundColor'] )
-			|| isset( $attrs['fontSize'] )
-			|| isset( $attrs['content'] )
-			|| isset( $attrs['style'] );
-
-		if ( 'core/heading' === $name ) {
-			$level = 2;
-			$html  = $inner;
-			if ( preg_match( '/<h([1-6])([^>]*)>(.*?)<\/h\1>/is', $inner, $m ) ) {
-				$level = (int) $m[1];
-				$html  = (string) $m[3];
-			} elseif ( ! empty( $attrs['content'] ) ) {
-				$html = (string) $attrs['content'];
-			}
-
-			$align = 'left';
-			if ( ! empty( $attrs['textAlign'] ) ) {
-				$align = self::align_attr( (string) $attrs['textAlign'] );
-			} elseif ( preg_match( '/has-text-align-(left|center|right)/', $inner, $am ) ) {
-				$align = (string) $am[1];
-			}
-
-			$has_bad_align = isset( $attrs['align'] );
-			if ( ! $needs_strip && ! $has_bad_align ) {
-				return $block;
-			}
-
-			$fixed = self::make_email_heading_block( $html, $level, $align, $pad_top, $pad_bottom );
-			if ( $pad_x > 0 ) {
-				$fixed['attrs']['paddingX'] = $pad_x;
-			}
-			if ( '' !== $font ) {
-				$fixed['attrs']['fontFamily'] = $font;
-			}
-			self::copy_email_border_attrs( $attrs, $fixed['attrs'] );
-			return $fixed;
+		if ( isset( $attrs['content'] ) ) {
+			unset( $attrs['content'] );
+			$dirty = true;
 		}
 
-		if ( 'core/paragraph' !== $name ) {
+		// Old seeds used a custom numeric fontSize; native typography uses style or a slug.
+		if ( isset( $attrs['fontSize'] ) && is_numeric( $attrs['fontSize'] ) && ! is_string( $attrs['fontSize'] ) ) {
+			unset( $attrs['fontSize'] );
+			$dirty = true;
+		}
+
+		if ( 'core/heading' === $name && isset( $attrs['align'] ) ) {
+			unset( $attrs['align'] );
+			$dirty = true;
+		}
+
+		if ( ! $dirty ) {
 			return $block;
 		}
 
-		$inner_html = '';
-		if ( preg_match( '/<p[^>]*>(.*?)<\/p>/is', $inner, $m ) ) {
-			$inner_html = (string) $m[1];
-		} elseif ( ! empty( $attrs['content'] ) ) {
-			$inner_html = (string) $attrs['content'];
-		}
-
-		$align = 'left';
-		if ( ! empty( $attrs['align'] ) ) {
-			$align = self::align_attr( (string) $attrs['align'] );
-		} elseif ( ! empty( $attrs['textAlign'] ) ) {
-			$align = self::align_attr( (string) $attrs['textAlign'] );
-		} elseif ( preg_match( '/has-text-align-(left|center|right)/', $inner, $am ) ) {
-			$align = (string) $am[1];
-		}
-
-		$has_extra = $needs_strip || isset( $attrs['textAlign'] );
-		if ( ! $has_extra ) {
-			return $block;
-		}
-
-		$fixed                           = self::make_email_paragraph_block_html( $inner_html, $align );
-		$fixed['attrs']['paddingTop']    = $pad_top;
-		$fixed['attrs']['paddingBottom'] = $pad_bottom;
-		$fixed['attrs']['paddingX']      = $pad_x;
-		if ( '' !== $font ) {
-			$fixed['attrs']['fontFamily'] = $font;
-		}
-		self::copy_email_border_attrs( $attrs, $fixed['attrs'] );
-		return $fixed;
+		$block['attrs'] = $attrs;
+		return $block;
 	}
 
 	/**

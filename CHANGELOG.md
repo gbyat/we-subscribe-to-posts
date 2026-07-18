@@ -9,8 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Restored text alignment controls (toolbar + sidebar) for heading and paragraph blocks in the visual email editor.
+- Restored text alignment for heading/paragraph via the block toolbar (no duplicate sidebar control).
 - Fixed invalid header heading/paragraph blocks on load (attrs like `textColor`/`fontSize` no longer mismatch core `save()` HTML).
+- Recreate core heading/paragraph blocks after parse so stored header seeds always open as valid.
+- Stop stripping header text colors on load (repair no longer removes `textColor` / `style`).
+- Larger click target for separators in the visual editor (28px hit area).
 
 ## [1.3.3] - 2026-07-17
 

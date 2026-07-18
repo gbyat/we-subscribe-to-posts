@@ -303,6 +303,57 @@
 	margin-bottom: 0;
 }
 
+/*
+ * core/separator renders as <hr> — a 1–2px line is almost impossible to click.
+ * Expand the hit target and draw the visible rule via ::after.
+ */
+.wstp-email-visual-canvas hr.wp-block-separator.wstp-email-separator-wrap {
+	position: relative;
+	box-sizing: border-box;
+	height: 28px !important;
+	min-height: 28px !important;
+	margin: 6px 0 !important;
+	padding: 0 !important;
+	border: 0 !important;
+	background: transparent !important;
+	overflow: visible;
+	cursor: pointer;
+}
+
+.wstp-email-visual-canvas hr.wp-block-separator.wstp-email-separator-wrap::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 50%;
+	height: 2px;
+	margin-top: -1px;
+	background: currentColor;
+	border: 0;
+	pointer-events: none;
+}
+
+.wstp-email-visual-canvas hr.wp-block-separator.wstp-email-separator-wrap.is-style-dots::after {
+	height: auto;
+	margin-top: -0.6em;
+	background: transparent;
+	text-align: center;
+	letter-spacing: 0.35em;
+	content: "•••";
+	font-size: 14px;
+	line-height: 1;
+}
+
+.wstp-email-visual-canvas
+	hr.wp-block-separator.wstp-email-separator-wrap:hover,
+.wstp-email-visual-canvas
+	hr.wp-block-separator.wstp-email-separator-wrap.is-selected,
+.wstp-email-visual-canvas
+	hr.wp-block-separator.wstp-email-separator-wrap.has-child-selected {
+	outline: 1px dashed color-mix(in srgb, currentColor 45%, transparent);
+	outline-offset: 2px;
+}
+
 .wstp-email-block--truncation {
 	font-size: 13px;
 	color: #646970;
