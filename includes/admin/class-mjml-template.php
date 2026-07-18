@@ -428,7 +428,12 @@ final class Mjml_Template {
 	public static function get_blocks_template(): string {
 		$stored = get_option( self::OPTION_KEY_BLOCKS, '' );
 		if ( is_string( $stored ) && '' !== trim( $stored ) ) {
-			return Block_To_Mjml::hydrate_header_block_from_branding( $stored );
+			$blocks  = Block_To_Mjml::hydrate_header_block_from_branding( $stored );
+			$repaired = Block_To_Mjml::repair_email_core_text_blocks( $blocks );
+			if ( $repaired !== $stored ) {
+				update_option( self::OPTION_KEY_BLOCKS, $repaired, false );
+			}
+			return $repaired;
 		}
 
 		return Block_To_Mjml::default_blocks_for_layout( self::DEFAULT_STARTER );

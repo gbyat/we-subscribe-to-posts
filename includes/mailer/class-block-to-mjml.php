@@ -140,7 +140,6 @@ final class Block_To_Mjml {
 							$inner_html = esc_html( $text );
 						}
 
-						$heading_html          = '<h2 class="wp-block-heading has-text-align-center">' . $inner_html . '</h2>';
 						$block['attrs']        = array_merge(
 							$attrs,
 							array(
@@ -150,23 +149,7 @@ final class Block_To_Mjml {
 							)
 						);
 						$block['innerBlocks']  = array(
-							array(
-								'blockName'    => 'core/heading',
-								'attrs'        => array(
-									'level'         => 2,
-									'textAlign'     => 'center',
-									'align'         => 'center',
-									'textColor'     => isset( $attrs['textColor'] ) ? (string) $attrs['textColor'] : 'accent-three',
-									'fontSize'      => isset( $attrs['fontSize'] ) ? (int) $attrs['fontSize'] : 22,
-									'paddingTop'    => 0,
-									'paddingBottom' => 4,
-									'paddingX'      => 0,
-									'content'       => $text,
-								),
-								'innerBlocks'  => array(),
-								'innerHTML'    => $heading_html,
-								'innerContent' => array( $heading_html ),
-							),
+							self::make_email_heading_block( $inner_html, 2, 'center', 0, 4 ),
 						);
 						$block['innerContent'] = array( null );
 						$block['innerHTML']    = '';
@@ -184,45 +167,12 @@ final class Block_To_Mjml {
 					}
 
 					$heading_inner = '<a href="' . esc_url( $link ) . '">' . esc_html( $title ) . '</a>';
-					$heading_html  = '<h2 class="wp-block-heading has-text-align-center">' . $heading_inner . '</h2>';
 					$inners        = array(
-						array(
-							'blockName'    => 'core/heading',
-							'attrs'        => array(
-								'level'         => 2,
-								'textAlign'     => 'center',
-								'align'         => 'center',
-								'textColor'     => 'accent-three',
-								'fontSize'      => 22,
-								'paddingTop'    => 0,
-								'paddingBottom' => 4,
-								'paddingX'      => 0,
-								'content'       => $heading_inner,
-							),
-							'innerBlocks'  => array(),
-							'innerHTML'    => $heading_html,
-							'innerContent' => array( $heading_html ),
-						),
+						self::make_email_heading_block( $heading_inner, 2, 'center', 0, 4 ),
 					);
 
 					if ( '' !== $tagline ) {
-						$para_html = '<p class="has-text-align-center">' . esc_html( $tagline ) . '</p>';
-						$inners[]  = array(
-							'blockName'    => 'core/paragraph',
-							'attrs'        => array(
-								'align'         => 'center',
-								'textAlign'     => 'center',
-								'textColor'     => 'accent',
-								'fontSize'      => 15,
-								'paddingTop'    => 0,
-								'paddingBottom' => 0,
-								'paddingX'      => 0,
-								'content'       => $tagline,
-							),
-							'innerBlocks'  => array(),
-							'innerHTML'    => $para_html,
-							'innerContent' => array( $para_html ),
-						);
+						$inners[] = self::make_email_paragraph_block( $tagline, 'center' );
 					}
 
 					$block['attrs']        = array_merge(
@@ -252,6 +202,236 @@ final class Block_To_Mjml {
 
 		$serialized = serialize_blocks( $parsed );
 		return is_string( $serialized ) && '' !== $serialized ? $serialized : $blocks;
+	}
+
+	/**
+	 * Repair core heading/paragraph blocks so attrs match save() HTML.
+	 *
+	 * Older seeds stored textColor/fontSize/content on headings while the HTML
+	 * only had has-text-align-*, which Gutenberg marks as invalid on parse.
+	 *
+	 * @param string $blocks Serialized blocks.
+	 * @return string
+	 */
+	public static function repair_email_core_text_blocks( string $blocks ): string {
+		if ( '' === trim( $blocks ) ) {
+			return $blocks;
+		}
+
+		$parsed = parse_blocks( $blocks );
+		if ( empty( $parsed ) ) {
+			return $blocks;
+		}
+
+		$changed = false;
+		$walk    = static function ( array &$nodes ) use ( &$walk, &$changed ): void {
+			foreach ( $nodes as &$block ) {
+				if ( ! is_array( $block ) ) {
+					continue;
+				}
+				$name = isset( $block['blockName'] ) ? (string) $block['blockName'] : '';
+				if ( 'core/heading' === $name || 'core/paragraph' === $name ) {
+					$fixed = self::normalize_email_core_text_block( $block );
+					if ( $fixed !== $block ) {
+						$block   = $fixed;
+						$changed = true;
+					}
+				}
+				if ( ! empty( $block['innerBlocks'] ) && is_array( $block['innerBlocks'] ) ) {
+					$walk( $block['innerBlocks'] );
+				}
+			}
+		};
+
+		$walk( $parsed );
+		if ( ! $changed ) {
+			return $blocks;
+		}
+
+		$serialized = serialize_blocks( $parsed );
+		return is_string( $serialized ) && '' !== $serialized ? $serialized : $blocks;
+	}
+
+	/**
+	 * Build a core/heading block whose attrs match the saved HTML.
+	 *
+	 * @param string $inner_html Inner HTML (may include links).
+	 * @param int    $level      Heading level 1–6.
+	 * @param string $align      left|center|right.
+	 * @param int    $pad_top    Padding top.
+	 * @param int    $pad_bottom Padding bottom.
+	 * @return array<string,mixed>
+	 */
+	private static function make_email_heading_block(
+		string $inner_html,
+		int $level = 2,
+		string $align = 'center',
+		int $pad_top = 0,
+		int $pad_bottom = 4
+	): array {
+		$level = max( 1, min( 6, $level ) );
+		$align = self::align_attr( $align );
+		$tag   = 'h' . $level;
+		$html  = '<' . $tag . ' class="wp-block-heading has-text-align-' . $align . '">' . $inner_html . '</' . $tag . '>';
+
+		return array(
+			'blockName'    => 'core/heading',
+			'attrs'        => array(
+				'level'         => $level,
+				'textAlign'     => $align,
+				'paddingTop'    => max( 0, $pad_top ),
+				'paddingBottom' => max( 0, $pad_bottom ),
+				'paddingX'      => 0,
+			),
+			'innerBlocks'  => array(),
+			'innerHTML'    => $html,
+			'innerContent' => array( $html ),
+		);
+	}
+
+	/**
+	 * Build a core/paragraph block whose attrs match the saved HTML.
+	 *
+	 * @param string $text  Plain text content (escaped).
+	 * @param string $align left|center|right.
+	 * @return array<string,mixed>
+	 */
+	private static function make_email_paragraph_block( string $text, string $align = 'center' ): array {
+		return self::make_email_paragraph_block_html( esc_html( $text ), $align );
+	}
+
+	/**
+	 * Build a core/paragraph from already-safe inner HTML (may include links).
+	 *
+	 * @param string $inner_html Inner HTML.
+	 * @param string $align      left|center|right.
+	 * @return array<string,mixed>
+	 */
+	private static function make_email_paragraph_block_html( string $inner_html, string $align = 'center' ): array {
+		$align = self::align_attr( $align );
+		$html  = '<p class="has-text-align-' . $align . '">' . $inner_html . '</p>';
+
+		return array(
+			'blockName'    => 'core/paragraph',
+			'attrs'        => array(
+				'align'         => $align,
+				'paddingTop'    => 0,
+				'paddingBottom' => 0,
+				'paddingX'      => 0,
+			),
+			'innerBlocks'  => array(),
+			'innerHTML'    => $html,
+			'innerContent' => array( $html ),
+		);
+	}
+
+	/**
+	 * Normalize one core heading/paragraph so Gutenberg validation succeeds.
+	 *
+	 * @param array<string,mixed> $block Block.
+	 * @return array<string,mixed>
+	 */
+	private static function normalize_email_core_text_block( array $block ): array {
+		$name  = isset( $block['blockName'] ) ? (string) $block['blockName'] : '';
+		$attrs = isset( $block['attrs'] ) && is_array( $block['attrs'] ) ? $block['attrs'] : array();
+		$inner = isset( $block['innerHTML'] ) ? (string) $block['innerHTML'] : '';
+
+		$pad_top    = isset( $attrs['paddingTop'] ) ? max( 0, (int) $attrs['paddingTop'] ) : 0;
+		$pad_bottom = isset( $attrs['paddingBottom'] ) ? max( 0, (int) $attrs['paddingBottom'] ) : 0;
+		$pad_x      = isset( $attrs['paddingX'] ) ? max( 0, (int) $attrs['paddingX'] ) : 0;
+		$font       = isset( $attrs['fontFamily'] ) ? (string) $attrs['fontFamily'] : '';
+
+		$needs_strip = isset( $attrs['textColor'] )
+			|| isset( $attrs['backgroundColor'] )
+			|| isset( $attrs['fontSize'] )
+			|| isset( $attrs['content'] )
+			|| isset( $attrs['style'] );
+
+		if ( 'core/heading' === $name ) {
+			$level = 2;
+			$html  = $inner;
+			if ( preg_match( '/<h([1-6])([^>]*)>(.*?)<\/h\1>/is', $inner, $m ) ) {
+				$level = (int) $m[1];
+				$html  = (string) $m[3];
+			} elseif ( ! empty( $attrs['content'] ) ) {
+				$html = (string) $attrs['content'];
+			}
+
+			$align = 'left';
+			if ( ! empty( $attrs['textAlign'] ) ) {
+				$align = self::align_attr( (string) $attrs['textAlign'] );
+			} elseif ( preg_match( '/has-text-align-(left|center|right)/', $inner, $am ) ) {
+				$align = (string) $am[1];
+			}
+
+			$has_bad_align = isset( $attrs['align'] );
+			if ( ! $needs_strip && ! $has_bad_align ) {
+				return $block;
+			}
+
+			$fixed = self::make_email_heading_block( $html, $level, $align, $pad_top, $pad_bottom );
+			if ( $pad_x > 0 ) {
+				$fixed['attrs']['paddingX'] = $pad_x;
+			}
+			if ( '' !== $font ) {
+				$fixed['attrs']['fontFamily'] = $font;
+			}
+			self::copy_email_border_attrs( $attrs, $fixed['attrs'] );
+			return $fixed;
+		}
+
+		if ( 'core/paragraph' !== $name ) {
+			return $block;
+		}
+
+		$inner_html = '';
+		if ( preg_match( '/<p[^>]*>(.*?)<\/p>/is', $inner, $m ) ) {
+			$inner_html = (string) $m[1];
+		} elseif ( ! empty( $attrs['content'] ) ) {
+			$inner_html = (string) $attrs['content'];
+		}
+
+		$align = 'left';
+		if ( ! empty( $attrs['align'] ) ) {
+			$align = self::align_attr( (string) $attrs['align'] );
+		} elseif ( ! empty( $attrs['textAlign'] ) ) {
+			$align = self::align_attr( (string) $attrs['textAlign'] );
+		} elseif ( preg_match( '/has-text-align-(left|center|right)/', $inner, $am ) ) {
+			$align = (string) $am[1];
+		}
+
+		$has_extra = $needs_strip || isset( $attrs['textAlign'] );
+		if ( ! $has_extra ) {
+			return $block;
+		}
+
+		$fixed                           = self::make_email_paragraph_block_html( $inner_html, $align );
+		$fixed['attrs']['paddingTop']    = $pad_top;
+		$fixed['attrs']['paddingBottom'] = $pad_bottom;
+		$fixed['attrs']['paddingX']      = $pad_x;
+		if ( '' !== $font ) {
+			$fixed['attrs']['fontFamily'] = $font;
+		}
+		self::copy_email_border_attrs( $attrs, $fixed['attrs'] );
+		return $fixed;
+	}
+
+	/**
+	 * Copy email-only border attrs onto a cleaned core text block.
+	 *
+	 * @param array<string,mixed> $from Source attrs.
+	 * @param array<string,mixed> $to   Target attrs (by ref).
+	 * @return void
+	 */
+	private static function copy_email_border_attrs( array $from, array &$to ): void {
+		foreach ( array( 'borderTop', 'borderRight', 'borderBottom', 'borderLeft' ) as $key ) {
+			if ( isset( $from[ $key ] ) && (int) $from[ $key ] > 0 ) {
+				$to[ $key ] = max( 0, min( 12, (int) $from[ $key ] ) );
+			}
+		}
+		if ( ! empty( $from['borderColor'] ) && is_string( $from['borderColor'] ) ) {
+			$to['borderColor'] = (string) $from['borderColor'];
+		}
 	}
 
 	/**

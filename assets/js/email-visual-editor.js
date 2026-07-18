@@ -268,6 +268,7 @@
 	 */
 	function setTextAlignAttributes( setAttributes, value ) {
 		var next = value === 'center' || value === 'right' ? value : 'left';
+		// Heading uses textAlign; paragraph still accepts align. Set both for MJML.
 		setAttributes( { textAlign: next, align: next } );
 	}
 
@@ -1270,6 +1271,48 @@
 		paddingX: { type: 'number', default: 0 },
 	};
 
+	/**
+	 * Text alignment toolbar for core/heading and core/paragraph.
+	 * The email canvas is a standalone BlockEditor — native heading/paragraph
+	 * alignment controls often do not appear, so we provide them explicitly.
+	 *
+	 * @param {Object} props Block edit props.
+	 * @return {Object|null} Toolbar element.
+	 */
+	function TextAlignToolbar( props ) {
+		var align = resolveTextAlign( props.attributes );
+		var setAttributes = props.setAttributes;
+		if ( AlignmentToolbar ) {
+			return el(
+				BlockControls,
+				{ group: 'block' },
+				el( AlignmentToolbar, {
+					value: align,
+					onChange: function ( next ) {
+						setTextAlignAttributes( setAttributes, next || 'left' );
+					},
+				} )
+			);
+		}
+		if ( AlignmentControl && ToolbarGroup ) {
+			return el(
+				BlockControls,
+				{ group: 'block' },
+				el(
+					ToolbarGroup,
+					null,
+					el( AlignmentControl, {
+						value: align,
+						onChange: function ( next ) {
+							setTextAlignAttributes( setAttributes, next || 'left' );
+						},
+					} )
+				)
+			);
+		}
+		return null;
+	}
+
 	function ImageAlignToolbar( props ) {
 		var align = props.attributes.align || 'center';
 		var setAttributes = props.setAttributes;
@@ -1905,11 +1948,12 @@
 					if ( props.name !== 'core/paragraph' && props.name !== 'core/heading' ) {
 						return el( BlockEdit, props );
 					}
-					// Native Color + Typography (incl. font size) + alignment toolbar.
-					// We only add Spacing, Borders, and email-safe Font family.
+					// Native Color + Typography (font size). Alignment is explicit:
+					// the standalone email canvas often omits core's text-align toolbar.
 					return el(
 						Fragment,
 						null,
+						el( TextAlignToolbar, props ),
 						el( BlockEdit, props ),
 						el(
 							InspectorControls,
@@ -1920,7 +1964,7 @@
 									showColors: false,
 									showText: false,
 									showFont: true,
-									showAlign: false,
+									showAlign: true,
 									showFontSize: false,
 								} )
 							)
