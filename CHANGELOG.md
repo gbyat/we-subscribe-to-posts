@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- MJML tab: init/refresh CodeMirror when the panel is visible; add “Show code editor” button (with DE/POT strings).
+
+### Changed
+
+- Release flow drafts/validates `[Unreleased]` changelog notes before bumping the version (avoids orphan version bumps).
+
 ## [1.3.4] - 2026-07-18
 
 ### Fixed

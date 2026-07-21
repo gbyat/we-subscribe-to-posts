@@ -72,6 +72,8 @@ function runOptional(command, args, label) {
 }
 
 try {
+	const { draftUnreleasedFromCommits } = require('./promote-changelog');
+
 	const gitRepoCheck = runQuiet('git', ['rev-parse', '--is-inside-work-tree']);
 	if ('true' !== gitRepoCheck) {
 		console.error('Current directory is not a git repository. Initialize git first.');
@@ -82,6 +84,14 @@ try {
 	if (!remoteUrl) {
 		console.error('No git remote named "origin" found. Add remote before releasing.');
 		process.exit(1);
+	}
+
+	// Draft / validate changelog BEFORE bumping version (avoids orphan bumps on failure).
+	const draft = draftUnreleasedFromCommits(false);
+	if (draft.drafted) {
+		console.log(
+			`CHANGELOG.md: auto-drafted ${draft.count} note(s) from commit messages. Review before the release commit.`
+		);
 	}
 
 	const previousVersion = JSON.parse(

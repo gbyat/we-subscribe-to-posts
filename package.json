@@ -8,6 +8,7 @@
     "i18n:json": "node scripts/make-json.js",
     "json": "npm run i18n:json",
     "sync:version": "node scripts/sync-version.js",
+    "changelog:draft": "node scripts/promote-changelog.js --draft",
     "release:patch": "node scripts/release.js patch",
     "release:minor": "node scripts/release.js minor",
     "release:major": "node scripts/release.js major",

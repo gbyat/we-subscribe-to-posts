@@ -36,6 +36,7 @@ Post subscription notifications for WordPress with double opt-in, one-click unsu
 - Build POT catalog: `npm run pot`
 - Build JS translation JSON: `npm run json`
 - Create release: `npm run release:patch` (or `minor` / `major`)
+- If `[Unreleased]` is empty, release auto-drafts bullets from commits since the last tag; manual: `npm run changelog:draft`
 
 The PHP codebase is checked clean against WPCS 3.4.0 (0 errors / 0 warnings).
 
