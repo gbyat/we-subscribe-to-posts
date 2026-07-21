@@ -1,6 +1,10 @@
 node_modules/
 vendor/
 
+# Release artifacts
+*.zip
+releases/
+
 # OS / logs
 Thumbs.db
 .DS_Store

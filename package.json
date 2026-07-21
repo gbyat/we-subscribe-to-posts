@@ -12,11 +12,21 @@
     "release:patch": "node scripts/release.js patch",
     "release:minor": "node scripts/release.js minor",
     "release:major": "node scripts/release.js major",
+    "release:patch:local": "node scripts/release.js patch --local",
+    "release:minor:local": "node scripts/release.js minor --local",
+    "release:major:local": "node scripts/release.js major --local",
     "build:mjml-browser": "node scripts/build-mjml-browser.js",
     "build:mjml-starters": "node scripts/compile-mjml-starters.js",
-    "build:mjml": "npm run build:mjml-browser && npm run build:mjml-starters"
+    "build:mjml": "npm run build:mjml-browser && npm run build:mjml-starters",
+    "build:assets": "npm run build:mjml",
+    "zip": "node scripts/build-release-zip.js",
+    "build": "node scripts/build-release-zip.js --build",
+    "pack": "npm run build",
+    "preflight": "node scripts/preflight-deploy.js",
+    "preflight:warn": "node scripts/preflight-deploy.js --warn-only"
   },
   "devDependencies": {
+    "archiver": "^7.0.1",
     "esbuild": "^0.25.0",
     "mjml": "^4.15.3",
     "mjml-browser": "^4.15.3"

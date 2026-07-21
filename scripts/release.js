@@ -2,7 +2,9 @@ const { spawnSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-const releaseType = process.argv[2] || 'patch';
+const args = process.argv.slice(2);
+const releaseType = args.find((arg) => !arg.startsWith('--')) || 'patch';
+const localOnly = args.includes('--local') || args.includes('--no-push');
 const allowedTypes = ['patch', 'minor', 'major'];
 const rootDir = path.join(__dirname, '..');
 const npmCommand = 'npm';
@@ -19,9 +21,9 @@ function escapeShellArg(value) {
 	return `"${value.replace(/"/g, '\\"')}"`;
 }
 
-function runCommand(command, args, stdio, encoding) {
+function runCommand(command, argsList, stdio, encoding) {
 	if (shouldUseShell(command)) {
-		const fullCommand = [command, ...args].map(escapeShellArg).join(' ');
+		const fullCommand = [command, ...argsList].map(escapeShellArg).join(' ');
 		return spawnSync(fullCommand, [], {
 			cwd: rootDir,
 			stdio,
@@ -30,7 +32,7 @@ function runCommand(command, args, stdio, encoding) {
 		});
 	}
 
-	return spawnSync(command, args, {
+	return spawnSync(command, argsList, {
 		cwd: rootDir,
 		stdio,
 		encoding,
@@ -40,38 +42,49 @@ function runCommand(command, args, stdio, encoding) {
 
 if (!allowedTypes.includes(releaseType)) {
 	console.error('Invalid release type. Use patch, minor, or major.');
+	console.error('Optional flags: --local (or --no-push) to tag without pushing to origin.');
 	process.exit(1);
 }
 
-function run(command, args, options = {}) {
-	const result = runCommand(command, args, options.stdio || 'inherit', options.encoding);
+function run(command, argsList, options = {}) {
+	const result = runCommand(command, argsList, options.stdio || 'inherit', options.encoding);
 
 	if (result.error) {
 		throw result.error;
 	}
 	if (result.status !== 0) {
-		throw new Error(`${command} ${args.join(' ')} failed with exit code ${result.status}`);
+		throw new Error(`${command} ${argsList.join(' ')} failed with exit code ${result.status}`);
 	}
 }
 
-function runQuiet(command, args) {
-	const result = runCommand(command, args, ['ignore', 'pipe', 'ignore'], 'utf8');
+function runQuiet(command, argsList) {
+	const result = runCommand(command, argsList, ['ignore', 'pipe', 'ignore'], 'utf8');
 	if (result.error || result.status !== 0) {
 		return '';
 	}
 	return (result.stdout || '').trim();
 }
 
-function runOptional(command, args, label) {
+function runOptional(command, argsList, label) {
 	try {
-		run(command, args);
+		run(command, argsList);
 		console.log(`${label} completed.`);
 	} catch (error) {
 		console.warn(`${label} failed (non-blocking): ${error instanceof Error ? error.message : String(error)}`);
 	}
 }
 
+function hasNpmScript(name) {
+	try {
+		const pkg = JSON.parse(fs.readFileSync(path.join(rootDir, 'package.json'), 'utf8'));
+		return Boolean(pkg.scripts && pkg.scripts[name]);
+	} catch (error) {
+		return false;
+	}
+}
+
 try {
+	const config = JSON.parse(fs.readFileSync(path.join(rootDir, 'plugin.config.json'), 'utf8'));
 	const { draftUnreleasedFromCommits } = require('./promote-changelog');
 
 	const gitRepoCheck = runQuiet('git', ['rev-parse', '--is-inside-work-tree']);
@@ -81,8 +94,8 @@ try {
 	}
 
 	const remoteUrl = runQuiet('git', ['remote', 'get-url', 'origin']);
-	if (!remoteUrl) {
-		console.error('No git remote named "origin" found. Add remote before releasing.');
+	if (!localOnly && !remoteUrl) {
+		console.error('No git remote named "origin" found. Add remote before releasing, or use --local.');
 		process.exit(1);
 	}
 
@@ -104,6 +117,10 @@ try {
 	const version = JSON.parse(fs.readFileSync(path.join(rootDir, 'package.json'), 'utf8')).version;
 	run('node', ['scripts/promote-changelog.js', version, previousVersion]);
 
+	if (config.hasBlocks && hasNpmScript('build:assets')) {
+		runOptional(npmCommand, ['run', 'build:assets'], 'Asset build');
+	}
+
 	runOptional(npmCommand, ['run', 'pot'], 'POT generation');
 	runOptional(npmCommand, ['run', 'json'], 'JSON translation generation');
 
@@ -119,12 +136,21 @@ try {
 	run('git', ['commit', '-m', `Release ${tag}`]);
 	run('git', ['tag', '-a', tag, '-m', `Release ${tag}`]);
 
-	const branch = runQuiet('git', ['rev-parse', '--abbrev-ref', 'HEAD']) || 'main';
-	run('git', ['push', 'origin', branch]);
-	run('git', ['push', 'origin', tag]);
+	run(npmCommand, ['run', 'zip']);
 
-	console.log(`Release ${tag} created and pushed.`);
-	console.log('GitHub Actions will build the ZIP and publish the release.');
+	if (localOnly) {
+		console.log(`Release ${tag} created locally (no push).`);
+		console.log(`ZIP: releases/${config.slug}-${version}.zip`);
+		console.log('Push later with: git push origin HEAD && git push origin ' + tag);
+	} else {
+		const branch = runQuiet('git', ['rev-parse', '--abbrev-ref', 'HEAD']) || 'main';
+		run('git', ['push', 'origin', branch]);
+		run('git', ['push', 'origin', tag]);
+
+		console.log(`Release ${tag} created and pushed.`);
+		console.log('GitHub Actions will build the ZIP and publish the release.');
+		console.log(`Local ZIP also kept at: releases/${config.slug}-${version}.zip`);
+	}
 } catch (error) {
 	console.error(`Release failed: ${error instanceof Error ? error.message : String(error)}`);
 	process.exit(1);

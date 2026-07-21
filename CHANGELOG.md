@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Local release scripts (`release:*:local`) and `npm run zip` / `npm run build` for test ZIPs without pushing.
+- Deploy preflight checks before packaging; skip `composer audit` when Composer is not on PATH.
+
 ## [1.3.5] - 2026-07-21
 
 ### Fixed

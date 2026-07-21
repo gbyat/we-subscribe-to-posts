@@ -118,36 +118,7 @@ jobs:
           node scripts/extract-release-notes.js "${VERSION}" release_notes.txt
 
       - name: Create plugin ZIP
-        run: |
-          PLUGIN_DIR="we-subscribe-to-posts"
-          ZIP_NAME="${PLUGIN_DIR}.zip"
-
-          mkdir -p "${PLUGIN_DIR}"
-          cp we-subscribe-to-posts.php "${PLUGIN_DIR}/"
-
-          if [ -f uninstall.php ]; then
-            cp uninstall.php "${PLUGIN_DIR}/"
-          fi
-          if [ -d includes ]; then
-            cp -r includes "${PLUGIN_DIR}/"
-          fi
-          if [ -d assets ]; then
-            cp -r assets "${PLUGIN_DIR}/"
-          fi
-          if [ -d templates ]; then
-            cp -r templates "${PLUGIN_DIR}/"
-          fi
-          if [ -d languages ]; then
-            cp -r languages "${PLUGIN_DIR}/"
-          fi
-          for doc in CHANGELOG.md README.md README.txt readme.txt LICENSE; do
-            if [ -f "${doc}" ]; then
-              cp "${doc}" "${PLUGIN_DIR}/"
-            fi
-          done
-
-          zip -r "${ZIP_NAME}" "${PLUGIN_DIR}/"
-          rm -rf "${PLUGIN_DIR}"
+        run: npm run zip
 
       - name: Publish GitHub release
         uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2

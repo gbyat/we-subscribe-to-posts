@@ -1,0 +1,24 @@
+{
+	"slug": "we-subscribe-to-posts",
+	"name": "WE Subscribe To Posts",
+	"description": "Post subscription notifications with double opt-in and one-click unsubscribe.",
+	"textDomain": "we-subscribe-to-posts",
+	"versionConstant": "WSTP_VERSION",
+	"githubRepo": "gbyat/we-subscribe-to-posts",
+	"namespace": "WeSubscribeToPosts",
+	"prefixSnake": "wstp",
+	"prefixUpper": "WSTP",
+	"locales": ["de_DE"],
+	"hasBlocks": false,
+	"potExclude": "node_modules,vendor,scripts,.github",
+	"zipInclude": {
+		"files": [
+			"we-subscribe-to-posts.php",
+			"uninstall.php",
+			"CHANGELOG.md",
+			"README.md",
+			"readme.txt"
+		],
+		"directories": ["includes", "assets", "templates", "languages"]
+	}
+}
