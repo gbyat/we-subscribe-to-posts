@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Recreate core heading/paragraph blocks after parse so stored header seeds always open as valid.
 - Stop stripping header text colors on load (repair no longer removes `textColor` / `style`).
 - Larger click target for separators in the visual editor (28px hit area).
+- MJML tab: init/refresh CodeMirror when the panel is visible; add “Show code editor” button.
 
 [1.3.3]: https://github.com/gbyat/we-subscribe-to-posts/releases/tag/v1.3.3
 

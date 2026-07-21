@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-18T23:37:31+02:00\n"
+"POT-Creation-Date: 2026-07-21T11:56:47+02:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: we-subscribe-to-posts\n"
@@ -220,140 +220,149 @@ msgstr ""
 
 #: includes/admin/class-mjml-template.php:98
 #: includes/admin/class-mjml-template.php:99
-#: includes/admin/class-mjml-template.php:742
+#: includes/admin/class-mjml-template.php:754
 msgid "Digest Email Template"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:146
+#: includes/admin/class-mjml-template.php:138
+#: includes/admin/class-mjml-template.php:918
+msgid "Show code editor"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:139
+msgid "Refresh code editor"
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:157
 msgid "Select email header logo"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:147
+#: includes/admin/class-mjml-template.php:158
 msgid "Use logo"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:148
+#: includes/admin/class-mjml-template.php:159
 msgid "Media library is not available. Please reload the page."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:223
+#: includes/admin/class-mjml-template.php:235
 msgid "Email canvas"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:224
+#: includes/admin/class-mjml-template.php:236
 msgid "Outer email background and container for all sections."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:225
-#: includes/admin/class-mjml-template.php:504
+#: includes/admin/class-mjml-template.php:237
+#: includes/admin/class-mjml-template.php:516
 #: templates/admin/email-branding-form.php:18
 msgid "Outer background"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:226
+#: includes/admin/class-mjml-template.php:238
 msgid "Email header"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:227
+#: includes/admin/class-mjml-template.php:239
 msgid "Email footer (from Branding)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:228
+#: includes/admin/class-mjml-template.php:240
 msgid "Add a heading, text, or button — each with its own colors. Or use a logo instead."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:229
+#: includes/admin/class-mjml-template.php:241
 msgid "Your brand"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:230
+#: includes/admin/class-mjml-template.php:242
 msgid "Logo (optional)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:231
+#: includes/admin/class-mjml-template.php:243
 msgid "Leave empty to add a heading, text, or button in the header — each with its own colors."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:232
+#: includes/admin/class-mjml-template.php:244
 #: templates/admin/email-branding-form.php:117
 msgid "Select logo"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:233
+#: includes/admin/class-mjml-template.php:245
 #: templates/admin/email-branding-form.php:117
 msgid "Replace logo"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:234
+#: includes/admin/class-mjml-template.php:246
 #: templates/admin/email-branding-form.php:118
 msgid "Remove logo"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:235
+#: includes/admin/class-mjml-template.php:247
 #: templates/admin/email-branding-form.php:122
 msgid "Logo link URL"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:236
+#: includes/admin/class-mjml-template.php:248
 #: templates/admin/email-branding-form.php:130
 msgid "Logo max width (px)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:237
+#: includes/admin/class-mjml-template.php:249
 #: templates/admin/email-branding-form.php:126
 msgid "Logo alt text"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:238
+#: includes/admin/class-mjml-template.php:250
 msgid "Link URL"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:239
+#: includes/admin/class-mjml-template.php:251
 msgid "Makes the whole header text clickable. Or select text and use the link control in the toolbar."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:240
+#: includes/admin/class-mjml-template.php:252
 msgid "Link URL for the header text:"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:241
+#: includes/admin/class-mjml-template.php:253
 msgid "Links to:"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:242
+#: includes/admin/class-mjml-template.php:254
 msgid "Underline links"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:243
+#: includes/admin/class-mjml-template.php:255
 msgid "Off by default so linked brand text stays clean."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:244
+#: includes/admin/class-mjml-template.php:256
 msgid "Space between lines (px)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:245
+#: includes/admin/class-mjml-template.php:257
 msgid "Gap between heading and paragraph lines inside the header."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:246
+#: includes/admin/class-mjml-template.php:258
 msgid "Content comes from the Branding tab."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:247
+#: includes/admin/class-mjml-template.php:259
 msgid "Greeting & intro"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:248
+#: includes/admin/class-mjml-template.php:260
 msgid "The greeting is personalized at send time. Add paragraph or heading blocks below for an optional intro or announcement."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:249
+#: includes/admin/class-mjml-template.php:261
 msgid "Greeting (personalized)"
 msgstr ""
 
 #. translators: %s: subscriber name.
-#: includes/admin/class-mjml-template.php:251
+#: includes/admin/class-mjml-template.php:263
 #: includes/mailer/class-mjml-template-renderer.php:103
 #: templates/emails/digest.php:21
 #: templates/emails/optin-confirmation.php:22
@@ -361,93 +370,93 @@ msgstr ""
 msgid "Hi %s,"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:252
+#: includes/admin/class-mjml-template.php:264
 msgid "Posts loop"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:253
+#: includes/admin/class-mjml-template.php:265
 msgid "Truncation notice"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:254
+#: includes/admin/class-mjml-template.php:266
 msgid "Appears only when the digest post limit hides extra posts. Omitted from the email when unused; spacing applies only then."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:255
+#: includes/admin/class-mjml-template.php:267
 msgid "Post title"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:256
+#: includes/admin/class-mjml-template.php:268
 msgid "Shows each post title (linked). Style with color, size, and spacing."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:257
+#: includes/admin/class-mjml-template.php:269
 msgid "Post excerpt"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:258
+#: includes/admin/class-mjml-template.php:270
 msgid "Post meta"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:259
+#: includes/admin/class-mjml-template.php:271
 msgid "Enable date and/or author in the sidebar."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:260
+#: includes/admin/class-mjml-template.php:272
 msgid "Post field"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:261
+#: includes/admin/class-mjml-template.php:273
 msgid "Word count"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:262
+#: includes/admin/class-mjml-template.php:274
 msgid "Maximum words per post. Uses the post excerpt when set, otherwise the content."
 msgstr ""
 
 #. translators: %d: word count.
-#: includes/admin/class-mjml-template.php:264
+#: includes/admin/class-mjml-template.php:276
 #, php-format
 msgid "%d words"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:265
+#: includes/admin/class-mjml-template.php:277
 msgid "Show date"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:266
+#: includes/admin/class-mjml-template.php:278
 msgid "Show author"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:267
+#: includes/admin/class-mjml-template.php:279
 msgid "Separator"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:268
+#: includes/admin/class-mjml-template.php:280
 msgid "March 15, 2026"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:269
-#: includes/admin/class-mjml-template.php:1251
-#: includes/admin/class-mjml-template.php:1255
-#: includes/admin/class-mjml-template.php:1336
+#: includes/admin/class-mjml-template.php:281
+#: includes/admin/class-mjml-template.php:1271
+#: includes/admin/class-mjml-template.php:1275
+#: includes/admin/class-mjml-template.php:1356
 msgid "Alex"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:270
+#: includes/admin/class-mjml-template.php:282
 msgid "Post image"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:271
+#: includes/admin/class-mjml-template.php:283
 msgid "Post image (side)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:272
+#: includes/admin/class-mjml-template.php:284
 msgid "Image"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:273
-#: includes/admin/class-mjml-template.php:324
+#: includes/admin/class-mjml-template.php:285
+#: includes/admin/class-mjml-template.php:336
 #: includes/mailer/class-block-to-mjml.php:1940
 #: includes/mailer/class-mjml-template-renderer.php:156
 #: includes/mailer/class-mjml-template-renderer.php:256
@@ -455,504 +464,508 @@ msgstr ""
 msgid "Read more"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:274
+#: includes/admin/class-mjml-template.php:286
 msgid "Spacing"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:275
+#: includes/admin/class-mjml-template.php:287
 #: templates/admin/email-branding-form.php:34
 msgid "Colors"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:276
+#: includes/admin/class-mjml-template.php:288
 msgid "Line color"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:277
+#: includes/admin/class-mjml-template.php:289
 msgid "Add top padding so the line does not sit against the button above."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:278
+#: includes/admin/class-mjml-template.php:290
 msgid "Borders"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:279
+#: includes/admin/class-mjml-template.php:291
 msgid "Top (px)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:280
+#: includes/admin/class-mjml-template.php:292
 msgid "Right (px)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:281
+#: includes/admin/class-mjml-template.php:293
 msgid "Bottom (px)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:282
+#: includes/admin/class-mjml-template.php:294
 msgid "Left (px)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:283
+#: includes/admin/class-mjml-template.php:295
 msgid "Border color"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:284
+#: includes/admin/class-mjml-template.php:296
 msgid "Typography"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:285
+#: includes/admin/class-mjml-template.php:297
 msgid "Background"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:286
+#: includes/admin/class-mjml-template.php:298
 msgid "Text"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:287
+#: includes/admin/class-mjml-template.php:299
 msgid "Secondary text"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:288
+#: includes/admin/class-mjml-template.php:300
 msgid "Links"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:289
+#: includes/admin/class-mjml-template.php:301
 msgid "Font size (px)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:290
+#: includes/admin/class-mjml-template.php:302
 msgid "Font"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:291
+#: includes/admin/class-mjml-template.php:303
 msgid "Email-safe font stack (Outlook and most clients)."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:292
+#: includes/admin/class-mjml-template.php:304
 msgid "Align"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:293
+#: includes/admin/class-mjml-template.php:305
 msgid "Left"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:294
+#: includes/admin/class-mjml-template.php:306
 msgid "Center"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:295
+#: includes/admin/class-mjml-template.php:307
 msgid "Right"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:296
+#: includes/admin/class-mjml-template.php:308
 msgid "Width (% of column)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:297
+#: includes/admin/class-mjml-template.php:309
 msgid "Percent of the column. Compiled to pixels for Outlook (column % × this % × 600px). On mobile the column stacks to full width."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:298
+#: includes/admin/class-mjml-template.php:310
 msgid "Column width (%)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:299
+#: includes/admin/class-mjml-template.php:311
 msgid "Share of the email width (600px). Example: 34% ≈ 204px in Outlook. Prefer this over dragging — drag can store pixel widths."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:300
+#: includes/admin/class-mjml-template.php:312
 msgid "List view"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:301
+#: includes/admin/class-mjml-template.php:313
 msgid "List view is not available in this WordPress version."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:302
+#: includes/admin/class-mjml-template.php:314
 msgid "Gap after (px)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:303
+#: includes/admin/class-mjml-template.php:315
 msgid "Space below this field in the email. Shown in the editor canvas as you change it."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:304
+#: includes/admin/class-mjml-template.php:316
 msgid "Border radius (px)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:305
+#: includes/admin/class-mjml-template.php:317
 msgid "Padding top (px)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:306
+#: includes/admin/class-mjml-template.php:318
 msgid "Padding bottom (px)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:307
+#: includes/admin/class-mjml-template.php:319
 msgid "Padding left/right (px)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:308
+#: includes/admin/class-mjml-template.php:320
 msgid "Column spacing"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:309
+#: includes/admin/class-mjml-template.php:321
 msgid "Gap between columns (px)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:310
+#: includes/admin/class-mjml-template.php:322
 msgid "Horizontal when columns sit side by side; vertical when stacked on mobile."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:311
+#: includes/admin/class-mjml-template.php:323
 msgid "Button style"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:312
+#: includes/admin/class-mjml-template.php:324
 msgid "Style"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:313
+#: includes/admin/class-mjml-template.php:325
 msgid "Button"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:314
+#: includes/admin/class-mjml-template.php:326
 msgid "Link"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:315
+#: includes/admin/class-mjml-template.php:327
 msgid "Add block"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:316
+#: includes/admin/class-mjml-template.php:328
 msgid "Add email content…"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:317
+#: includes/admin/class-mjml-template.php:329
 msgid "In the Header, add a heading, text, or button. Open the Styles tab (circle icon) for colors and spacing on each block."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:318
+#: includes/admin/class-mjml-template.php:330
 msgid "Custom text"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:319
+#: includes/admin/class-mjml-template.php:331
 msgid "Custom heading"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:320
+#: includes/admin/class-mjml-template.php:332
 msgid "Your own static copy in the digest (links, bold, and italic are supported)."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:321
+#: includes/admin/class-mjml-template.php:333
 msgid "Block"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:322
-#: includes/admin/class-mjml-template.php:1227
-#: includes/admin/class-mjml-template.php:1330
+#: includes/admin/class-mjml-template.php:334
+#: includes/admin/class-mjml-template.php:1247
+#: includes/admin/class-mjml-template.php:1350
 msgid "Sample post title"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:323
-#: includes/admin/class-mjml-template.php:1230
-#: includes/admin/class-mjml-template.php:1333
-#: includes/admin/class-mjml-template.php:1334
+#: includes/admin/class-mjml-template.php:335
+#: includes/admin/class-mjml-template.php:1250
+#: includes/admin/class-mjml-template.php:1353
+#: includes/admin/class-mjml-template.php:1354
 msgid "Short excerpt of the post…"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:325
+#: includes/admin/class-mjml-template.php:337
 msgid "Could not convert blocks to MJML."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:326
+#: includes/admin/class-mjml-template.php:338
 msgid "MJML compilation failed."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:327
+#: includes/admin/class-mjml-template.php:339
 msgid "Name for this layout:"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:328
+#: includes/admin/class-mjml-template.php:340
 msgid "My layout"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:329
+#: includes/admin/class-mjml-template.php:341
 msgid "Please enter a layout name."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:505
+#: includes/admin/class-mjml-template.php:517
 #: templates/admin/email-branding-form.php:19
 msgid "Content, header, footer, posts"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:506
+#: includes/admin/class-mjml-template.php:518
 #: templates/admin/email-branding-form.php:20
 msgid "Theme surface (optional)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:507
+#: includes/admin/class-mjml-template.php:519
 #: templates/admin/email-branding-form.php:21
 msgid "Body and footer text"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:508
+#: includes/admin/class-mjml-template.php:520
 #: templates/admin/email-branding-form.php:22
 msgid "Buttons and links"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:509
+#: includes/admin/class-mjml-template.php:521
 #: templates/admin/email-branding-form.php:23
 msgid "Headings (darkest readable theme color)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:539
+#: includes/admin/class-mjml-template.php:551
 msgid "Stacked"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:540
+#: includes/admin/class-mjml-template.php:552
 msgid "Featured image above title and excerpt."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:544
+#: includes/admin/class-mjml-template.php:556
 msgid "Image left"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:545
+#: includes/admin/class-mjml-template.php:557
 msgid "Two-column layout with image on the left."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:549
+#: includes/admin/class-mjml-template.php:561
 msgid "Minimal"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:550
+#: includes/admin/class-mjml-template.php:562
 msgid "Text-only digest with a simple serif style."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:606
+#: includes/admin/class-mjml-template.php:618
 msgid "Personalized greeting line, e.g. “Hi Anna,”"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:610
+#: includes/admin/class-mjml-template.php:622
 msgid "Subscriber name only"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:614
+#: includes/admin/class-mjml-template.php:626
 msgid "Repeat the block inside for each post in the digest"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:618
+#: includes/admin/class-mjml-template.php:630
 msgid "Post title (inside loop)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:622
+#: includes/admin/class-mjml-template.php:634
 msgid "Post excerpt (inside loop; visual editor sets word count)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:626
+#: includes/admin/class-mjml-template.php:638
 msgid "Post date (inside loop)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:630
+#: includes/admin/class-mjml-template.php:642
 msgid "Post author (inside loop)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:634
+#: includes/admin/class-mjml-template.php:646
 msgid "Post permalink (inside loop)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:638
+#: includes/admin/class-mjml-template.php:650
 msgid "Featured image HTML for stacked layouts (inside loop)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:642
+#: includes/admin/class-mjml-template.php:654
 msgid "Featured image HTML for side-by-side layouts (inside loop)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:646
+#: includes/admin/class-mjml-template.php:658
 msgid "Featured image URL only (inside loop)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:650
+#: includes/admin/class-mjml-template.php:662
 msgid "Read-more button label"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:654
+#: includes/admin/class-mjml-template.php:666
 msgid "Ready-made header HTML built from the branding settings below"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:658
+#: includes/admin/class-mjml-template.php:670
 msgid "Ready-made footer HTML built from the branding settings below"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:662
+#: includes/admin/class-mjml-template.php:674
 msgid "Outer email background (theme: base)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:666
+#: includes/admin/class-mjml-template.php:678
 msgid "Content card background (theme: base-two)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:670
+#: includes/admin/class-mjml-template.php:682
 msgid "Heading text color (theme: darkest readable accent/base-three)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:674
+#: includes/admin/class-mjml-template.php:686
 msgid "Body/footer text color (theme: accent)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:678
+#: includes/admin/class-mjml-template.php:690
 msgid "Button background color (theme: accent-two)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:682
+#: includes/admin/class-mjml-template.php:694
 msgid "Link color (theme: accent-two)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:686
+#: includes/admin/class-mjml-template.php:698
 msgid "Optional notice when post limit hides additional posts"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:690
+#: includes/admin/class-mjml-template.php:702
 msgid "One-click unsubscribe URL"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:694
+#: includes/admin/class-mjml-template.php:706
 #: templates/admin/email-branding-form.php:196
 msgid "Unsubscribe link label"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:698
+#: includes/admin/class-mjml-template.php:710
 msgid "Site name"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:749
+#: includes/admin/class-mjml-template.php:761
 msgid "Visual"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:752
+#: includes/admin/class-mjml-template.php:764
 msgid "MJML"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:755
+#: includes/admin/class-mjml-template.php:767
 msgid "Branding"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:761
+#: includes/admin/class-mjml-template.php:773
 msgid "The template was last saved from the MJML tab. Saving Visual will regenerate MJML from blocks and overwrite advanced MJML edits."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:764
+#: includes/admin/class-mjml-template.php:776
 msgid "Compose the digest from placeholder blocks (header, intro, posts loop fields, truncation, footer). Use Save as… to keep named copies while you try different layouts. Digests always use the currently saved active template."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:768
+#: includes/admin/class-mjml-template.php:780
 msgid "Editing saved layout:"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:783
+#: includes/admin/class-mjml-template.php:795
 msgid "Save visual template"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:785
+#: includes/admin/class-mjml-template.php:797
 msgid "Save as…"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:788
-#: includes/admin/class-mjml-template.php:911
+#: includes/admin/class-mjml-template.php:800
+#: includes/admin/class-mjml-template.php:931
 msgid "Preview HTML"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:809
+#: includes/admin/class-mjml-template.php:821
 msgid "My layouts"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:810
+#: includes/admin/class-mjml-template.php:822
 msgid "Named copies of your visual work. Load one to continue editing it; digests use whatever is currently saved as the active template."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:812
+#: includes/admin/class-mjml-template.php:824
 msgid "No saved layouts yet. Use Save as… to keep a copy before trying another starter."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:817
+#: includes/admin/class-mjml-template.php:829
 #: includes/admin/class-subscribers-page.php:343
 #: includes/subscription/class-admin-notification-service.php:164
 #: templates/admin/email-branding-form.php:137
 msgid "Name"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:818
+#: includes/admin/class-mjml-template.php:830
 msgid "Updated"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:819
+#: includes/admin/class-mjml-template.php:831
 #: includes/admin/class-subscribers-page.php:350
 msgid "Actions"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:834
+#: includes/admin/class-mjml-template.php:846
 msgid "loaded"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:849
+#: includes/admin/class-mjml-template.php:861
 msgid "Load"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:851
+#: includes/admin/class-mjml-template.php:863
 msgid "Delete this saved layout?"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:855
+#: includes/admin/class-mjml-template.php:867
 #: includes/admin/class-subscribers-page.php:631
 msgid "Delete"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:865
+#: includes/admin/class-mjml-template.php:877
 msgid "Starter templates"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:866
+#: includes/admin/class-mjml-template.php:878
 msgid "Starters replace the active template. Save as… first if you want to keep your current work."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:872
+#: includes/admin/class-mjml-template.php:884
 msgid "Replace the current active template with this starter? Use Save as… first if you want to keep your work."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:876
+#: includes/admin/class-mjml-template.php:888
 msgid "Use this starter"
 msgstr ""
 
 #. translators: %s: external MJML editor URL.
-#: includes/admin/class-mjml-template.php:889
+#: includes/admin/class-mjml-template.php:901
 #, php-format
 msgid "Advanced: edit MJML directly. Design with <a href=\"%s\" target=\"_blank\" rel=\"noopener noreferrer\">MJML</a>, paste the source here, and save. Compiled HTML is used when sending digests."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:902
+#: includes/admin/class-mjml-template.php:914
 msgid "MJML source"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:909
+#: includes/admin/class-mjml-template.php:921
+msgid "Opens the highlighted editor. Use Refresh if the pane looks blank after switching tabs."
+msgstr ""
+
+#: includes/admin/class-mjml-template.php:929
 msgid "Save template"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:922
+#: includes/admin/class-mjml-template.php:942
 msgid "Placeholders"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:926
+#: includes/admin/class-mjml-template.php:946
 msgid "Token"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:927
+#: includes/admin/class-mjml-template.php:947
 msgid "Description"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:1116
-#: includes/admin/class-mjml-template.php:1615
+#: includes/admin/class-mjml-template.php:1136
+#: includes/admin/class-mjml-template.php:1635
 #: includes/admin/class-preview-controller.php:58
 #: includes/admin/class-settings-page.php:1288
 #: includes/admin/class-subscribers-page.php:126
@@ -961,25 +974,25 @@ msgstr ""
 msgid "You are not allowed to do this."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:1124
+#: includes/admin/class-mjml-template.php:1144
 msgid "No blocks provided."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:1203
+#: includes/admin/class-mjml-template.php:1223
 msgid "No compiled HTML template available for preview."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:1204
+#: includes/admin/class-mjml-template.php:1224
 msgid "Preview failed"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:1511
-#: includes/admin/class-mjml-template.php:1514
-#: includes/admin/class-mjml-template.php:1543
+#: includes/admin/class-mjml-template.php:1531
+#: includes/admin/class-mjml-template.php:1534
+#: includes/admin/class-mjml-template.php:1563
 msgid "Untitled layout"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:1619
+#: includes/admin/class-mjml-template.php:1639
 #: includes/admin/class-preview-controller.php:62
 #: includes/admin/class-settings-page.php:1292
 #: includes/admin/class-subscribers-page.php:130
@@ -988,74 +1001,74 @@ msgid "Security check failed."
 msgstr ""
 
 #. translators: %s: preview recipient email
-#: includes/admin/class-mjml-template.php:1678
+#: includes/admin/class-mjml-template.php:1698
 #, php-format
 msgid "Send a preview digest to %s (latest 3 posts)"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:1683
+#: includes/admin/class-mjml-template.php:1703
 msgid "Send preview now"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:1700
+#: includes/admin/class-mjml-template.php:1720
 msgid "MJML template saved and compiled HTML updated."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:1701
+#: includes/admin/class-mjml-template.php:1721
 msgid "Visual template saved and compiled HTML updated."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:1702
+#: includes/admin/class-mjml-template.php:1722
 msgid "Layout saved to My layouts and set as active."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:1703
+#: includes/admin/class-mjml-template.php:1723
 msgid "Saved layout loaded into the editor."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:1704
+#: includes/admin/class-mjml-template.php:1724
 msgid "Saved layout deleted."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:1705
+#: includes/admin/class-mjml-template.php:1725
 msgid "Saved layout could not be found."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:1706
+#: includes/admin/class-mjml-template.php:1726
 msgid "Please enter a name for Save as…"
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:1707
+#: includes/admin/class-mjml-template.php:1727
 msgid "Layout library is full. Delete an old layout first."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:1708
+#: includes/admin/class-mjml-template.php:1728
 msgid "Email branding saved."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:1709
+#: includes/admin/class-mjml-template.php:1729
 msgid "Starter template loaded."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:1710
+#: includes/admin/class-mjml-template.php:1730
 msgid "Starter template could not be loaded."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:1711
+#: includes/admin/class-mjml-template.php:1731
 msgid "Compiled HTML is missing. Save again so MJML can compile in your browser."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:1712
+#: includes/admin/class-mjml-template.php:1732
 #: includes/admin/class-settings-page.php:711
 msgid "Preview email sent successfully."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:1713
+#: includes/admin/class-mjml-template.php:1733
 #: includes/admin/class-settings-page.php:712
 msgid "Preview email could not be sent."
 msgstr ""
 
-#: includes/admin/class-mjml-template.php:1714
+#: includes/admin/class-mjml-template.php:1734
 msgid "Preview recipient email is invalid. Set it under Post Subscriptions → Settings."
 msgstr ""
 

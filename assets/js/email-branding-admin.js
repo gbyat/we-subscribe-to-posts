@@ -49,6 +49,13 @@
 		if ( tab === 'visual' && typeof window.wstpMountEmailVisualEditor === 'function' ) {
 			window.wstpMountEmailVisualEditor();
 		}
+
+		if ( tab === 'template' && typeof window.wstpEnsureMjmlCodeEditor === 'function' ) {
+			// CodeMirror must init/refresh while the panel is visible.
+			window.setTimeout( function () {
+				window.wstpEnsureMjmlCodeEditor();
+			}, 30 );
+		}
 	}
 
 	$( '.nav-tab-wrapper a.nav-tab' ).on( 'click', function ( event ) {

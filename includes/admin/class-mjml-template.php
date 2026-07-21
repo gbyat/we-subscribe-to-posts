@@ -122,12 +122,23 @@ final class Mjml_Template {
 			WSTP_VERSION,
 			true
 		);
+		$mjml_admin_js = WSTP_PATH . 'assets/js/mjml-template-admin.js';
 		wp_enqueue_script(
 			'wstp-mjml-template-admin',
 			WSTP_URL . 'assets/js/mjml-template-admin.js',
-			array( 'wstp-mjml-browser' ),
-			WSTP_VERSION,
+			array( 'jquery', 'wstp-mjml-browser', 'code-editor' ),
+			is_readable( $mjml_admin_js ) ? (string) filemtime( $mjml_admin_js ) : WSTP_VERSION,
 			true
+		);
+		wp_localize_script(
+			'wstp-mjml-template-admin',
+			'wstpMjmlTemplateAdmin',
+			array(
+				'i18n' => array(
+					'showEditor'    => __( 'Show code editor', 'we-subscribe-to-posts' ),
+					'refreshEditor' => __( 'Refresh code editor', 'we-subscribe-to-posts' ),
+				),
+			)
 		);
 		wp_enqueue_editor();
 		wp_enqueue_media();
@@ -156,11 +167,12 @@ final class Mjml_Template {
 			WSTP_VERSION
 		);
 		wp_enqueue_script( 'wp-color-picker' );
+		$branding_admin_js = WSTP_PATH . 'assets/js/email-branding-admin.js';
 		wp_enqueue_script(
 			'wstp-email-branding-admin',
 			WSTP_URL . 'assets/js/email-branding-admin.js',
-			array( 'jquery', 'wp-color-picker' ),
-			WSTP_VERSION,
+			array( 'jquery', 'wp-color-picker', 'wstp-mjml-template-admin' ),
+			is_readable( $branding_admin_js ) ? (string) filemtime( $branding_admin_js ) : WSTP_VERSION,
 			true
 		);
 
@@ -900,6 +912,14 @@ final class Mjml_Template {
 
 						<p>
 							<label for="wstp-mjml-template"><strong><?php esc_html_e( 'MJML source', 'we-subscribe-to-posts' ); ?></strong></label>
+						</p>
+						<p style="margin:0 0 8px;">
+							<button type="button" class="button" id="wstp-mjml-open-editor">
+								<?php esc_html_e( 'Show code editor', 'we-subscribe-to-posts' ); ?>
+							</button>
+							<span class="description" style="margin-left:8px;">
+								<?php esc_html_e( 'Opens the highlighted editor. Use Refresh if the pane looks blank after switching tabs.', 'we-subscribe-to-posts' ); ?>
+							</span>
 						</p>
 						<textarea id="wstp-mjml-template" name="wstp_mjml_template" rows="28" class="large-text code" style="font-family:monospace;width:100%;"><?php echo esc_textarea( $template ); ?></textarea>
 
