@@ -1,5 +1,6 @@
 node_modules/
 vendor/
+wp-cli.phar
 
 # Release artifacts
 *.zip
@@ -19,3 +20,13 @@ TASK-LOG.md
 .phpcs-cache
 .phpunit.result.cache
 composer.phar
+
+# Secrets / local env
+.env
+.env.*
+!.env.example
+
+# Sighthound local scan output
+sighthound-*.sarif
+sighthound-*.json
+results.sarif
